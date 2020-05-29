@@ -1,11 +1,11 @@
-name: Mage docker image creation
+name: Bake docker image creation
 on:
   push:
-  schedule:
-    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+    branches:
+      - master
 jobs:
   build:
-    name: Mage docker
+    name: Bake docker
     runs-on: ubuntu-latest
     steps:      
       - name: Check out source code
@@ -13,10 +13,8 @@ jobs:
       - name: Build and Publish
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: taxibeat/dispatch-domain/mage
+          name: taxibeat/bake
           username: ${{ secrets.GitHubUser }}
           password: ${{ secrets.GitHubToken }}
           registry: docker.pkg.github.com
-          dockerfile: tools/mage/Dockerfile
-          tags: "latest,0.0.6"
-          cache: ${{ github.event_name != 'schedule' }}
+          tags: "latest,0.0.1"
