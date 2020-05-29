@@ -31,6 +31,6 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 
 RUN mkdir /.cache /.magefile && chmod 777 /.cache /.magefile
 
-COPY tools/mage/entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["sh", "/entrypoint.sh"]
