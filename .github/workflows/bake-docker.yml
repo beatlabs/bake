@@ -1,8 +1,7 @@
 name: Bake docker image creation
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 jobs:
   build:
     name: Bake docker
@@ -17,4 +16,4 @@ jobs:
           username: ${{ secrets.GitHubUser }}
           password: ${{ secrets.GitHubToken }}
           registry: docker.pkg.github.com
-          tags: "latest,0.0.1"
+          tag_semver: true

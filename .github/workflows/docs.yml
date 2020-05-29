@@ -1,8 +1,7 @@
 name: Confluence Docs Sync
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 jobs:
   build:
     name: Sync Docs
