@@ -28,6 +28,8 @@ func CodeCovDefault() error {
 
 func codeCov(tags []string) error {
 
+	fmt.Printf("ci: running codecov with tags: %v\n", tags)
+
 	args := []string{
 		"test",
 		"-mod=vendor",

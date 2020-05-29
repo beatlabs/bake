@@ -15,6 +15,8 @@ import (
 
 // ModSync runs go module tidy and vendor.
 func ModSync() error {
+	fmt.Printf("code: running go mod sync\n")
+
 	if err := sh.RunV(bake.GoCmd, "mod", "tidy"); err != nil {
 		return err
 	}
@@ -23,11 +25,15 @@ func ModSync() error {
 
 // Fmt runs go fmt.
 func Fmt() error {
+	fmt.Printf("code: running go fmt\n")
+
 	return sh.RunV(bake.GoCmd, "fmt", "./...")
 }
 
 // FmtCheck checks if all files are formatted.
 func FmtCheck() error {
+	fmt.Printf("code: running go fmt check\n")
+
 	goFiles, err := getAllGoFiles(".")
 	if err != nil {
 		return err
@@ -82,6 +88,8 @@ func getAllGoFiles(path string) ([]string, error) {
 
 // CheckVendor checks if vendor is in sync with go.mod.
 func CheckVendor() error {
+	fmt.Printf("code: running check vendor\n")
+
 	hash1, err := dirhash.HashDir("vendor/", "mod", dirhash.Hash1)
 	if err != nil {
 		return fmt.Errorf("failed to create vendor hash: %w", err)

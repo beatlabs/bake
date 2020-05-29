@@ -28,8 +28,7 @@ func RunDefault() error {
 }
 
 func run(tags []string) error {
-
-	fmt.Printf("Run tests with build flags: %v\n", tags)
+	fmt.Printf("test: running tests with tags: %v\n", tags)
 
 	args := []string{
 		"test",
@@ -61,7 +60,7 @@ func CoverDefault() error {
 
 func cover(tags []string) error {
 
-	fmt.Printf("Run coverage with build flags: %v\n", tags)
+	fmt.Printf("test: running cover with tags: %v\n", tags)
 
 	defer func() {
 		err := os.Remove(coverFile)

@@ -24,6 +24,7 @@ var (
 
 // Docker lints the docker file.
 func Docker(dockerFile string) error {
+	fmt.Printf("lint: running docker lint for file: %s\n", dockerFile)
 	return sh.RunV("hadolint", dockerFile)
 }
 
@@ -43,6 +44,7 @@ func GoDefault() error {
 }
 
 func code(linters []string, tags []string) error {
+	fmt.Printf("lint: running go lint. linters: %v tags: %v\n", linters, tags)
 
 	buildTagFlag := ""
 	if len(tags) > 0 {
