@@ -13,7 +13,7 @@ jobs:
       - name: Build and Publish
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: taxibeat/bake
+          name: taxibeat/bake/bake
           username: ${{ secrets.GitHubUser }}
           password: ${{ secrets.GitHubToken }}
           registry: docker.pkg.github.com
