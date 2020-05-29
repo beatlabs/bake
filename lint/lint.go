@@ -57,7 +57,7 @@ func code(linters []string, tags []string) error {
 	}
 
 	cmd := "golangci-lint"
-	args := strings.Split(fmt.Sprintf("run %s %s --exclude-use-default=false --deadline=5m", linterFlag, buildTagFlag), " ")
+	args := strings.Split(fmt.Sprintf("run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", linterFlag, buildTagFlag), " ")
 
 	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
 
