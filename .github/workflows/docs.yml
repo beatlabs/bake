@@ -1,0 +1,19 @@
+name: Confluence Docs Sync
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Sync Docs
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Check out source code
+        uses: actions/checkout@v2
+
+      - name: Sync
+        run: make confluence-docs-sync
+        env:
+          CONFLUENCE_USERNAME: ${{ secrets.ConfluenceUsername }}
+          CONFLUENCE_PASSWORD: ${{ secrets.ConfluencePassword }}
+          CONFLUENCE_BASEURL: ${{ secrets.ConfluenceBaseURL }}
