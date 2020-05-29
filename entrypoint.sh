@@ -1,8 +1,10 @@
 #!/bin/sh
 
-if [ -f $PWD/mage-build ]; then
-    exec $PWD/mage-build $@
+if [ -f $PWD/bake-build ]; then
+    echo "executing prebuild bake file"
+    exec $PWD/bake-build $@
 else
+    echo "executing mage"
     exec mage $@
 fi
 

@@ -6,6 +6,10 @@ import (
 	"github.com/taxibeat/bake/lint"
 )
 
+const (
+	dockerFile = "./infra/deploy/local/Dockerfile"
+)
+
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
@@ -16,7 +20,7 @@ func (l Lint) All() {
 
 // Docker lints the docker file.
 func (l Lint) Docker() error {
-	return lint.Docker()
+	return lint.Docker(dockerFile)
 }
 
 // Go runs the go linter.

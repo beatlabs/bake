@@ -1,4 +1,4 @@
-// Package mage is the main entry point for our mage collection of targets.
+// Package bake is the main entry point for our mage collection of targets.
 package bake
 
 const (

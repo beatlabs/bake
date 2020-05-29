@@ -22,12 +22,8 @@ var (
 	}
 )
 
-const (
-	dockerFile = "./infra/deploy/local/Dockerfile"
-)
-
 // Docker lints the docker file.
-func Docker() error {
+func Docker(dockerFile string) error {
 	return sh.RunV("hadolint", dockerFile)
 }
 
