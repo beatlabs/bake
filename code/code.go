@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	"github.com/taxibeat/bake/common"
 	"golang.org/x/mod/sumdb/dirhash"
 )
 
@@ -17,17 +17,17 @@ import (
 func ModSync() error {
 	fmt.Print("code: running go mod sync\n")
 
-	if err := sh.RunV(bake.GoCmd, "mod", "tidy"); err != nil {
+	if err := sh.RunV(common.GoCmd, "mod", "tidy"); err != nil {
 		return err
 	}
-	return sh.RunV(bake.GoCmd, "mod", "vendor")
+	return sh.RunV(common.GoCmd, "mod", "vendor")
 }
 
 // Fmt runs go fmt.
 func Fmt() error {
 	fmt.Print("code: running go fmt\n")
 
-	return sh.RunV(bake.GoCmd, "fmt", "./...")
+	return sh.RunV(common.GoCmd, "fmt", "./...")
 }
 
 // FmtCheck checks if all files are formatted.
@@ -95,7 +95,7 @@ func CheckVendor() error {
 		return fmt.Errorf("failed to create vendor hash: %w", err)
 	}
 
-	err = sh.RunV(bake.GoCmd, "mod", "vendor")
+	err = sh.RunV(common.GoCmd, "mod", "vendor")
 	if err != nil {
 		return err
 	}

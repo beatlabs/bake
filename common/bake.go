@@ -1,5 +1,5 @@
 // Package bake is the main entry point for our mage collection of targets.
-package bake
+package common
 
 const (
 	// BuildTagIntegration tag.

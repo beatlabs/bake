@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	"github.com/taxibeat/bake/common"
 )
 
 const (
@@ -23,7 +23,7 @@ func CodeCov(buildTags ...string) error {
 
 // CodeCovDefault runs the actual CI pipeline with CodeCov integration and default build tags.
 func CodeCovDefault() error {
-	return codeCov([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return codeCov([]string{common.BuildTagIntegration, common.BuildTagComponent})
 }
 
 func codeCov(tags []string) error {

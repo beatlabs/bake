@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	"github.com/taxibeat/bake/common"
 )
 
 const (
@@ -24,7 +24,7 @@ func Run(tags ...string) error {
 
 // RunDefault Go tests with cover and race flags enabled and with default build tags.
 func RunDefault() error {
-	return run([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return run([]string{common.BuildTagIntegration, common.BuildTagComponent})
 }
 
 func run(tags []string) error {
@@ -43,9 +43,9 @@ func run(tags []string) error {
 
 	args = append(args, "./...")
 
-	fmt.Printf("Executing cmd: %s %s\n", bake.GoCmd, strings.Join(args, " "))
+	fmt.Printf("Executing cmd: %s %s\n", common.GoCmd, strings.Join(args, " "))
 
-	return sh.RunV(bake.GoCmd, args...)
+	return sh.RunV(common.GoCmd, args...)
 }
 
 // Cover runs Go test and produce full code coverage result and accepts build tags.
@@ -55,7 +55,7 @@ func Cover(buildTags ...string) error {
 
 // CoverDefault runs Go test and produce full code coverage result and uses default build tags.
 func CoverDefault() error {
-	return cover([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return cover([]string{common.BuildTagIntegration, common.BuildTagComponent})
 }
 
 func cover(tags []string) error {
@@ -85,14 +85,14 @@ func cover(tags []string) error {
 
 	args = append(args, "./...")
 
-	fmt.Printf("Executing cmd: %s %s\n", bake.GoCmd, strings.Join(args, " "))
+	fmt.Printf("Executing cmd: %s %s\n", common.GoCmd, strings.Join(args, " "))
 
-	err := sh.Run(bake.GoCmd, args...)
+	err := sh.Run(common.GoCmd, args...)
 	if err != nil {
 		return err
 	}
 
-	return sh.RunV(bake.GoCmd, "tool", "cover", "-func="+coverFile)
+	return sh.RunV(common.GoCmd, "tool", "cover", "-func="+coverFile)
 }
 
 func getBuildTagFlag(buildTags []string) string {

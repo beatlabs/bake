@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/taxibeat/bake/common"
+
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
 )
 
 var (
@@ -40,7 +41,7 @@ func GoLinters(linters []string, tags []string) error {
 
 // GoDefault lints the Go code and uses default linters and build tags.
 func GoDefault() error {
-	return code(defaultLinters, []string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return code(defaultLinters, []string{common.BuildTagIntegration, common.BuildTagComponent})
 }
 
 func code(linters []string, tags []string) error {
