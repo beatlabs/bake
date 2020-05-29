@@ -23,7 +23,7 @@ type ConfluenceDoc struct {
 
 // ConfluenceSync syncs the list of documents provided with Confluence.
 func ConfluenceSync(docs ...ConfluenceDoc) error {
-	fmt.Printf("doc: syncing docs with confluence\n")
+	fmt.Print("doc: syncing docs with confluence\n")
 
 	var ok bool
 	var cfg confluenceConfig
