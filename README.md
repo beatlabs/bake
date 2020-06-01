@@ -5,7 +5,7 @@ Bake contains build tools to help make us elevate the developer experience of ou
 The repository contains two major components:
 
 - Mage targets and helpers, to support a more structured and common make experience.
-- Bake Dockerfile, which is used to create an image for our CI/CD process
+- Dockerfile, which is used to create an image for our CI/CD process
 
 ## Mage
 

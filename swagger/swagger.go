@@ -13,7 +13,7 @@ import (
 var (
 	defaultSwagCmd  = "swag"
 	defaultSwagArgs = []string{
-		"init", "-g", "../../../cmd/dispatch/main.go", "-d", "./internal/infra/http", "-o",
+		"init", "--generalInfo", "../../../cmd/dispatch/main.go", "--dir", "./internal/infra/http", "-output",
 	}
 	defaultDocsDir = "internal/infra/http/docs"
 	defaultAPIDir  = "api"
@@ -21,8 +21,6 @@ var (
 
 // Create creates a swagger files from source code annotations.
 func Create(cmd string, args []string, docsDir, apiDir string) error {
-	fmt.Printf("swagger: running create. args: %v, docs dir: %s, api dir: %s\n", args, docsDir, apiDir)
-
 	args = append(args, docsDir)
 	if err := sh.RunV(cmd, args...); err != nil {
 		return err
@@ -45,8 +43,6 @@ func CreateDefault() error {
 
 // Check ensures that the generated files are up to date.
 func Check(cmd string, args []string, apiDir string) error {
-	fmt.Printf("swagger: running check. args: %v, api dir: %s\n", args, apiDir)
-
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		return err
