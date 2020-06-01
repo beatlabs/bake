@@ -9,4 +9,6 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
       - name: Bake CI
-        - run: ./bake.sh ci:run
+        run: ./bake.sh ci:run
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
