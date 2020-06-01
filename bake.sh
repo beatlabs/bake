@@ -3,7 +3,7 @@
 set -e
 
 image_name="docker.pkg.github.com/taxibeat/bake/bake"
-image_tag="0.0.3"
+image_tag="0.0.10"
 
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
@@ -43,9 +43,6 @@ docker run \
   --name "$RUN_ID-bake" \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
-  -e CONFLUENCE_USERNAME=$CONFLUENCE_USERNAME \
-  -e CONFLUENCE_PASSWORD=$CONFLUENCE_PASSWORD \
-  -e CONFLUENCE_BASEURL=$CONFLUENCE_BASEURL \
   -e HOST_HOSTNAME=172.17.0.1 \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
