@@ -1,11 +1,4 @@
-<!-- Space: DT -->
-<!-- Title: Bake -->
-<!-- Parent: Engineering -->
-<!-- Parent: Dispatch Tools -->
-
 # bake
-
-![Confluence Docs Sync](https://github.com/taxibeat/bake/workflows/Confluence%20Docs%20Sync/badge.svg)
 
 Bake contains build tools to help make us elevate the developer experience of our Go projects.
 
