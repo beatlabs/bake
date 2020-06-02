@@ -8,6 +8,11 @@ jobs:
     steps:      
       - name: Check out source code
         uses: actions/checkout@v2
+      - name: Bake CI pre
+        run: |
+          ls bake.sh
+          chmod +x bake.sh
+          ls bake.sh
       - name: Bake CI
         run: |
           ls bake.sh
