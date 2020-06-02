@@ -28,6 +28,17 @@ type CI mg.Namespace
 // Run CI with CodeCov and default build tags.
 func (CI) Run() error {
 	goTargets := code.Go{}
-	mg.SerialDeps(goTargets.CheckVendor, goTargets.FmtCheck, Lint{}.Go())
+	err := goTargets.FmtCheck()
+	if err != nil {
+		return err
+	}
+	err = goTargets.CheckVendor()
+	if err != nil {
+		return err
+	}
+	err = Lint{}.Go()
+	if err != nil {
+		return err
+	}
 	return ci.CodeCovDefault()
 }
