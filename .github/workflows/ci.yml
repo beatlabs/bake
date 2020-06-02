@@ -9,7 +9,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
       - name: Bake CI pre
-        run: echo "pre run"
+        run: ls -al
       - name: Bake CI
         run: ./bake.sh ci:run
         env:
