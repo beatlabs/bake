@@ -10,9 +10,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Bake CI pre
         run: |
-          ls bake.sh
+          ls -al bake.sh
           chmod +x bake.sh
-          ls bake.sh
+          ls -al bake.sh
       - name: Bake CI
         run: |
           ls bake.sh
