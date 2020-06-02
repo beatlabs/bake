@@ -51,7 +51,6 @@ docker run \
   --name "$RUN_ID-bake" \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
-  -e GITHUB_USERNAME=$GITHUB_USERNAME \
   -e GITHUB_TOKEN=$GITHUB_TOKEN \
   -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
   -u $(id -u):$(id -g) \
