@@ -9,7 +9,7 @@ image_tag="0.0.10"
 # The token must container the repo and read:packages scopes.
 if [ -z "${GITHUB_USERNAME}" ]; then echo GITHUB_USERNAME must be set; exit 1; fi
 if [ -z "${GITHUB_TOKEN}" ]; then echo GITHUB_TOKEN must be set; exit 1; fi
-echo $GITHUB_TOKEN | docker login https://docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
+docker login https://docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN
 
 DOCKER0_BRIDGE=172.17.0.1
 
