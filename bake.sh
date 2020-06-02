@@ -3,7 +3,7 @@
 set -e
 
 image_name="docker.pkg.github.com/taxibeat/bake/bake"
-image_tag="0.0.10"
+image_tag="0.0.12"
 
 # Github username and token are require to pull the docker image as well as for acessing git repos inside the runnign container.
 # The token must container the repo and read:packages scopes.
