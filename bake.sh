@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Running CI"
+
 set -e
 
 image_name="docker.pkg.github.com/taxibeat/bake/bake"
