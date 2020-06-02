@@ -24,11 +24,15 @@ else
    exit 1
 fi
 
+echo "Docker Group ID: $docker_gid"
+
 RUN_ID=${RUN_ID:=$BUILD_NUMBER}
 if [[ -z "$RUN_ID" ]]; then
     # Generate random 3 character alphanumeric string
     RUN_ID=`cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 3 | head -n 1`
 fi
+
+echo "Run ID: $RUN_ID"
 
 # Force removal of containers and images.
 cleanup () {
