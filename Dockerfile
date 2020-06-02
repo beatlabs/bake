@@ -28,7 +28,9 @@ RUN wget -c https://github.com/mantzas/mark/releases/download/v0.9.0/mark-linux-
 # Download and install golangci-lint into go bin path
 RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.26.0
 
-RUN mkdir /.cache /.magefile && chmod 777 /.cache /.magefile
+# Very permissive because we don't know what user the container will run as
+RUN mkdir /home/beat && chmod 777 /home/beat
+ENV HOME /home/beat
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
