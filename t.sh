@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo GITHUB_USERNAME
+echo "NAME: ${GITHUB_USERNAME}"
 
-echo GITHUB_TOKEN
+echo "TOKEN: ${GITHUB_TOKEN}"
