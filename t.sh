@@ -1,3 +1,5 @@
 #!/bin/bash
 
-echo "This is Sparta!"
+echo GITHUB_USERNAME
+
+echo GITHUB_TOKEN
