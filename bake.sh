@@ -56,6 +56,7 @@ docker run \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
   -e GITHUB_TOKEN=$GITHUB_TOKEN \
+  -e GITHUB_USERNAME=$GITHUB_USERNAME \
   -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
