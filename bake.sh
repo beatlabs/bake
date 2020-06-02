@@ -5,6 +5,14 @@ set -e
 image_name="docker.pkg.github.com/taxibeat/bake/bake"
 image_tag="0.0.10"
 
+# Github username and token are require to pull the docker image as well as for acessing git repos inside the runnign container.
+# The token must container the repo and read:packages scopes.
+if [ -z "${GITHUB_USERNAME}" ]; then echo GITHUB_USERNAME must be set; exit 1; fi
+if [ -z "${GITHUB_TOKEN}" ]; then echo GITHUB_TOKEN must be set; exit 1; fi
+echo $GITHUB_TOKEN | docker login https://docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
+
+DOCKER0_BRIDGE=172.17.0.1
+
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -43,7 +51,9 @@ docker run \
   --name "$RUN_ID-bake" \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
-  -e HOST_HOSTNAME=172.17.0.1 \
+  -e GITHUB_USERNAME=$GITHUB_USERNAME \
+  -e GITHUB_TOKEN=$GITHUB_TOKEN \
+  -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
   $image_name:$image_tag \
