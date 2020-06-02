@@ -8,16 +8,8 @@ jobs:
     steps:      
       - name: Check out source code
         uses: actions/checkout@v2
-      - name: Bake CI pre
-        run: |
-          ./t.sh
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
       - name: Bake CI
-        run: |
-          ./bake.sh ci:run
+        run: ./bake.sh ci:run          
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
