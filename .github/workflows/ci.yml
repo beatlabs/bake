@@ -10,7 +10,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Bake CI
         run: |
+          ls bake.sh
           chmod +x bake.sh
+          ls bake.sh
           ./bake.sh ci:run
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
