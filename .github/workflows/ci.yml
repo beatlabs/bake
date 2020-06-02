@@ -8,10 +8,10 @@ jobs:
     steps:      
       - name: Check out source code
         uses: actions/checkout@v2
-      - name: Bake CI pre
-        run: chmod +x bake.sh
       - name: Bake CI
-        run: bash ./bake.sh ci:run
+        run: |
+          chmod +x bake.sh
+          ./bake.sh ci:run
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
