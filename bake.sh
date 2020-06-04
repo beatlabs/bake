@@ -3,7 +3,7 @@
 set -e
 
 image_name="taxibeat/bake"
-image_tag="0.0.13"
+image_tag="0.1.0"
 
 # Github username and token are require for accessing git repos inside the running container.
 # The token must container the repo and read:packages scopes.
