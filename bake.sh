@@ -1,17 +1,15 @@
 #!/bin/bash
 
-echo "Running CI"
-
 set -e
 
 image_name="docker.pkg.github.com/taxibeat/bake/bake"
-image_tag="0.0.10"
+image_tag="0.0.12"
 
 # Github username and token are require to pull the docker image as well as for acessing git repos inside the runnign container.
 # The token must container the repo and read:packages scopes.
 if [ -z "${GITHUB_USERNAME}" ]; then echo GITHUB_USERNAME must be set; exit 1; fi
 if [ -z "${GITHUB_TOKEN}" ]; then echo GITHUB_TOKEN must be set; exit 1; fi
-echo $GITHUB_TOKEN | docker login https://docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
+docker login https://docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN
 
 DOCKER0_BRIDGE=172.17.0.1
 
@@ -26,11 +24,15 @@ else
    exit 1
 fi
 
+echo "Docker Group ID: $docker_gid"
+
 RUN_ID=${RUN_ID:=$BUILD_NUMBER}
 if [[ -z "$RUN_ID" ]]; then
     # Generate random 3 character alphanumeric string
     RUN_ID=`cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 3 | head -n 1`
 fi
+
+echo "Run ID: $RUN_ID"
 
 # Force removal of containers and images.
 cleanup () {
@@ -54,6 +56,7 @@ docker run \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
   -e GITHUB_TOKEN=$GITHUB_TOKEN \
+  -e GITHUB_USERNAME=$GITHUB_USERNAME \
   -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
