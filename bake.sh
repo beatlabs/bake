@@ -5,11 +5,6 @@ set -e
 image_name="taxibeat/bake"
 image_tag="0.1.0"
 
-# Github username and token are require for accessing git repos inside the running container.
-# The token must container the repo and read:packages scopes.
-if [ -z "${GITHUB_USERNAME}" ]; then echo GITHUB_USERNAME must be set; exit 1; fi
-if [ -z "${GITHUB_TOKEN}" ]; then echo GITHUB_TOKEN must be set; exit 1; fi
-
 DOCKER0_BRIDGE=172.17.0.1
 
 # GID to be added to user groups in the running container
@@ -55,7 +50,6 @@ docker run \
   -e RUN_ID=$RUN_ID \
   -e CODECOV_TOKEN=$CODECOV_TOKEN \
   -e GITHUB_TOKEN=$GITHUB_TOKEN \
-  -e GITHUB_USERNAME=$GITHUB_USERNAME \
   -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
