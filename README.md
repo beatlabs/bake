@@ -13,7 +13,7 @@ In order to incorporate Bake into a project please follow the following steps:
 
 ### 1. Generate and export a GITHUB_TOKEN with 'repo' scope
 
-This is required if you have private repos as dependencies.
+This is required in order to access private repos (including go packages in this repo).
 
 ### 2. Create a `bake.sh` script for running Bake
 
@@ -31,7 +31,8 @@ And modify to your needs, e.g. add any env vars that your targets may require.
 $ docker run --rm -it taxibeat/bake:<version> --gen-bin
 ```
 
-Note that it's your responsibility to keep this local binary up to date if any mage related code changes.
+And add `bake-build` to your `.gitignore`.
+Note that it's your responsibility to keep this local binary up to date whenever your local mage targets change.
 
 ## Executing targets
 
