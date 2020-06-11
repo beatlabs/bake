@@ -28,7 +28,7 @@ And modify to your needs, e.g. add any env vars that your targets may require.
 ### 3. Optional - Speed up bake by prebuilding a mage binary
 
 ```console
-$ docker run --rm -it taxibeat/bake:<version> --gen-bin
+$ docker run --rm -it -v $PWD:/home/beat -w /home/beat bake-local taxibeat/bake:<version> --gen-bin
 ```
 
 And add `bake-build` to your `.gitignore`.
