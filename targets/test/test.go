@@ -21,5 +21,5 @@ func (Test) All() error {
 
 // Cover runs all tests and produces a coverage report.
 func (Test) Cover() error {
-	return test.Cover()
+	return test.CoverDefault()
 }
