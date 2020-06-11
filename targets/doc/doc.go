@@ -77,23 +77,28 @@ func getDocs(root string) ([]confluenceDoc, error) {
 		if info.IsDir() {
 			return nil
 		}
-		if matched, err := filepath.Match("*.md", filepath.Base(path)); err != nil {
+
+		matched, err := filepath.Match("*.md", filepath.Base(path))
+		if err != nil {
 			return err
-		} else if matched {
-			content, err := ioutil.ReadFile(path)
-			if err != nil {
-				return err
-			}
-
-			if !strings.HasPrefix(string(content), `<!-- Space: DT -->`) {
-				return nil
-			}
-
-			docs = append(docs, confluenceDoc{
-				Path: filepath.Dir(path),
-				File: info.Name(),
-			})
 		}
+		if !matched {
+			return nil
+		}
+
+		content, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		if !strings.HasPrefix(string(content), `<!-- Space: DT -->`) {
+			return nil
+		}
+
+		docs = append(docs, confluenceDoc{
+			Path: filepath.Dir(path),
+			File: info.Name(),
+		})
 		return nil
 	})
 	if err != nil {
@@ -103,7 +108,7 @@ func getDocs(root string) ([]confluenceDoc, error) {
 }
 
 func confluenceSync(currentPath string, cfg confluenceConfig, doc confluenceDoc) error {
-	fmt.Printf("processing %s%s\n", doc.Path, doc.File)
+	fmt.Printf("processing %s/%s\n", doc.Path, doc.File)
 	defer func() {
 		err := os.Chdir(currentPath)
 		if err != nil {
