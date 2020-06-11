@@ -1,3 +1,8 @@
+<!-- Space: DT -->
+<!-- Title: Bake -->
+<!-- Parent: Engineering -->
+<!-- Parent: Dev Tools -->
+
 # bake
 
 Bake contains build tools to help make us elevate the developer experience of our Go projects.
