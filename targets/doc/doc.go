@@ -1,11 +1,15 @@
-// Package doc contains documentation related helpers to be used in mage targets.
+// Package doc contains doc related mage targets.
 package doc
 
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
@@ -15,14 +19,17 @@ type confluenceConfig struct {
 	baseURL  string
 }
 
-// ConfluenceDoc definition of a document to be synced.
-type ConfluenceDoc struct {
+type confluenceDoc struct {
 	Path string
 	File string
 }
 
-// ConfluenceSync syncs the list of documents provided with Confluence.
-func ConfluenceSync(docs ...ConfluenceDoc) error {
+// Doc groups together doc related tasks.
+type Doc mg.Namespace
+
+// ConfluenceSync synchronized annotated docs to confluence.
+func (Doc) ConfluenceSync() error {
+
 	fmt.Print("doc: syncing docs with confluence\n")
 
 	var ok bool
@@ -46,17 +53,62 @@ func ConfluenceSync(docs ...ConfluenceDoc) error {
 		return fmt.Errorf("failed to get current working directory")
 	}
 
+	docs, err := getDocs(".")
+	if err != nil {
+		return err
+	}
+
 	for _, doc := range docs {
 		err := confluenceSync(current, cfg, doc)
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 
-func confluenceSync(currentPath string, cfg confluenceConfig, doc ConfluenceDoc) error {
-	fmt.Printf("processing %s%s\n", doc.Path, doc.File)
+func getDocs(root string) ([]confluenceDoc, error) {
+	var docs []confluenceDoc
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+
+		matched, err := filepath.Match("*.md", filepath.Base(path))
+		if err != nil {
+			return err
+		}
+		if !matched {
+			return nil
+		}
+
+		content, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		if !strings.HasPrefix(string(content), `<!-- Space: DT -->`) {
+			return nil
+		}
+
+		docs = append(docs, confluenceDoc{
+			Path: filepath.Dir(path),
+			File: info.Name(),
+		})
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return docs, nil
+}
+
+func confluenceSync(currentPath string, cfg confluenceConfig, doc confluenceDoc) error {
+	fmt.Printf("processing %s/%s\n", doc.Path, doc.File)
 	defer func() {
 		err := os.Chdir(currentPath)
 		if err != nil {
