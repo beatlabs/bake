@@ -97,7 +97,7 @@ func compareFiles(file1, file2 string) error {
 		return fmt.Errorf("failed to open read %s,: %v", file2, err)
 	}
 
-	if bytes.Compare(f1, f2) == 0 {
+	if bytes.Equal(f1, f2) {
 		return nil
 	}
 
