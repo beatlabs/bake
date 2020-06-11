@@ -17,3 +17,4 @@ jobs:
           CONFLUENCE_PASSWORD: ${{ secrets.ConfluencePassword }}
           CONFLUENCE_BASEURL: ${{ secrets.ConfluenceBaseURL }}
           GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
