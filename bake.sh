@@ -3,7 +3,7 @@
 set -e
 
 image_name="taxibeat/bake"
-image_tag="0.1.0"
+image_tag="0.3.0"
 
 DOCKER0_BRIDGE=172.17.0.1
 
