@@ -33,7 +33,7 @@ And modify to your needs, e.g. add any env vars that your targets may require.
 ### 3. Optional - Speed up bake by prebuilding a mage binary
 
 ```console
-$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-bin
+$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) taxibeat/bake:<version> --gen-bin
 ```
 
 And add `bake-build` to your `.gitignore`.
