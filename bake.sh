@@ -3,7 +3,7 @@
 set -e
 
 image_name="taxibeat/bake"
-image_tag="0.3.2"
+image_tag="0.3.3"
 
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
