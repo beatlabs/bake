@@ -32,6 +32,8 @@ RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/inst
 RUN mkdir /home/beat && chmod 777 /home/beat
 ENV HOME /home/beat
 
+COPY bake.sh /home/beat/bake-default.sh
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["bash", "/entrypoint.sh"]
