@@ -25,7 +25,7 @@ This is required in order to access private repos (including go packages in this
 In order to generate an initial `bake.sh` you can run
 
 ```console
-$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-script > bake.sh
+$ docker run --rm -it -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-script > bake.sh
 ```
 
 And modify to your needs, e.g. add any env vars that your targets may require.
