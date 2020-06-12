@@ -3,9 +3,7 @@
 set -e
 
 image_name="taxibeat/bake"
-image_tag="0.3.0"
-
-DOCKER0_BRIDGE=172.17.0.1
+image_tag="0.3.3"
 
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
@@ -28,10 +26,15 @@ fi
 
 echo "Run ID: $RUN_ID"
 
+NETWORK_ID=$(docker network create "${RUN_ID}"-bake)
+
+echo "Network ID: $NETWORK_ID"
+
 # Force removal of containers and images.
 cleanup () {
    docker ps --format '{{.Names}}' | grep "^$RUN_ID-" | awk '{print $1}' | xargs -I {} docker rm -f {}
    docker image list --format '{{.Repository}}' | grep "^$RUN_ID-" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
+   docker network rm "$NETWORK_ID" > /dev/null
 }
 trap cleanup EXIT
 
@@ -41,19 +44,20 @@ echo "Starting run $RUN_ID"
 [[ -t 1 ]] && t='-t'
 
 docker run \
+  --network $NETWORK_ID \
   --rm \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v $PWD:/src \
-  -w /src \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+  --volume "$PWD":/src \
+  --workdir /src \
   $t \
   --name "$RUN_ID-bake" \
-  -e RUN_ID=$RUN_ID \
-  -e CODECOV_TOKEN=$CODECOV_TOKEN \
-  -e GITHUB_TOKEN=$GITHUB_TOKEN \
-  -e CONFLUENCE_USERNAME=$CONFLUENCE_USERNAME \
-  -e CONFLUENCE_PASSWORD=$CONFLUENCE_PASSWORD \
-  -e CONFLUENCE_BASEURL=$CONFLUENCE_BASEURL \
-  -e HOST_HOSTNAME=$DOCKER0_BRIDGE \
+  --env RUN_ID="$RUN_ID" \
+  --env CODECOV_TOKEN="$CODECOV_TOKEN" \
+  --env GITHUB_TOKEN="$GITHUB_TOKEN" \
+  --env CONFLUENCE_USERNAME="$CONFLUENCE_USERNAME" \
+  --env CONFLUENCE_PASSWORD="$CONFLUENCE_PASSWORD" \
+  --env CONFLUENCE_BASEURL="$CONFLUENCE_BASEURL" \
+  --env NETWORK_ID="$NETWORK_ID" \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
   $image_name:$image_tag \
