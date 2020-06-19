@@ -20,7 +20,7 @@ In order to incorporate Bake into a project please follow the following steps:
 
 This is required in order to access private repos (including go packages in this repo).
 
-Please export it as `GITHUB_TOKEN`.
+You can export it in your shell (`export GITHUB_TOKEN=my-token`) or set it inline before executing bake (`GITHUB_TOKEN=my-token ./bake.sh`).
 
 ### 2. Create a `bake.sh` script for running Bake
 
