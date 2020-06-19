@@ -16,9 +16,11 @@ The repository contains two major components:
 
 In order to incorporate Bake into a project please follow the following steps:
 
-### 1. Generate and export a GITHUB_TOKEN with 'repo' scope
+### 1. Generate a github [personal access token](https://github.com/settings/tokens) with 'repo' scope and SSO enabled
 
 This is required in order to access private repos (including go packages in this repo).
+
+Please export it as `GITHUB_TOKEN`.
 
 ### 2. Create a `bake.sh` script for running Bake
 
