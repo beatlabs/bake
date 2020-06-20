@@ -14,6 +14,13 @@ import (
 	"text/template"
 )
 
+// to be overridden by ldflags
+var (
+	version string = "local"
+	commit  string
+	date    string
+)
+
 const (
 	imageName        = "taxibeat/bake"
 	dockerSocketFile = "/var/run/docker.sock"
@@ -33,13 +40,6 @@ const (
 		{{- end}}
 		{{.DockerImageName}}:{{.DockerImageTag}} \
 		{{.Target}}`
-)
-
-// to be overridden by ldflags
-var (
-	version string = "local"
-	commit  string
-	date    string
 )
 
 type containerArgs struct {
