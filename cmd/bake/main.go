@@ -82,12 +82,12 @@ func main() {
 func runBake(target string) error {
 	a, err := newContainerArgs(target)
 	if err != nil {
-		return err
+		return fmt.Errorf("create container args: %w", err)
 	}
 
 	c, err := parseTemplate(a)
 	if err != nil {
-		return err
+		return fmt.Errorf("parse template: %w", err)
 	}
 
 	defer func() {
@@ -109,25 +109,25 @@ func newContainerArgs(target string) (containerArgs, error) {
 
 	runID, err := genID()
 	if err != nil {
-		return containerArgs{}, err
+		return containerArgs{}, fmt.Errorf("generate run ID: %w", err)
 	}
 	ba.ContainerName = fmt.Sprintf("bake-%s", runID)
 
 	dockerGID, err := getDockerSocketGID()
 	if err != nil {
-		return containerArgs{}, err
+		return containerArgs{}, fmt.Errorf("docker socket GID: %w", err)
 	}
 	ba.DockerSocketGID = dockerGID
 
 	net, err := createNetwork(ba.ContainerName)
 	if err != nil {
-		return containerArgs{}, err
+		return containerArgs{}, fmt.Errorf("create docker network: %w", err)
 	}
 	ba.NetworkID = net
 
 	u, err := user.Current()
 	if err != nil {
-		return containerArgs{}, err
+		return containerArgs{}, fmt.Errorf("get current user: %w", err)
 	}
 	ba.UserID = u.Uid
 	ba.UserGID = u.Gid
@@ -220,12 +220,12 @@ func parseTemplate(args containerArgs) (string, error) {
 	t := template.New("bake")
 	t, err := t.Parse(tpl)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("parse template string: %w", err)
 	}
 
 	var out bytes.Buffer
 	if err := t.Execute(&out, args); err != nil {
-		return "", err
+		return "", fmt.Errorf("execute template: %w", err)
 	}
 
 	return out.String(), nil
