@@ -19,19 +19,9 @@ func (Go) Fmt() error {
 	return code.Fmt()
 }
 
-// Fumpt runs gofumpt.
-func (Go) Fumpt() error {
-	return code.Fumpt()
-}
-
 // FmtCheck checks if all files are formatted.
 func (Go) FmtCheck() error {
 	return code.FmtCheck()
-}
-
-// FumptCheck checks if all files are formatted with gofumpt.
-func (Go) FumptCheck() error {
-	return code.FumptCheck()
 }
 
 // CheckVendor checks if vendor is in sync with go.mod.

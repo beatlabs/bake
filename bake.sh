@@ -60,5 +60,5 @@ docker run \
   --env NETWORK_ID="$NETWORK_ID" \
   -u $(id -u):$(id -g) \
   --group-add $docker_gid \
-  $image_name:$image_tag \
+  localhost:5000/bake:test9 \
   $@
