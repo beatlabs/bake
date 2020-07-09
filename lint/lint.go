@@ -12,7 +12,8 @@ import (
 var defaultLinters = []string{
 	"govet",
 	"golint",
-	"gofmt",
+	"gofumpt",
+	"gosec",
 	"unparam",
 	"goconst",
 	"prealloc",
