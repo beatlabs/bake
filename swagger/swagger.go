@@ -87,13 +87,11 @@ func generate(main, output string) error {
 }
 
 func compareFiles(file1, file2 string) error {
-	// nolint:gosec
-	f1, err := ioutil.ReadFile(file1)
+	f1, err := ioutil.ReadFile(filepath.Clean(file1))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file1, err)
 	}
-	// nolint:gosec
-	f2, err := ioutil.ReadFile(file2)
+	f2, err := ioutil.ReadFile(filepath.Clean(file2))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file2, err)
 	}

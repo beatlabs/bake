@@ -85,8 +85,7 @@ func getDocs(root string) ([]confluenceDoc, error) {
 			return nil
 		}
 
-		// nolint:gosec
-		content, err := ioutil.ReadFile(path)
+		content, err := ioutil.ReadFile(filepath.Clean(path))
 		if err != nil {
 			return err
 		}

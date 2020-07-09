@@ -82,7 +82,7 @@ func getBuildTagFlag(tags []string) string {
 }
 
 func downloadFile(filepath string, url string) error {
-	// nolint:gosec
+	// #nosec G107
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
