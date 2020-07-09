@@ -34,7 +34,7 @@ func Fmt() error {
 func Fumpt() error {
 	fmt.Print("code: running gofumpt\n")
 
-	return sh.RunV("gofumpt", "-s", "-w", ".")
+	return sh.RunV("gofumpt", "-s", "-w", "-extra", ".")
 }
 
 // FmtCheck checks if all files are formatted.
