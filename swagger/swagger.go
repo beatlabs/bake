@@ -40,7 +40,7 @@ func CreateDefault(main string) error {
 }
 
 // Check ensures that the generated files are up to date.
-func Check(main string, api string) error {
+func Check(main, api string) error {
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		return err

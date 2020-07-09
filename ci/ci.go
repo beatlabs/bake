@@ -81,7 +81,7 @@ func getBuildTagFlag(tags []string) string {
 	return "-tags=" + strings.Join(tags, ",")
 }
 
-func downloadFile(filepath string, url string) error {
+func downloadFile(filepath, url string) error {
 	// #nosec G107
 	resp, err := http.Get(url)
 	if err != nil {

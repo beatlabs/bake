@@ -33,7 +33,7 @@ func Go(tags []string) error {
 }
 
 // GoLinters lints the Go code and accepts linters and build tags.
-func GoLinters(linters []string, tags []string) error {
+func GoLinters(linters, tags []string) error {
 	return code(linters, tags)
 }
 
@@ -42,7 +42,7 @@ func GoDefault() error {
 	return code(defaultLinters, []string{bake.BuildTagIntegration, bake.BuildTagComponent})
 }
 
-func code(linters []string, tags []string) error {
+func code(linters, tags []string) error {
 	fmt.Printf("lint: running go lint. linters: %v tags: %v\n", linters, tags)
 
 	buildTagFlag := ""
