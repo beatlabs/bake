@@ -59,7 +59,6 @@ func CoverDefault() error {
 }
 
 func cover(tags []string) error {
-
 	fmt.Printf("test: running cover with tags: %v\n", tags)
 
 	defer func() {

@@ -30,25 +30,59 @@ func Fmt() error {
 	return sh.RunV(bake.GoCmd, "fmt", "./...")
 }
 
+// Fumpt runs gofumpt.
+func Fumpt() error {
+	fmt.Print("code: running gofumpt\n")
+
+	return sh.RunV("gofumpt", "-l", "-w", ".")
+}
+
 // FmtCheck checks if all files are formatted.
 func FmtCheck() error {
 	fmt.Print("code: running go fmt check\n")
 
-	goFiles, err := getAllGoFiles(".")
+	files, err := runCmdOnFiles("gofmt", "-l")
 	if err != nil {
 		return err
 	}
+	if len(files) == 0 {
+		return nil
+	}
+
+	return fmt.Errorf("go files are not formatted:\n%s", strings.Join(files, "\n"))
+}
+
+// FumptCheck checks if all files are formatted with gofumpt.
+func FumptCheck() error {
+	fmt.Print("code: running gofumpt check\n")
+
+	files, err := runCmdOnFiles("gofumpt", "-l")
+	if err != nil {
+		return err
+	}
+	if len(files) == 0 {
+		return nil
+	}
+
+	return fmt.Errorf("go files are not gofumpt-ed:\n%s", strings.Join(files, "\n"))
+}
+
+func runCmdOnFiles(cmd, args string) ([]string, error) {
+	goFiles, err := getAllGoFiles(".")
+	if err != nil {
+		return nil, err
+	}
 
 	if len(goFiles) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	files := make([]string, 0, len(goFiles))
 
 	for _, f := range goFiles {
-		msg, err := sh.Output("gofmt", "-l", f)
+		msg, err := sh.Output(cmd, args, f)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if msg == "" {
 			continue
@@ -56,11 +90,7 @@ func FmtCheck() error {
 		files = append(files, msg)
 	}
 
-	if len(files) == 0 {
-		return nil
-	}
-
-	return fmt.Errorf("go files are not formatted:\n%s", strings.Join(files, "\n"))
+	return files, nil
 }
 
 func getAllGoFiles(path string) ([]string, error) {

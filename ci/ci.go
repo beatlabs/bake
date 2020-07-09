@@ -27,7 +27,6 @@ func CodeCovDefault() error {
 }
 
 func codeCov(tags []string) error {
-
 	fmt.Printf("ci: running codecov with tags: %v\n", tags)
 
 	args := []string{
@@ -83,6 +82,7 @@ func getBuildTagFlag(tags []string) string {
 }
 
 func downloadFile(filepath string, url string) error {
+	// nolint:gosec
 	resp, err := http.Get(url)
 	if err != nil {
 		return err

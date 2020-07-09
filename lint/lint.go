@@ -9,18 +9,16 @@ import (
 	"github.com/taxibeat/bake"
 )
 
-var (
-	defaultLinters = []string{
-		"govet",
-		"golint",
-		"gofmt",
-		"unparam",
-		"goconst",
-		"prealloc",
-		"stylecheck",
-		"unconvert",
-	}
-)
+var defaultLinters = []string{
+	"govet",
+	"golint",
+	"gofmt",
+	"unparam",
+	"goconst",
+	"prealloc",
+	"stylecheck",
+	"unconvert",
+}
 
 // Docker lints the docker file.
 func Docker(dockerFile string) error {
