@@ -9,18 +9,17 @@ import (
 	"github.com/taxibeat/bake"
 )
 
-var (
-	defaultLinters = []string{
-		"govet",
-		"golint",
-		"gofmt",
-		"unparam",
-		"goconst",
-		"prealloc",
-		"stylecheck",
-		"unconvert",
-	}
-)
+var defaultLinters = []string{
+	"govet",
+	"golint",
+	"gofumpt",
+	"gosec",
+	"unparam",
+	"goconst",
+	"prealloc",
+	"stylecheck",
+	"unconvert",
+}
 
 // Docker lints the docker file.
 func Docker(dockerFile string) error {
@@ -34,7 +33,7 @@ func Go(tags []string) error {
 }
 
 // GoLinters lints the Go code and accepts linters and build tags.
-func GoLinters(linters []string, tags []string) error {
+func GoLinters(linters, tags []string) error {
 	return code(linters, tags)
 }
 
@@ -43,7 +42,7 @@ func GoDefault() error {
 	return code(defaultLinters, []string{bake.BuildTagIntegration, bake.BuildTagComponent})
 }
 
-func code(linters []string, tags []string) error {
+func code(linters, tags []string) error {
 	fmt.Printf("lint: running go lint. linters: %v tags: %v\n", linters, tags)
 
 	buildTagFlag := ""

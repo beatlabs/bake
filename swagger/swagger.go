@@ -40,7 +40,7 @@ func CreateDefault(main string) error {
 }
 
 // Check ensures that the generated files are up to date.
-func Check(main string, api string) error {
+func Check(main, api string) error {
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		return err
@@ -87,12 +87,11 @@ func generate(main, output string) error {
 }
 
 func compareFiles(file1, file2 string) error {
-
-	f1, err := ioutil.ReadFile(file1)
+	f1, err := ioutil.ReadFile(filepath.Clean(file1))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file1, err)
 	}
-	f2, err := ioutil.ReadFile(file2)
+	f2, err := ioutil.ReadFile(filepath.Clean(file2))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file2, err)
 	}

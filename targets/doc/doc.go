@@ -29,7 +29,6 @@ type Doc mg.Namespace
 
 // ConfluenceSync synchronized annotated docs to confluence.
 func (Doc) ConfluenceSync() error {
-
 	fmt.Print("doc: syncing docs with confluence\n")
 
 	var ok bool
@@ -86,7 +85,7 @@ func getDocs(root string) ([]confluenceDoc, error) {
 			return nil
 		}
 
-		content, err := ioutil.ReadFile(path)
+		content, err := ioutil.ReadFile(filepath.Clean(path))
 		if err != nil {
 			return err
 		}
