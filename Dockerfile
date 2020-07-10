@@ -26,7 +26,7 @@ RUN wget -c https://github.com/swaggo/swag/releases/download/v1.6.6/swag_1.6.6_L
 RUN wget -c https://github.com/mantzas/mark/releases/download/v0.9.0/mark-linux-x64.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install golangci-lint into go bin path
-RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.26.0
+RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.28.1
 
 # Very permissive because we don't know what user the container will run as
 RUN mkdir /home/beat && chmod 777 /home/beat
