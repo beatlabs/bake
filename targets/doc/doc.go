@@ -77,6 +77,10 @@ func getDocs(root string) ([]confluenceDoc, error) {
 			return nil
 		}
 
+		if strings.HasPrefix(filepath.Dir(path), "vendor/") {
+			return nil
+		}
+
 		matched, err := filepath.Match("*.md", filepath.Base(path))
 		if err != nil {
 			return err
