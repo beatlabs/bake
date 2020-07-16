@@ -77,7 +77,7 @@ func getDocs(root string) ([]confluenceDoc, error) {
 			return nil
 		}
 
-		if strings.Contains(path, "vendor/") {
+		if strings.HasPrefix(filepath.Dir(path), "vendor/") {
 			return nil
 		}
 
