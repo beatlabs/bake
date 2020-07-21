@@ -8,6 +8,4 @@ const (
 	BuildTagComponent = "component"
 	// GoCmd defines the std Go command.
 	GoCmd = "go"
-	// DockerCmd defines the std docker command.
-	DockerCmd = "docker"
 )

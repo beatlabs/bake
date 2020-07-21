@@ -3,6 +3,8 @@ package lint
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/magefile/mage/sh"
@@ -19,6 +21,68 @@ var defaultLinters = []string{
 	"prealloc",
 	"stylecheck",
 	"unconvert",
+}
+
+const (
+	helmCmd               = "helm"
+	beatHelmRegistry      = "https://chartmuseum.private.k8s.management.thebeat.co/"
+	stableHelmRegistry    = "https://kubernetes-charts.storage.googleapis.com"
+	incubatorHelmRegistry = "https://kubernetes-charts-incubator.storage.googleapis.com"
+	bitnamiHelmRegistry   = "https://charts.bitnami.com/bitnami"
+	awsHelmRegistry       = "https://aws.github.io/eks-charts"
+)
+
+// Helm linting of a specific chart path.
+func Helm(path string) error {
+	repos := map[string]string{
+		"beat":      beatHelmRegistry,
+		"stable":    stableHelmRegistry,
+		"incubator": incubatorHelmRegistry,
+		"bitnami":   bitnamiHelmRegistry,
+		"aws":       awsHelmRegistry,
+	}
+
+	err := helmAddRepo(repos)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("lint: running helm dependency build for chart path: %s\n", path)
+	err = sh.RunV(helmCmd, "dependency", "build", path)
+	if err != nil {
+		return err
+	}
+
+	err = helmCreateTemplateIfNotExists(path)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("lint: running helm lint for chart path: %s\n", path)
+	return sh.RunV(helmCmd, "lint", "--strict", path)
+}
+
+func helmAddRepo(repos map[string]string) error {
+	for key, value := range repos {
+		fmt.Printf("lint: running helm add repo %s for registry: %s\n", key, value)
+		err := sh.RunV(helmCmd, "repo", "add", key, value)
+		if err != nil {
+			return fmt.Errorf("failed to add helm repo %s %s: %w", key, value, err)
+		}
+	}
+	return nil
+}
+
+func helmCreateTemplateIfNotExists(path string) error {
+	templatePath := filepath.Join(path, "templates")
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		fmt.Printf("lint: creating helm chart template path: %s\n", templatePath)
+		err = os.Mkdir(templatePath, os.ModePerm)
+		if err != nil {
+			return fmt.Errorf("failed to create helm chart template path %s: %w", templatePath, err)
+		}
+	}
+	return nil
 }
 
 // Docker lints the docker file.
