@@ -31,6 +31,7 @@ const (
 	awsHelmRegistry       = "https://aws.github.io/eks-charts"
 )
 
+// Helm linting of a specific chart path.
 func Helm(path string) error {
 	repos := map[string]string{
 		"beat":      beatHelmRegistry,
