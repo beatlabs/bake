@@ -4,6 +4,7 @@ package lint
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/magefile/mage/sh"
@@ -73,7 +74,7 @@ func helmAddRepo(repos map[string]string) error {
 }
 
 func helmCreateTemplateIfNotExists(path string) error {
-	templatePath := path + "templates"
+	templatePath := filepath.Join(path, "templates")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		fmt.Printf("lint: creating helm chart template path: %s\n", templatePath)
 		err = os.Mkdir(templatePath, os.ModePerm)
