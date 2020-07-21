@@ -26,7 +26,7 @@ RUN wget -c https://github.com/swaggo/swag/releases/download/v1.6.6/swag_1.6.6_L
 RUN wget -c https://github.com/mantzas/mark/releases/download/v0.9.0/mark-linux-x64.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
-RUN wget -c https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz -O - | tar -xz -C /tmp && sudo mv /tmp/linux-amd64/helm /usr/bin
+RUN wget -c https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz -O - | tar -xz -C /tmp && sudo mv /tmp/linux-amd64/helm /usr/bin && rm -rf /tmp/linux-amd
 
 # Download and install golangci-lint into go bin path
 RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.28.2
