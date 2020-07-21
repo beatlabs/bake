@@ -78,6 +78,7 @@ The bake image is used for local and CI/CD and contains all the tools we need in
 - [swaggo](https://github.com/swaggo/swag) for generating swagger files from annotations
 - [mark](https://github.com/mantzas/mark) for syncing markdown documentation to Confluence
 - [golangci-lint](https://github.com/golangci/golangci-lint) a multi-linter for Go
+- [helm](https://helm.sh/) a k8s package manager
 
 Along with the Dockerfile we have also a script `bake.sh` which is responsible for starting up the above container and run our mage targets.
 
