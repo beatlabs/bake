@@ -75,7 +75,6 @@ func cover(tags []string) error {
 		"-covermode=atomic",
 		"-coverprofile=" + coverFile,
 		"-race",
-		"-timeout=60s",
 	}
 
 	if len(tags) > 0 {
