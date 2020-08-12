@@ -36,7 +36,6 @@ func codeCov(tags []string) error {
 		"-cover",
 		"-coverprofile=" + coverFile,
 		"-covermode=atomic",
-		"-timeout=60s",
 	}
 
 	if len(tags) > 0 {
