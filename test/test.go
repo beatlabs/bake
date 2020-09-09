@@ -14,20 +14,20 @@ const (
 	coverFile = "coverage.txt"
 )
 
-// Run Go tests with cover and race flags enabled and accepts build tags.
-func Run(tags ...string) error {
+// Run Go tests with cover and race flags enabled. Accepts extra args and build tags.
+func Run(extraArgs []string, tags ...string) error {
 	if len(tags) == 0 {
-		return run(nil)
+		return run(extraArgs, nil)
 	}
-	return run(tags)
+	return run(extraArgs, tags)
 }
 
 // RunDefault Go tests with cover and race flags enabled and with default build tags.
 func RunDefault() error {
-	return run([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return run(nil, []string{bake.BuildTagIntegration, bake.BuildTagComponent})
 }
 
-func run(tags []string) error {
+func run(extraArgs, tags []string) error {
 	fmt.Printf("test: running tests with tags: %v\n", tags)
 
 	args := []string{
@@ -35,6 +35,9 @@ func run(tags []string) error {
 		"-mod=vendor",
 		"-cover",
 		"-race",
+	}
+	for _, arg := range extraArgs {
+		args = append(args, arg)
 	}
 
 	if len(tags) > 0 {
