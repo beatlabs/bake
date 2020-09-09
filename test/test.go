@@ -39,9 +39,7 @@ func run(extraArgs, tags []string, pkg string) error {
 		"-cover",
 		"-race",
 	}
-	for _, arg := range extraArgs {
-		args = append(args, arg)
-	}
+	args = append(args, extraArgs...)
 
 	if len(tags) > 0 {
 		args = append(args, getBuildTagFlag(tags))
