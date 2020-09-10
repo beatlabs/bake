@@ -11,8 +11,7 @@ import (
 )
 
 const (
-	// DefaultPkg to run test against.
-	DefaultPkg = "./..."
+	defaultPkg = "./..."
 	coverFile  = "coverage.txt"
 )
 
@@ -34,7 +33,7 @@ func Run(tags, extraArgs []string, pkg string) error {
 	args = append(args, extraArgs...)
 
 	if pkg == "" {
-		pkg = DefaultPkg
+		pkg = defaultPkg
 	}
 	args = append(args, pkg)
 	return run(args)
@@ -44,7 +43,7 @@ func Run(tags, extraArgs []string, pkg string) error {
 func RunDefault() error {
 	args := DefaultTestArgs
 	args = append(args, getBuildTagFlag([]string{bake.BuildTagIntegration, bake.BuildTagComponent}))
-	args = append(args, DefaultPkg)
+	args = append(args, defaultPkg)
 	return run(args)
 }
 
