@@ -11,40 +11,45 @@ import (
 )
 
 const (
-	coverFile = "coverage.txt"
+	defaultPkg = "./..."
+	coverFile  = "coverage.txt"
 )
 
-// Run Go tests with cover and race flags enabled and accepts build tags.
-func Run(tags ...string) error {
-	if len(tags) == 0 {
-		return run(nil)
-	}
-	return run(tags)
+// DefaultTestArgs used when running tests.
+var DefaultTestArgs = []string{
+	"test",
+	"-mod=vendor",
+	"-cover",
+	"-race",
 }
 
-// RunDefault Go tests with cover and race flags enabled and with default build tags.
-func RunDefault() error {
-	return run([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
-}
-
-func run(tags []string) error {
-	fmt.Printf("test: running tests with tags: %v\n", tags)
-
-	args := []string{
-		"test",
-		"-mod=vendor",
-		"-cover",
-		"-race",
-	}
-
+// Run Go tests with cover and race flags enabled. Accepts build tags, extra args and a specific pkg.
+func Run(tags, extraArgs []string, pkg string) error {
+	args := DefaultTestArgs
 	if len(tags) > 0 {
 		args = append(args, getBuildTagFlag(tags))
 	}
 
-	args = append(args, "./...")
+	args = append(args, extraArgs...)
 
+	if pkg == "" {
+		pkg = defaultPkg
+	}
+	args = append(args, pkg)
+	return run(args)
+}
+
+// RunDefault Go tests with cover, race flags enabled, with default build tags and default pkg.
+func RunDefault() error {
+	args := DefaultTestArgs
+	args = append(args, getBuildTagFlag([]string{bake.BuildTagIntegration, bake.BuildTagComponent}))
+	args = append(args, defaultPkg)
+	return run(args)
+}
+
+func run(args []string) error {
+	fmt.Printf("test: running tests with args: %v\n", args)
 	fmt.Printf("Executing cmd: %s %s\n", bake.GoCmd, strings.Join(args, " "))
-
 	return sh.RunV(bake.GoCmd, args...)
 }
 

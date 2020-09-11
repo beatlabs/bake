@@ -11,7 +11,7 @@ type Test mg.Namespace
 
 // Unit runs unit tests only.
 func (Test) Unit() error {
-	return test.Run()
+	return test.Run(nil, nil, "")
 }
 
 // All runs all tests.
