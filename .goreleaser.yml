@@ -7,6 +7,11 @@ project_name: bake
 #    # you may remove this if you don't need go generate
 #    - go generate ./...
 
+release:
+  github:
+    owner: taxibeat
+    name: bake
+
 builds:
   - env:
       - CGO_ENABLED=0
