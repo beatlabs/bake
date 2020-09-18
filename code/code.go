@@ -1,10 +1,11 @@
-// Package code contains code related helpers to be used in mage targets.
+// Package code contains code related helpers to be used in mage targets.< $(CURDIR)/infra/deploy/local/Dockerfile
 package code
 
 import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -17,17 +18,17 @@ import (
 func ModSync() error {
 	fmt.Print("code: running go mod sync\n")
 
-	if err := sh.RunV(bake.GoCmd, "mod", "tidy"); err != nil {
+	if err := bake.RunGo("mod", "tidy"); err != nil {
 		return err
 	}
-	return sh.RunV(bake.GoCmd, "mod", "vendor")
+	return bake.RunGo("mod", "vendor")
 }
 
 // Fmt runs go fmt.
 func Fmt() error {
 	fmt.Print("code: running go fmt\n")
 
-	return sh.RunV(bake.GoCmd, "fmt", "./...")
+	return bake.RunGo("fmt", "./...")
 }
 
 // FmtCheck checks if all files are formatted.
@@ -46,7 +47,7 @@ func FmtCheck() error {
 	files := make([]string, 0, len(goFiles))
 
 	for _, f := range goFiles {
-		msg, err := sh.Output("gofmt", "-l", f)
+		msg, err := runGofmt("-l", f)
 		if err != nil {
 			return err
 		}
@@ -95,7 +96,7 @@ func CheckVendor() error {
 		return fmt.Errorf("failed to create vendor hash: %w", err)
 	}
 
-	err = sh.RunV(bake.GoCmd, "mod", "vendor")
+	err = bake.RunGo("mod", "vendor")
 	if err != nil {
 		return err
 	}
@@ -110,4 +111,25 @@ func CheckVendor() error {
 	}
 
 	return nil
+}
+
+func runGofmt(args ...string) (string, error) {
+	cmd := "gofmt"
+
+	_, err := exec.LookPath(cmd)
+	if err != nil {
+		cmd = "docker"
+
+		// todo: set this on init?
+		wd, err := os.Getwd()
+		if err != nil {
+			return "", fmt.Errorf("failed to get working directory: %v\n", err)
+		}
+
+		args = append([]string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", "golang:1.14", "gofmt"}, args...)
+
+	}
+
+	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
+	return sh.Output(cmd, args...)
 }

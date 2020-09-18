@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/magefile/mage/sh"
 	"github.com/taxibeat/bake"
 )
 
@@ -49,8 +48,7 @@ func RunDefault() error {
 
 func run(args []string) error {
 	fmt.Printf("test: running tests with args: %v\n", args)
-	fmt.Printf("Executing cmd: %s %s\n", bake.GoCmd, strings.Join(args, " "))
-	return sh.RunV(bake.GoCmd, args...)
+	return bake.RunGo(args...)
 }
 
 // Cover runs Go test and produce full code coverage result and accepts build tags.
@@ -88,14 +86,12 @@ func cover(tags []string) error {
 
 	args = append(args, "./...")
 
-	fmt.Printf("Executing cmd: %s %s\n", bake.GoCmd, strings.Join(args, " "))
-
-	err := sh.Run(bake.GoCmd, args...)
+	err := bake.RunGo(args...)
 	if err != nil {
 		return err
 	}
 
-	return sh.RunV(bake.GoCmd, "tool", "cover", "-func="+coverFile)
+	return bake.RunGo("tool", "cover", "-func="+coverFile)
 }
 
 func getBuildTagFlag(buildTags []string) string {

@@ -126,7 +126,7 @@ func confluenceSync(currentPath string, cfg confluenceConfig, doc confluenceDoc)
 		fmt.Printf("changed to working directory: %s\n", doc.Path)
 	}
 
-	args := []string{"-u", cfg.username, "-p", cfg.password, "-b", cfg.baseURL, "-f", doc.File}
+	args := []string{"run", "--rm", "-i", "kovetskiy/mark:3.1", "mark", "-u", cfg.username, "-p", cfg.password, "-b", cfg.baseURL, "-f", doc.File}
 
-	return sh.RunV("mark", args...)
+	return sh.RunV("docker", args...)
 }

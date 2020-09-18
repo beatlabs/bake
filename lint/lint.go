@@ -4,6 +4,7 @@ package lint
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -48,7 +49,7 @@ func Helm(path string) error {
 	}
 
 	fmt.Printf("lint: running helm dependency build for chart path: %s\n", path)
-	err = sh.RunV(helmCmd, "dependency", "build", path)
+	err = runHelm("dependency", "build", path)
 	if err != nil {
 		return err
 	}
@@ -59,13 +60,13 @@ func Helm(path string) error {
 	}
 
 	fmt.Printf("lint: running helm lint for chart path: %s\n", path)
-	return sh.RunV(helmCmd, "lint", "--strict", path)
+	return runHelm("lint", "--strict", path)
 }
 
 func helmAddRepo(repos map[string]string) error {
 	for key, value := range repos {
 		fmt.Printf("lint: running helm add repo %s for registry: %s\n", key, value)
-		err := sh.RunV(helmCmd, "repo", "add", key, value)
+		err := runHelm("repo", "add", key, value)
 		if err != nil {
 			return fmt.Errorf("failed to add helm repo %s %s: %w", key, value, err)
 		}
@@ -88,7 +89,8 @@ func helmCreateTemplateIfNotExists(path string) error {
 // Docker lints the docker file.
 func Docker(dockerFile string) error {
 	fmt.Printf("lint: running docker lint for file: %s\n", dockerFile)
-	return sh.RunV("hadolint", dockerFile)
+	wd, _ := os.Getwd()
+	return sh.RunV("docker", "run", "--rm", "-v", wd+":/app", "-w", "/app", "hadolint/hadolint", "hadolint", dockerFile)
 }
 
 // Go lints the Go code and accepts build tags.
@@ -119,11 +121,11 @@ func code(linters, tags []string) error {
 		linterFlag = getLinterFlag(linters)
 	}
 
-	cmd := "golangci-lint"
-	args := strings.Split(fmt.Sprintf("run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", linterFlag, buildTagFlag), " ")
+	cmd := "docker"
+	wd, _ := os.Getwd()
+	args := strings.Split(fmt.Sprintf("run --env=GOFLAGS=-mod=vendor --rm --volume %s:/app -w /app golangci/golangci-lint:v1.28.1 golangci-lint run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", wd, linterFlag, buildTagFlag), " ")
 
 	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
-
 	return sh.RunV(cmd, args...)
 }
 
@@ -133,4 +135,27 @@ func getBuildTagFlag(tags []string) string {
 
 func getLinterFlag(linters []string) string {
 	return "--enable " + strings.Join(linters, ",")
+}
+
+func runHelm(args ...string) error {
+	cmd := "helm"
+
+	_, err := exec.LookPath(cmd)
+	if err != nil {
+		cmd = "docker"
+
+		// todo: set this on init?
+		wd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("failed to get working directory: %v\n", err)
+		}
+
+		// todo: extract dockerArgs?
+		dockerArgs := []string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", "alpine/helm", "helm"}
+		args = append(dockerArgs, args...)
+
+	}
+
+	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
+	return sh.RunV(cmd, args...)
 }

@@ -24,6 +24,11 @@ func (l Lint) Go() error {
 	return lint.GoDefault()
 }
 
+// Docker runs the go linter.
+func (l Lint) Docker() error {
+	return lint.Docker("Dockerfile")
+}
+
 // CI groups together ci related tasks.
 type CI mg.Namespace
 

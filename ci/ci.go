@@ -51,7 +51,7 @@ func codeCov(tags []string) error {
 		}
 	}()
 
-	err := sh.RunV(bake.GoCmd, args...)
+	err := bake.RunGo(args...)
 	if err != nil {
 		return err
 	}

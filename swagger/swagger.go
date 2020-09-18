@@ -79,7 +79,7 @@ func generate(main, output string) error {
 		"--output",
 		output,
 	}
-	if err := sh.RunV(defaultSwagCmd, args...); err != nil {
+	if err := sh.RunV(defaultSwagCmd, args...); err != nil { // todo: need to generate it on the fly
 		return err
 	}
 
