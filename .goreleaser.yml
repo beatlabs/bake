@@ -9,15 +9,15 @@ project_name: bake
 
 release:
   github:
-    owner: taxibeat
-    name: bake
+#    owner: taxibeat
+#    name: bake
 
 builds:
   - env:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
+      #- windows
       - darwin
     main: ./cmd/bake/
 
@@ -25,7 +25,7 @@ archives:
   - replacements:
       darwin: Darwin
       linux: Linux
-      windows: Windows
+      #windows: Windows
       386: i386
       amd64: x86_64
 
