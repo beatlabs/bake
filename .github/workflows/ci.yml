@@ -20,3 +20,12 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           #GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
           #GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: release --rm-dist
+        #env:
+        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
