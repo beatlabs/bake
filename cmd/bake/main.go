@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-
 	_, err := exec.LookPath("go")
 	if err == nil {
 		os.Exit(mage.Main())
@@ -27,10 +26,12 @@ func main() {
 		log.Fatalf("failed to get working directory: %v\n", err)
 	}
 
-	args := []string{"run", "--rm", "--volume", wd + ":/app", "--workdir", "/app", "golang:1.14", "sh", "-c",
+	args := []string{
+		"run", "--rm", "--volume", wd + ":/app", "--workdir", "/app", "golang:1.14", "sh", "-c",
 		"go get github.com/magefile/mage@v1.9.0 && " +
 			"mage -compile " + bake + " && " +
-			"chown --reference=./ " + bake + " "}
+			"chown --reference=./ " + bake + " ",
+	}
 	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
 
 	err = sh.RunV(cmd, args...)

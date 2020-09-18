@@ -123,7 +123,7 @@ func runGofmt(args ...string) (string, error) {
 		// todo: set this on init?
 		wd, err := os.Getwd()
 		if err != nil {
-			return "", fmt.Errorf("failed to get working directory: %v\n", err)
+			return "", fmt.Errorf("failed to get working directory: %v", err)
 		}
 
 		args = append([]string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", "golang:1.14", "gofmt"}, args...)

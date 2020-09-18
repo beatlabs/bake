@@ -25,7 +25,6 @@ var defaultLinters = []string{
 }
 
 const (
-	helmCmd               = "helm"
 	beatHelmRegistry      = "https://chartmuseum.private.k8s.management.thebeat.co/"
 	stableHelmRegistry    = "https://kubernetes-charts.storage.googleapis.com"
 	incubatorHelmRegistry = "https://kubernetes-charts-incubator.storage.googleapis.com"
@@ -147,7 +146,7 @@ func runHelm(args ...string) error {
 		// todo: set this on init?
 		wd, err := os.Getwd()
 		if err != nil {
-			return fmt.Errorf("failed to get working directory: %v\n", err)
+			return fmt.Errorf("failed to get working directory: %v", err)
 		}
 
 		// todo: extract dockerArgs?

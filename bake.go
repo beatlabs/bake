@@ -19,13 +19,14 @@ const (
 	GoCmd = "go"
 )
 
+// RunDocker runs the docker command.
 func RunDocker(img, cmd string, args ...string) error {
 	docker := "docker"
 
 	// todo: set this on init?
 	wd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("failed to get working directory: %v\n", err)
+		return fmt.Errorf("failed to get working directory: %v", err)
 	}
 
 	// todo: extract dockerArgs?
@@ -36,6 +37,7 @@ func RunDocker(img, cmd string, args ...string) error {
 	return sh.RunV(docker, args...)
 }
 
+// RunGo runs the go command.
 func RunGo(args ...string) error {
 	cmd := "go"
 
