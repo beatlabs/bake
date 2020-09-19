@@ -126,7 +126,13 @@ func confluenceSync(currentPath string, cfg confluenceConfig, doc confluenceDoc)
 		fmt.Printf("changed to working directory: %s\n", doc.Path)
 	}
 
-	args := []string{"run", "--rm", "-i", "kovetskiy/mark:3.1", "mark", "-u", cfg.username, "-p", cfg.password, "-b", cfg.baseURL, "-f", doc.File}
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get current working directory")
+	}
+
+	args := []string{"run", "--rm", "--interactive", "--volume", wd + ":/app", "--workdir", "/app", "kovetskiy/mark:3.0",
+		"mark", "-u", cfg.username, "-p", cfg.password, "-b", cfg.baseURL, "-f", doc.File}
 
 	return sh.RunV("docker", args...)
 }
