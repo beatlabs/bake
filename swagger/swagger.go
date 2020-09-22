@@ -86,7 +86,7 @@ func generate(main, output string) error {
 	_, err := exec.LookPath(defaultSwagCmd)
 	if err != nil {
 		fmt.Printf("Warning: %s command not found, using docker\n", defaultSwagCmd)
-		return bake.RunDocker("golang:1.14", "go get -u github.com/swaggo/swag/cmd/swag && "+defaultSwagCmd+" "+
+		return bake.RunDocker("golang:1.14", "(cd ~ && go get -u github.com/swaggo/swag/cmd/swag) && "+defaultSwagCmd+" "+
 			strings.Join(args, " "))
 	}
 
