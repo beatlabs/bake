@@ -9,11 +9,11 @@
 #
 # USAGE
 #
-#     GITHUB_TOKEN=... VERSION=... install.sh
+#     GITHUB_TOKEN=... $BAKE_VERSION=... install.sh
 #
 # OR
 #
-#     GITHUB_TOKEN=... install.sh <VERSION>
+#     GITHUB_TOKEN=... install.sh <$BAKE_VERSION>
 #
 
 set -x
@@ -21,8 +21,8 @@ set -x
 REPO="taxibeat/bake"
 GITHUB="https://api.github.com"
 
-if [ "$VERSION" = "" ]; then
-  VERSION=$1
+if [ "$BAKE_VERSION" = "" ]; then
+  BAKE_VERSION=$1
 fi
 
 if [ "$GITHUB_TOKEN" = "" ]; then
@@ -30,24 +30,19 @@ if [ "$GITHUB_TOKEN" = "" ]; then
   exit 1
 fi
 
-if [ "$VERSION" = "" ]; then
+if [ "$BAKE_VERSION" = "" ]; then
   echo "ERROR: missing VERSION"
   exit 1
 fi
 
-FILE="bake-$VERSION-Linux-x86_64.tar.gz"
+FILE="bake-$BAKE_VERSION-Linux-x86_64.tar.gz"
 
-if [ "$VERSION" = "latest" ]; then
-  parser=".[0].assets | map(select(.name == \"$FILE\"))[0].id"
-else
-  parser=". | map(select(.tag_name == \"$VERSION\"))[0].assets | map(select(.name == \"$FILE\"))[0].id"
-fi
-
+parser=". | map(select(.tag_name == \"$BAKE_VERSION\"))[0].assets | map(select(.name == \"$FILE\"))[0].id"
 asset_id=$(curl --header "Authorization: token $GITHUB_TOKEN" \
                 --header "Accept: application/vnd.github.v3.raw" \
                 --silent $GITHUB/repos/$REPO/releases | jq "$parser")
 if [ "$asset_id" = "null" ]; then
-  echo "ERROR: version not found $VERSION"
+  echo "ERROR: bake version not found $BAKE_VERSION"
   exit 1
 fi;
 
