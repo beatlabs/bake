@@ -9,22 +9,21 @@
 #
 # USAGE
 #
-#     export GITHUB_TOKEN=...
-#     install.sh <VERSION> <FILE>
+#     GITHUB_TOKEN=... VERSION=... install.sh
 #
-# for example to download the latest version:
+# OR
 #
-#     install.sh latest bake_0.0.1-alpha.2_Linux_x86_64.tar.gz
+#     GITHUB_TOKEN=... install.sh <VERSION>
 #
-# If your version/tag doesn't match, the script will exit with error.
 
 set -x
 
 REPO="taxibeat/bake"
 GITHUB="https://api.github.com"
 
-VERSION=$1
-FILE=$2
+if [ "$VERSION" = "" ]; then
+  VERSION=$1
+fi
 
 if [ "$GITHUB_TOKEN" = "" ]; then
   echo "ERROR: missing GITHUB_TOKEN"
@@ -36,10 +35,7 @@ if [ "$VERSION" = "" ]; then
   exit 1
 fi
 
-if [ "$FILE" = "" ]; then
-  echo "ERROR: missing FILE"
-  exit 1
-fi
+FILE="bake-$VERSION-Linux-x86_64.tar.gz"
 
 if [ "$VERSION" = "latest" ]; then
   parser=".[0].assets | map(select(.name == \"$FILE\"))[0].id"
