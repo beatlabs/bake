@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM alpine:3.11
 
 RUN apt-get -y update
 
