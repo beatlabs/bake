@@ -25,6 +25,7 @@ var defaultLinters = []string{
 }
 
 const (
+	helmCmd               = "helm"
 	beatHelmRegistry      = "https://chartmuseum.private.k8s.management.thebeat.co/"
 	stableHelmRegistry    = "https://kubernetes-charts.storage.googleapis.com"
 	incubatorHelmRegistry = "https://kubernetes-charts-incubator.storage.googleapis.com"
@@ -48,7 +49,7 @@ func Helm(path string) error {
 	}
 
 	fmt.Printf("lint: running helm dependency build for chart path: %s\n", path)
-	err = runHelm("dependency", "build", path)
+	err = sh.RunV(helmCmd, "dependency", "build", path)
 	if err != nil {
 		return err
 	}
@@ -59,13 +60,31 @@ func Helm(path string) error {
 	}
 
 	fmt.Printf("lint: running helm lint for chart path: %s\n", path)
-	return runHelm("lint", "--strict", path)
+
+	cmd := helmCmd
+	helmArgs := []string{"lint", "--strict", path}
+
+	_, err = exec.LookPath(cmd)
+	if err != nil {
+		cmd = bake.DockerCmd
+
+		wd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("failed to get working directory: %v", err)
+		}
+
+		dockerArgs := []string{"run", "--rm", "--volume", wd + ":/app", "--workdir", "/app", "alpine/helm", "helm"}
+		helmArgs = append(dockerArgs, helmArgs...)
+	}
+
+	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(helmArgs, " "))
+	return sh.RunV(cmd, helmArgs...)
 }
 
 func helmAddRepo(repos map[string]string) error {
 	for key, value := range repos {
 		fmt.Printf("lint: running helm add repo %s for registry: %s\n", key, value)
-		err := runHelm("repo", "add", key, value)
+		err := sh.RunV(helmCmd, "repo", "add", key, value)
 		if err != nil {
 			return fmt.Errorf("failed to add helm repo %s %s: %w", key, value, err)
 		}
@@ -120,12 +139,15 @@ func code(linters, tags []string) error {
 		linterFlag = getLinterFlag(linters)
 	}
 
-	cmd := "docker"
-	wd, _ := os.Getwd()
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get working directory: %v", err)
+	}
+
 	args := strings.Split(fmt.Sprintf("run --env=GOFLAGS=-mod=vendor --rm --volume %s:/app -w /app golangci/golangci-lint:v1.28.1 golangci-lint run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", wd, linterFlag, buildTagFlag), " ")
 
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
-	return sh.RunV(cmd, args...)
+	fmt.Printf("Executing cmd: %s %s\n", bake.DockerCmd, strings.Join(args, " "))
+	return sh.RunV(bake.DockerCmd, args...)
 }
 
 func getBuildTagFlag(tags []string) string {
@@ -134,27 +156,4 @@ func getBuildTagFlag(tags []string) string {
 
 func getLinterFlag(linters []string) string {
 	return "--enable " + strings.Join(linters, ",")
-}
-
-func runHelm(args ...string) error {
-	cmd := "helm"
-
-	_, err := exec.LookPath(cmd)
-	if err != nil {
-		cmd = "docker"
-
-		// todo: set this on init?
-		wd, err := os.Getwd()
-		if err != nil {
-			return fmt.Errorf("failed to get working directory: %v", err)
-		}
-
-		// todo: extract dockerArgs?
-		dockerArgs := []string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", "alpine/helm", "helm"}
-		args = append(dockerArgs, args...)
-
-	}
-
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
-	return sh.RunV(cmd, args...)
 }

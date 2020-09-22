@@ -17,10 +17,12 @@ const (
 	BuildTagComponent = "component"
 	// GoCmd defines the std Go command.
 	GoCmd = "go"
+	// DockerCmd defines the std Docker command.
+	DockerCmd = "docker"
 )
 
 // RunDocker runs the docker command.
-func RunDocker(img, cmd string, args ...string) error {
+func RunDocker(img string, args ...string) error {
 	docker := "docker"
 
 	// todo: set this on init?
@@ -30,22 +32,31 @@ func RunDocker(img, cmd string, args ...string) error {
 	}
 
 	// todo: extract dockerArgs?
-	dockerArgs := []string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", img, cmd}
-	args = append(dockerArgs, args...)
+	dockerArgs := []string{
+		"run", "--rm",
+		"--env", "GOFLAGS=-mod=vendor", "--env", "GO111MODULE=on",
+		"--volume", wd + ":/app", "--workdir", "/app", img, "sh", "-c",
+		"git config --global url.\"https://golang:$GITHUB_TOKEN@github.com\".insteadOf \"https://github.com\" && " +
+			strings.Join(args, " ") +
+			" && chown --reference=/app --recursive /app",
+	}
 
-	fmt.Printf("Executing cmd: %s %s\n", docker, strings.Join(args, " "))
-	return sh.RunV(docker, args...)
+	fmt.Printf("Executing cmd: %s %s\n", docker, strings.Join(dockerArgs, " "))
+	return sh.RunV(docker, dockerArgs...)
 }
 
 // RunGo runs the go command.
 func RunGo(args ...string) error {
-	cmd := "go"
-
-	_, err := exec.LookPath(cmd)
-	if err != nil {
-		return RunDocker("golang:1.14", cmd, args...)
+	forceDocker := false
+	if os.Getenv("BAKE_FORCE_DOCKER") != "" {
+		forceDocker = true
 	}
 
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
-	return sh.RunV(cmd, args...)
+	_, err := exec.LookPath(GoCmd)
+	if err != nil || forceDocker {
+		return RunDocker("golang:1.14", append([]string{GoCmd}, args...)...)
+	}
+
+	fmt.Printf("Executing cmd: %s %s\n", GoCmd, strings.Join(args, " "))
+	return sh.RunV(GoCmd, args...)
 }

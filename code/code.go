@@ -118,16 +118,13 @@ func runGofmt(args ...string) (string, error) {
 
 	_, err := exec.LookPath(cmd)
 	if err != nil {
-		cmd = "docker"
-
-		// todo: set this on init?
+		cmd = bake.DockerCmd
 		wd, err := os.Getwd()
 		if err != nil {
 			return "", fmt.Errorf("failed to get working directory: %v", err)
 		}
 
 		args = append([]string{"run", "--rm", "--volume", wd + ":/volume", "--workdir", "/volume", "golang:1.14", "gofmt"}, args...)
-
 	}
 
 	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))

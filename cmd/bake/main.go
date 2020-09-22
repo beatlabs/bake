@@ -11,16 +11,24 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
+const bakeStaticBinary = "./bake-static"
+
 func main() {
-	_, err := exec.LookPath("go")
-	if err == nil {
-		os.Exit(mage.Main())
+	forceStaticBinary := false
+	if os.Getenv("BAKE_FORCE_STATIC_BINARY") != "" {
+		forceStaticBinary = true
 	}
 
-	// go is not installed, let's use docker to build a static, project specific, bake binary
-	cmd := "docker"
-	bake := "./bake-static"
+	_, err := exec.LookPath("go")
+	if err != nil || forceStaticBinary {
+		staticBinary()
+		os.Exit(0)
+	}
 
+	os.Exit(mage.Main())
+}
+
+func staticBinary() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("failed to get working directory: %v\n", err)
@@ -28,19 +36,19 @@ func main() {
 
 	args := []string{
 		"run", "--rm", "--volume", wd + ":/app", "--workdir", "/app", "golang:1.14", "sh", "-c",
-		"go get github.com/magefile/mage@v1.9.0 && " +
-			"mage -compile " + bake + " && " +
-			"chown --reference=./ " + bake + " ",
+		"git config --global url.\"https://golang:$GITHUB_TOKEN@github.com\".insteadOf \"https://github.com\" && " +
+			"go get github.com/magefile/mage@v1.10.0 && " + "mage -compile " + bakeStaticBinary + " && " +
+			"chown --reference=./ " + bakeStaticBinary,
 	}
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
+	fmt.Printf("Executing cmd: %s\n", strings.Join(args, " "))
 
-	err = sh.RunV(cmd, args...)
+	err = sh.RunV("docker", args...)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Executing cmd: %s %s\n", bake, strings.Join(args, " "))
-	err = sh.RunV(bake, os.Args[1:]...)
+	fmt.Printf("Executing cmd: %s %s\n", bakeStaticBinary, strings.Join(os.Args[1:], " "))
+	err = sh.RunV(bakeStaticBinary, os.Args[1:]...)
 	if err != nil {
 		log.Fatal(err)
 	}

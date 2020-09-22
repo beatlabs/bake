@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake"
 )
 
 var (
@@ -17,7 +20,7 @@ var (
 	defaultAPIDir    = "api"
 )
 
-// Create creates a swagger files from source code annotations.
+// Create swagger files from source code annotations.
 func Create(main, output, api string) error {
 	if err := generate(main, output); err != nil {
 		return err
@@ -79,11 +82,15 @@ func generate(main, output string) error {
 		"--output",
 		output,
 	}
-	if err := sh.RunV(defaultSwagCmd, args...); err != nil { // todo: need to generate it on the fly
-		return err
+
+	_, err := exec.LookPath(defaultSwagCmd)
+	if err != nil {
+		fmt.Printf("Warning: %s command not found, using docker\n", defaultSwagCmd)
+		return bake.RunDocker("golang:1.14", "go get -u github.com/swaggo/swag/cmd/swag && "+defaultSwagCmd+" "+
+			strings.Join(args, " "))
 	}
 
-	return nil
+	return sh.RunV(defaultSwagCmd, args...)
 }
 
 func compareFiles(file1, file2 string) error {
