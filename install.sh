@@ -31,7 +31,7 @@ if [ "$GITHUB_TOKEN" = "" ]; then
 fi
 
 if [ "$BAKE_VERSION" = "" ]; then
-  echo "ERROR: missing VERSION"
+  echo "ERROR: missing BAKE_VERSION"
   exit 1
 fi
 
