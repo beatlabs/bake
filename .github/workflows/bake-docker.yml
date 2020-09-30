@@ -16,3 +16,4 @@ jobs:
           username: ${{ secrets.DOCKERHUBUSER }}
           password: ${{ secrets.DOCKERHUBPWD }}
           tag_semver: true
+          tags: "latest"
