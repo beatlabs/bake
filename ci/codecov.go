@@ -25,6 +25,9 @@ func CodeCovDefault() error {
 
 func codeCov(tags []string) error {
 	err := runTests(coverFile, tags)
+	if err != nil {
+		return err
+	}
 
 	defer func() {
 		err := os.Remove(coverFile)
