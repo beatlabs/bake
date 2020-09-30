@@ -3,11 +3,7 @@
 set -e
 
 image_name="taxibeat/bake"
-<<<<<<< Updated upstream
-image_tag="0.5.0"
-=======
 image_tag="latest"
->>>>>>> Stashed changes
 
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
