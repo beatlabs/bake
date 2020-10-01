@@ -5,6 +5,8 @@
 
 # bake
 
+[![Coverage Status](https://coveralls.io/repos/github/taxibeat/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/taxibeat/bake?branch=master)
+
 Bake contains build tools to help make us elevate the developer experience of our Go projects.
 
 The repository contains two major components:

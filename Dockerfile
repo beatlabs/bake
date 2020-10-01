@@ -31,6 +31,9 @@ RUN wget -c https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz -O - | tar -xz -C
 # Download and install golangci-lint into go bin path
 RUN wget -c https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.28.2
 
+# Download and install goveralls - go coveralls client
+RUN go get github.com/mattn/goveralls
+
 # Very permissive because we don't know what user the container will run as
 RUN mkdir /home/beat && chmod 777 /home/beat
 ENV HOME /home/beat

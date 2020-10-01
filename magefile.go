@@ -27,7 +27,7 @@ func (l Lint) Go() error {
 // CI groups together ci related tasks.
 type CI mg.Namespace
 
-// Run CI with CodeCov and default build tags.
+// Run CI with Coveralls and default build tags.
 func (CI) Run() error {
 	goTargets := code.Go{}
 	err := goTargets.FmtCheck()
@@ -42,5 +42,5 @@ func (CI) Run() error {
 	if err != nil {
 		return err
 	}
-	return ci.CodeCovDefault()
+	return ci.CoverallsDefault()
 }
