@@ -8,8 +8,6 @@ import (
 	"github.com/taxibeat/bake"
 )
 
-const coverallsService = "github"
-
 // Coveralls runs the actual CI pipeline with Coveralls integration and accepts build tags.
 func Coveralls(buildTags ...string) error {
 	return coveralls(buildTags)
@@ -36,7 +34,6 @@ func coveralls(tags []string) error {
 	return sh.RunV(
 		"goveralls",
 		"-coverprofile="+coverFile,
-		"-service="+coverallsService,
-		"-repotoken="+os.Getenv("GITHUB_TOKEN"),
+		"-repotoken="+os.Getenv("COVERALLSTOKEN"),
 	)
 }
