@@ -8,6 +8,8 @@ import (
 	"github.com/taxibeat/bake"
 )
 
+const coverFile = "coverage.txt"
+
 // Coveralls runs the actual CI pipeline with Coveralls integration and accepts build tags.
 func Coveralls(buildTags ...string) error {
 	return coveralls(buildTags)
