@@ -52,7 +52,6 @@ docker run \
   $t \
   --name "$RUN_ID-bake" \
   --env RUN_ID="$RUN_ID" \
-  --env CODECOV_TOKEN="$CODECOV_TOKEN" \
   --env COVERALLSTOKEN="$COVERALLSTOKEN" \
   --env GITHUB_TOKEN="$GITHUB_TOKEN" \
   --env CONFLUENCE_USERNAME="$CONFLUENCE_USERNAME" \
