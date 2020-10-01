@@ -51,7 +51,7 @@ docker run \
   --workdir /src \
   $t \
   --name "$RUN_ID-bake" \
-  --env RUN_ID="$RUN_ID" \
+  --env RUN_ID="${RUN_ID}-" \
   --env CODECOV_TOKEN="$CODECOV_TOKEN" \
   --env GITHUB_TOKEN="$GITHUB_TOKEN" \
   --env CONFLUENCE_USERNAME="$CONFLUENCE_USERNAME" \
