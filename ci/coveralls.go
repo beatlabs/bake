@@ -37,6 +37,5 @@ func coveralls(tags []string) error {
 	return sh.RunV(
 		"goveralls",
 		"-coverprofile="+coverFile,
-		"-repotoken="+os.Getenv("COVERALLSTOKEN"),
 	)
 }
