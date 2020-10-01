@@ -14,7 +14,7 @@ jobs:
       - name: Bake CI
         run: ./bake.sh ci:run          
         env:
-          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          COVERALLSTOKEN: ${{ secrets.COVERALLSTOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           GITHUB_USERNAME: ${{ secrets.GITHUBUSER }}
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
