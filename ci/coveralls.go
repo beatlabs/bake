@@ -37,6 +37,6 @@ func coveralls(tags []string) error {
 		"goveralls",
 		"-coverprofile="+coverFile,
 		"-service="+coverallsService,
-		"-repotoken="+os.Getenv("COVERALLSTOKEN"),
+		"-repotoken="+os.Getenv("GITHUB_TOKEN"),
 	)
 }
