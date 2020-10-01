@@ -34,6 +34,11 @@ func coveralls(tags []string) error {
 		}
 	}()
 
+	if os.Getenv("COVERALLS_TOKEN") == "" {
+		fmt.Printf("coveralls token is not set, skipping code coverage upload step.\n")
+		return nil
+	}
+
 	return sh.RunV(
 		"goveralls",
 		"-coverprofile="+coverFile,
