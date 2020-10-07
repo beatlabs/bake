@@ -54,7 +54,7 @@ This is a clean slate approach (requiring nothing but Docker to be installed) wh
 
 In order to use the Bake image please follow these instructions:
 
-### 1. Generate a github personal access token
+#### 1. Generate a github personal access token
 
 This is required in order to access private repos (including the go packages in the bake repo).
 
@@ -72,7 +72,7 @@ or set it inline before executing bake:
 GITHUB_TOKEN=my-token ./bake.sh
 ```
 
-### 2. Create a `bake.sh` script
+#### 2. Create a `bake.sh` script
 
 In order to generate an initial `bake.sh` you can run copy the one from this repo or run:
 
@@ -82,7 +82,7 @@ $ docker run --rm -it -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --ge
 
 And modify to your needs, e.g. add any env vars that your targets may require.
 
-### 3. Optional - Speed up bake
+#### 3. Optional - Speed up bake
 
 One of the most time consuming steps when running a mage target via the Bake image is waiting for Mage to compile it's ad-hoc binary.
 This can be circumvented by manually creating that binary, which saves a few seconds. The downside is that if the `magefile.go` changes then this manually created binary will be out of date, and must be manually updated/deleted.
@@ -93,7 +93,7 @@ $ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id
 
 And add `bake-build` to your `.gitignore`.
 
-### 4. Executing targets
+#### 4. Executing targets
 
 Instead of executing `mage` we now execute the script, e.g:
 
