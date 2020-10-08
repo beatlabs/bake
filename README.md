@@ -3,75 +3,107 @@
 <!-- Parent: Engineering -->
 <!-- Parent: Dev Tools -->
 
-# bake
+# Bake
 
 [![Coverage Status](https://coveralls.io/repos/github/taxibeat/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/taxibeat/bake?branch=master)
 
 Bake contains build tools to help make us elevate the developer experience of our Go projects.
 
-The repository contains two major components:
+The repository provides two major components:
 
 - Mage targets and helpers, to support a more structured and common make experience.
-- Dockerfile, which is used to create an image for our CI/CD process
+- A Bake Docker image containing pinned versions of Go and several CI tools (linters/code generators/etc), to guarantee a consistent experience.
 
-## Integration
+## Working with Mage
 
-In order to incorporate Bake into a project please follow the following steps:
+Bake uses [mage](https://magefile.org/) which is an alternative to make.
 
-### 1. Generate a github [personal access token](https://github.com/settings/tokens) with 'repo' scope and SSO enabled
+Mage targets are written in Go and can be found in `magefile.go` in the root directory of the repository.
 
-This is required in order to access private repos (including go packages in this repo).
+This repository provides several pre-built mage targets for tests, linting, documentation generation, and others.
 
-You can export it in your shell (`export GITHUB_TOKEN=my-token`) or set it inline before executing bake (`GITHUB_TOKEN=my-token ./bake.sh`).
+You can see the `magefile.go` in this repo for reference.
 
-### 2. Create a `bake.sh` script for running Bake
+## Executing mage targets locally
 
-In order to generate an initial `bake.sh` you can run
+In order to run mage targets in your local environment, you can install mage as well as any dependencies you may need (e.g. `golangci-lint`).
 
-```console
-$ docker run --rm -it -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-script > bake.sh
-```
-
-And modify to your needs, e.g. add any env vars that your targets may require.
-
-### 3. Optional - Speed up bake by prebuilding a mage binary
-
-```console
-$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) taxibeat/bake:<version> --gen-bin
-```
-
-And add `bake-build` to your `.gitignore`.
-Note that it's your responsibility to keep this local binary up to date whenever your local mage targets change.
-
-## Executing targets
-
-Bake uses [mage](https://magefile.org/) which is an alternative to make. Targets are written in Go and can be found in `magefile.go` in the root directory of the repository.
-
-For a complete list of available targets run `mage` or `./bake.sh` (explained later).
+For a complete list of available targets run `mage`.
 
 Some examples:
 
 Run unit tests:
 
 ```bash
-./bake.sh test:unit
+mage test:unit
 ```
 
 And all tests (unit+integration+component):
 
 ```bash
-./bake.sh test:all
+mage test:all
 ```
 
-Run the CI target (advisable to run in docker to match the jenkins)
+Take a look at the `magefile.go` of this project to see how it works.
+
+## Using the Bake Docker image
+
+In order to run mage targets in a controlled environment with no external dependencies we can use the Bake image.
+
+This is a clean slate approach (requiring nothing but Docker to be installed) which behaves the same both locally and in Jenkins thus providing strong reproducibility guarantees. The trade-off is that it's slower since we must spin up a container to run the mage targets, and can't make use of test caches or mage caches for example.
+
+In order to use the Bake image please follow these instructions:
+
+#### 1. Generate a github personal access token
+
+This is required in order to access private repos (including the go packages in the bake repo).
+
+A token can be generated at [https://github.com/settings/tokens](https://github.com/settings/tokens) and must have 'repo' scope and be SSO enabled
+
+You can export it in your shell 
+
+```bash
+export GITHUB_TOKEN=my-token
+```
+
+or set it inline before executing bake:
+
+```bash
+GITHUB_TOKEN=my-token ./bake.sh
+```
+
+#### 2. Create a `bake.sh` script
+
+In order to generate an initial `bake.sh` you can run copy the one from this repo or run:
+
+```bash
+$ docker run --rm -it -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-script > bake.sh
+```
+
+And modify to your needs, e.g. add any env vars that your targets may require.
+
+#### 3. Optional - Speed up bake
+
+One of the most time consuming steps when running a mage target via the Bake image is waiting for Mage to compile it's ad-hoc binary.
+This can be circumvented by manually creating that binary, which saves a few seconds. The downside is that if the `magefile.go` changes then this manually created binary will be out of date, and must be manually updated/deleted.
+
+```bash
+$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) taxibeat/bake:<version> --gen-bin
+```
+
+And add `bake-build` to your `.gitignore`.
+
+#### 4. Executing targets
+
+Instead of executing `mage` we now execute the script, e.g:
 
 ```bash
 ./bake.sh ci:run
 ```
 
-Take a look at the `magefile.go` of this project to see how it works.
+This is the recommended way to run the CI target in Jenkins.
 
-## Bake Dockerfile
+## Tools included in the Bake image
 
 The bake image is used for local and CI/CD and contains all the tools we need in our local and CI/CD environments:
 
@@ -81,7 +113,12 @@ The bake image is used for local and CI/CD and contains all the tools we need in
 - [mark](https://github.com/mantzas/mark) for syncing markdown documentation to Confluence
 - [golangci-lint](https://github.com/golangci/golangci-lint) a multi-linter for Go
 - [helm](https://helm.sh/) a k8s package manager
-
-Along with the Dockerfile we have also a script `bake.sh` which is responsible for starting up the above container and run our mage targets.
+- [goveralls](https://github.com/mattn/goveralls) a Coveralls cli tool
 
 The image is built and uploaded to the repository's package storage on every new release.
+
+The version of the Bake image and of the Bake Go module are kept in sync, and should be updated together in projects that use Bake.
+
+## Example projects
+
+- https://github.com/taxibeat/direction
