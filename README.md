@@ -48,7 +48,7 @@ Take a look at the `magefile.go` of this project to see how it works.
 
 ## Using the Bake Docker image
 
-In order to run mage targets in a controlled environment with external dependencies we can use the Bake image.
+In order to run mage targets in a controlled environment with no external dependencies we can use the Bake image.
 
 This is a clean slate approach (requiring nothing but Docker to be installed) which behaves the same both locally and in Jenkins thus providing strong reproducibility guarantees. The trade-off is that it's slower since we must spin up a container to run the mage targets, and can't make use of test caches or mage caches for example.
 
