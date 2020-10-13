@@ -67,7 +67,7 @@ func (c *Container) Start(pool *dockertest.Pool, networkID string, expiration ui
 		}
 
 		if rsp.StatusCode != http.StatusOK {
-			return errors.New("")
+			return errors.New("could not reach container")
 		}
 
 		return nil
