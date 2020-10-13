@@ -61,8 +61,7 @@ func (c *Container) Start(pool *dockertest.Pool, networkID string, expiration ui
 	}
 
 	err = pool.Retry(func() error {
-		url := "http://" + c.Address(pool) + "/health"
-		rsp, err := http.Get(url)
+		rsp, err := http.Get("http://" + c.Address(pool) + "/health")
 		if err != nil {
 			return err
 		}
