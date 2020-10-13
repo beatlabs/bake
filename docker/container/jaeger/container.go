@@ -25,13 +25,13 @@ type Params struct {
 	UseExpiration bool
 }
 
-// Container for Consul.
+// Container for Jaeger.
 type Container struct {
 	params Params
 	container.BaseContainer
 }
 
-// NewContainer creates a new Consul container.
+// NewContainer creates a new Jaeger container.
 func NewContainer(params Params) *Container {
 	return &Container{
 		params:        params,
