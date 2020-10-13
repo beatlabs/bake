@@ -4,52 +4,75 @@ package docker
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
-
 	"github.com/taxibeat/bake/docker/component"
 	"github.com/taxibeat/bake/docker/container/consul"
+	"github.com/taxibeat/bake/docker/container/jaeger"
 	"github.com/taxibeat/bake/docker/container/kafka"
 	"github.com/taxibeat/bake/docker/container/localstack"
 	"github.com/taxibeat/bake/docker/container/mock"
 )
 
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
 var comp *component.BaseComponent
 
 func TestMain(m *testing.M) {
+	rand.Seed(time.Now().UnixNano())
+
 	runID := os.Getenv("RUN_ID")
 	netID := os.Getenv("NETWORK_ID")
-	containerHost := runID != ""
-	runtime := NewRuntime()
+	containerHost := false
+
+	if runID == "" {
+		runID = randSeq(4)
+	} else {
+		containerHost = true
+	}
+	rt := NewRuntime()
 
 	c, err := newTestComponent(runID, netID, containerHost, true)
 	if err != nil {
 		fmt.Printf("failed to create docker test environment: %v", err)
 		os.Exit(1)
 	}
-	runtime.WithComponent(c)
+	rt.WithComponent(c)
 	comp = c
 
-	ee := runtime.Start()
+	ee := rt.Start()
 	if len(ee) > 0 {
 		for _, err := range ee {
 			fmt.Printf("failed to start up test environment: %v", err)
 		}
+		teardown(rt)
 		os.Exit(1)
 	}
 
 	exitCode := m.Run()
+	teardown(rt)
+	os.Exit(exitCode)
+}
 
-	ee = runtime.Teardown()
+func teardown(rt *Runtime) {
+	ee := rt.Teardown()
 	if len(ee) > 0 {
 		for _, err := range ee {
 			fmt.Printf("failed to teardown test environment: %v", err)
 		}
 	}
-
-	os.Exit(exitCode)
 }
 
 func TestClients(t *testing.T) {
@@ -116,6 +139,14 @@ func newTestComponent(prefix, existingNetworkID string, containerHost, useExpira
 		return nil, fmt.Errorf("could not create Localstack container: %w", err)
 	}
 	testComponent.WithContainer(localstackContainer)
+
+	jaegerContainer := jaeger.NewContainer(jaeger.Params{
+		Prefix:        prefix,
+		Version:       "1.19",
+		ContainerHost: containerHost,
+		UseExpiration: useExpiration,
+	})
+	testComponent.WithContainer(jaegerContainer)
 
 	return testComponent, nil
 }
