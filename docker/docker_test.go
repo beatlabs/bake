@@ -18,7 +18,7 @@ import (
 	"github.com/taxibeat/bake/docker/container/mock"
 )
 
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var letters = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
 
 func randSeq(n int) string {
 	b := make([]rune, n)
@@ -38,7 +38,7 @@ func TestMain(m *testing.M) {
 	containerHost := false
 
 	if runID == "" {
-		runID = randSeq(4)
+		runID = randSeq(4) + "-"
 	} else {
 		containerHost = true
 	}
