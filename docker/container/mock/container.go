@@ -10,7 +10,12 @@ import (
 	"github.com/taxibeat/bake/docker/container"
 )
 
-const defaultPort = "1080"
+const (
+	// DefaultContainerName name of the container.
+	DefaultContainerName = "mockserver"
+
+	defaultPort = "1080"
+)
 
 // Params of the container.
 type Params struct {
@@ -29,9 +34,14 @@ type Container struct {
 
 // NewContainer creates a new Mockserver container.
 func NewContainer(params Params) *Container {
+	name := DefaultContainerName
+	if params.Name != "" {
+		name = params.Name
+	}
+
 	return &Container{
 		params:        params,
-		BaseContainer: *container.NewBaseContainer(params.Prefix, params.Name, defaultPort, params.ContainerHost),
+		BaseContainer: *container.NewBaseContainer(params.Prefix, name, defaultPort, params.ContainerHost),
 	}
 }
 
