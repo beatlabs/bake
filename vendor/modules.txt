@@ -66,6 +66,9 @@ github.com/mattn/go-isatty
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
+# github.com/moby/term v0.0.0-20200915141129-7f0af18e79f2
+github.com/moby/term
+github.com/moby/term/windows
 # github.com/opencontainers/go-digest v1.0.0-rc1
 github.com/opencontainers/go-digest
 # github.com/opencontainers/image-spec v1.0.1
@@ -73,7 +76,7 @@ github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
 # github.com/opencontainers/runc v1.0.0-rc9
 github.com/opencontainers/runc/libcontainer/user
-# github.com/ory/dockertest/v3 v3.6.0
+# github.com/ory/dockertest/v3 v3.6.2
 ## explicit
 github.com/ory/dockertest/v3
 github.com/ory/dockertest/v3/docker
@@ -89,8 +92,6 @@ github.com/ory/dockertest/v3/docker/pkg/mount
 github.com/ory/dockertest/v3/docker/pkg/pools
 github.com/ory/dockertest/v3/docker/pkg/stdcopy
 github.com/ory/dockertest/v3/docker/pkg/system
-github.com/ory/dockertest/v3/docker/pkg/term
-github.com/ory/dockertest/v3/docker/pkg/term/windows
 github.com/ory/dockertest/v3/docker/types
 github.com/ory/dockertest/v3/docker/types/blkiodev
 github.com/ory/dockertest/v3/docker/types/container
@@ -100,7 +101,7 @@ github.com/ory/dockertest/v3/docker/types/network
 github.com/ory/dockertest/v3/docker/types/registry
 github.com/ory/dockertest/v3/docker/types/strslice
 github.com/ory/dockertest/v3/docker/types/versions
-# github.com/pkg/errors v0.8.1
+# github.com/pkg/errors v0.9.1
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
