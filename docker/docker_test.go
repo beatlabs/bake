@@ -18,6 +18,7 @@ import (
 	"github.com/taxibeat/bake/docker/container/kafka"
 	"github.com/taxibeat/bake/docker/container/localstack"
 	"github.com/taxibeat/bake/docker/container/mock"
+	"github.com/taxibeat/bake/docker/container/mogodb"
 	containerRedis "github.com/taxibeat/bake/docker/container/redis"
 )
 
@@ -165,6 +166,14 @@ func newTestComponent(prefix, existingNetworkID string, containerHost, useExpira
 		Env:           []string{"ALLOW_EMPTY_PASSWORD=yes"},
 	})
 	testComponent.WithContainer(redisContainer)
+
+	mongoContainer := mongodb.NewContainer(mongodb.Params{
+		Prefix:        prefix,
+		ContainerHost: containerHost,
+		Version:       "4.2",
+		UseExpiration: useExpiration,
+	})
+	testComponent.WithContainer(mongoContainer)
 
 	return testComponent, nil
 }
