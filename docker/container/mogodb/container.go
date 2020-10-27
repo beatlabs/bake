@@ -7,7 +7,6 @@ import (
 
 	"github.com/ory/dockertest/v3"
 	"github.com/taxibeat/bake/docker/container"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -29,7 +28,7 @@ type Params struct {
 	MongoOptions  *options.ClientOptions
 }
 
-// Container for Localstack.
+// Container for Mongo.
 type Container struct {
 	params Params
 	container.BaseContainer
@@ -78,16 +77,6 @@ func (c *Container) Start(pool *dockertest.Pool, networkID string, expiration ui
 
 		if err := cl.Ping(context.Background(), nil); err != nil {
 			return fmt.Errorf("could not ping mongo: %w", err)
-		}
-
-		db := cl.Database("testing")
-		dummyCollection := db.Collection("dummies")
-		_, err = dummyCollection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
-			Keys:    bson.M{"id": 1},
-			Options: options.Index().SetUnique(true),
-		})
-		if err != nil {
-			return fmt.Errorf("dummy data is not reachable: %w", err)
 		}
 
 		return nil
