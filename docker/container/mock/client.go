@@ -29,7 +29,24 @@ type CallTimes struct {
 type Request struct {
 	Method          string           `json:"method"`
 	Path            string           `json:"path"`
-	QueryParameters []QueryParameter `json:"queryStringParameters"`
+	QueryParameters []QueryParameter `json:"queryStringParameters,omitempty"`
+	Body            interface{}      `json:"body,omitempty"`
+}
+
+func (r Request) WithJSONBody(body interface{}) Request {
+	type jsonBody struct {
+		Type      string      `json:"type"`
+		MatchType string      `json:"matchType"`
+		JSON      interface{} `json:"json"`
+	}
+
+	r.Body = jsonBody{
+		Type:      "json",
+		MatchType: "STRICT",
+		JSON:      body,
+	}
+
+	return r
 }
 
 // Expectation represents an expectation in mockserver.
