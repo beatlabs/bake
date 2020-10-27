@@ -10,5 +10,6 @@ require (
 	github.com/magefile/mage v1.9.0
 	github.com/ory/dockertest/v3 v3.6.2
 	github.com/stretchr/testify v1.6.1
+	go.mongodb.org/mongo-driver v1.4.2
 	golang.org/x/mod v0.3.0
 )
