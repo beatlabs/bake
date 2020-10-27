@@ -33,6 +33,7 @@ type Request struct {
 	Body            interface{}      `json:"body,omitempty"`
 }
 
+// WithJSONBody returns a Request with a JSON body set.
 func (r Request) WithJSONBody(body interface{}) Request {
 	type jsonBody struct {
 		Type      string      `json:"type"`
