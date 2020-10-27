@@ -7,6 +7,7 @@ import (
 
 	"github.com/ory/dockertest/v3"
 	"github.com/taxibeat/bake/docker/container"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -34,7 +35,7 @@ type Container struct {
 	container.BaseContainer
 }
 
-// NewContainer creates a new Redis container.
+// NewContainer creates a new Mongo container.
 func NewContainer(params Params) *Container {
 	return &Container{
 		params:        params,
@@ -78,6 +79,17 @@ func (c *Container) Start(pool *dockertest.Pool, networkID string, expiration ui
 		if err := cl.Ping(context.Background(), nil); err != nil {
 			return fmt.Errorf("could not ping mongo: %w", err)
 		}
+
+		db := cl.Database("testing")
+		dummyCollection := db.Collection("dummies")
+		_, err = dummyCollection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+			Keys:    bson.M{"id": 1},
+			Options: options.Index().SetUnique(true),
+		})
+		if err != nil {
+			return fmt.Errorf("dummy data is not reachable: %w", err)
+		}
+
 		return nil
 	})
 	if err != nil {
