@@ -18,7 +18,7 @@ import (
 	"github.com/taxibeat/bake/docker/container/kafka"
 	"github.com/taxibeat/bake/docker/container/localstack"
 	"github.com/taxibeat/bake/docker/container/mock"
-	"github.com/taxibeat/bake/docker/container/mogodb"
+	"github.com/taxibeat/bake/docker/container/mongodb"
 	containerRedis "github.com/taxibeat/bake/docker/container/redis"
 )
 
