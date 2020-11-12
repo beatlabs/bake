@@ -179,7 +179,7 @@ func newTestComponent(prefix, existingNetworkID string, containerHost, useExpira
 	testComponent.WithContainer(mongoContainer)
 
 	mongoReplicaSetContainer, err := mongodb.NewContainer(mongodb.Params{
-		Prefix:         prefix,
+		Prefix:         prefix + "rs",
 		ContainerHost:  containerHost,
 		Version:        "4.2",
 		UseExpiration:  useExpiration,

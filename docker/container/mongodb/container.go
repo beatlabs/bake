@@ -90,6 +90,7 @@ func (c *Container) Start(pool *dockertest.Pool, networkID string, expiration ui
 		if err != nil {
 			return fmt.Errorf("failed to create mongo client: %w", err)
 		}
+		defer func() { _ = cl.Disconnect(context.Background()) }()
 
 		if err := cl.Ping(context.Background(), nil); err != nil {
 			return fmt.Errorf("could not ping mongo: %w", err)
