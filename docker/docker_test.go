@@ -22,16 +22,6 @@ import (
 	containerRedis "github.com/taxibeat/bake/docker/container/redis"
 )
 
-var letters = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
-
-func randSeq(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
-}
-
 var comp *component.BaseComponent
 
 func TestMain(m *testing.M) {
@@ -39,13 +29,7 @@ func TestMain(m *testing.M) {
 
 	runID := os.Getenv("RUN_ID")
 	netID := os.Getenv("NETWORK_ID")
-	containerHost := false
-
-	if runID == "" {
-		runID = randSeq(4) + "-"
-	} else {
-		containerHost = true
-	}
+	containerHost := runID != ""
 	rt := NewRuntime()
 
 	c, err := newTestComponent(runID, netID, containerHost, true)
