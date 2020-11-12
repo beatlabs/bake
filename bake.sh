@@ -21,7 +21,7 @@ fi
 RUN_ID=${RUN_ID:=$BUILD_NUMBER}
 if [[ -z "$RUN_ID" ]]; then
     # Generate random 3 character alphanumeric string
-    RUN_ID=$(uuidgen | cut -c 1,2,3)
+    RUN_ID=$(uuidgen | cut -c 1,2,3 | tr "[:upper:]" "[:lower:]")
 fi
 
 echo "Run ID: $RUN_ID"
