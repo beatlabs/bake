@@ -8,8 +8,10 @@ image_tag="latest"
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+   docker_sock="/var/run/docker.sock"
    docker_gid=$(stat -c "%g" /var/run/docker.sock)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
+   docker_sock="/var/run/docker.sock.raw"
    docker_gid=0
 else
    echo "Unsupported OS"
@@ -46,7 +48,7 @@ echo "Starting run $RUN_ID"
 docker run \
   --network $NETWORK_ID \
   --rm \
-  --volume /var/run/docker.sock:/var/run/docker.sock \
+  --volume ${docker_sock}:/var/run/docker.sock \
   --volume "$PWD":/src \
   --workdir /src \
   $t \
