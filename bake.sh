@@ -18,8 +18,6 @@ else
    exit 1
 fi
 
-echo "Docker Group ID: $docker_gid"
-
 RUN_ID=${RUN_ID:=$BUILD_NUMBER}
 if [[ -z "$RUN_ID" ]]; then
     # Generate random 3 character alphanumeric string
@@ -30,8 +28,6 @@ echo "Run ID: $RUN_ID"
 
 NETWORK_ID=$(docker network create "${RUN_ID}"-bake)
 
-echo "Network ID: $NETWORK_ID"
-
 # Force removal of containers and images.
 cleanup () {
    docker ps --format '{{.Names}}' | grep "^$RUN_ID-" | awk '{print $1}' | xargs -I {} docker rm -f {}
@@ -39,8 +35,6 @@ cleanup () {
    docker network rm "$NETWORK_ID" > /dev/null
 }
 trap cleanup EXIT
-
-echo "Starting run $RUN_ID"
 
 # Detect TTY
 [[ -t 1 ]] && t='-t'
