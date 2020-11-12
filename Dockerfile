@@ -1,14 +1,12 @@
 FROM golang:1.15-alpine
 
-RUN   apk update \                                                                                                                                                                                                                        
-  &&   apk add ca-certificates wget \                                                                                                                                                                                                      
-  &&   update-ca-certificates
-
-RUN apk add --no-cache bash git docker-cli
+RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
-RUN apk add gcc musl-dev 
+
+# Required to access private modules
+ENV GOPRIVATE=github.com/ORG/*
 
 # Download and install mage file into bin path
 RUN wget -qc https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
