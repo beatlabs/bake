@@ -3,12 +3,14 @@
 package docker
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"
 	"github.com/taxibeat/bake/docker/component"
 	"github.com/taxibeat/bake/docker/container/consul"
@@ -16,6 +18,8 @@ import (
 	"github.com/taxibeat/bake/docker/container/kafka"
 	"github.com/taxibeat/bake/docker/container/localstack"
 	"github.com/taxibeat/bake/docker/container/mock"
+	"github.com/taxibeat/bake/docker/container/mongodb"
+	containerRedis "github.com/taxibeat/bake/docker/container/redis"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
@@ -88,6 +92,12 @@ func TestClients(t *testing.T) {
 	mockClient := mock.NewClient("http://" + comp.GetContainer("mock-test").Address(comp.Pool))
 	err = mockClient.Reset()
 	assert.NoError(t, err)
+
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: comp.GetContainer(containerRedis.ContainerName).Address(comp.Pool),
+	})
+	_, err = redisClient.Ping(context.Background()).Result()
+	assert.NoError(t, err)
 }
 
 func newTestComponent(prefix, existingNetworkID string, containerHost, useExpiration bool) (*component.BaseComponent, error) {
@@ -147,6 +157,23 @@ func newTestComponent(prefix, existingNetworkID string, containerHost, useExpira
 		UseExpiration: useExpiration,
 	})
 	testComponent.WithContainer(jaegerContainer)
+
+	redisContainer := containerRedis.NewContainer(containerRedis.Params{
+		Prefix:        prefix,
+		ContainerHost: containerHost,
+		Version:       "5.0",
+		UseExpiration: useExpiration,
+		Env:           []string{"ALLOW_EMPTY_PASSWORD=yes"},
+	})
+	testComponent.WithContainer(redisContainer)
+
+	mongoContainer := mongodb.NewContainer(mongodb.Params{
+		Prefix:        prefix,
+		ContainerHost: containerHost,
+		Version:       "4.2",
+		UseExpiration: useExpiration,
+	})
+	testComponent.WithContainer(mongoContainer)
 
 	return testComponent, nil
 }
