@@ -9,7 +9,7 @@ image_tag="latest"
 # so that the user can interact with docker.
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
    docker_sock="/var/run/docker.sock"
-   docker_gid=$(stat -c "%g" /var/run/docker.sock)
+   docker_gid=$(stat -c "%g" $docker_sock)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
    docker_sock="/var/run/docker.sock.raw"
    docker_gid=0
