@@ -13,10 +13,9 @@ if [[ "$#" = 1 ]]; then
 fi
 
 if [ -f $PWD/bake-build ]; then
-    echo "executing prebuilt bake file"
+    echo "Using prebuilt bake-build binary"
     exec $PWD/bake-build $@
 else
-    echo "executing mage"
     exec mage $@
 fi
 
