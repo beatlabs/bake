@@ -167,13 +167,28 @@ func newTestComponent(prefix, existingNetworkID string, containerHost, useExpira
 	})
 	testComponent.WithContainer(redisContainer)
 
-	mongoContainer := mongodb.NewContainer(mongodb.Params{
+	mongoContainer, err := mongodb.NewContainer(mongodb.Params{
 		Prefix:        prefix,
 		ContainerHost: containerHost,
 		Version:       "4.2",
 		UseExpiration: useExpiration,
 	})
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a mongodb container: %w", err)
+	}
 	testComponent.WithContainer(mongoContainer)
+
+	mongoReplicaSetContainer, err := mongodb.NewContainer(mongodb.Params{
+		Prefix:         prefix + "rs",
+		ContainerHost:  containerHost,
+		Version:        "4.2",
+		UseExpiration:  useExpiration,
+		ReplicaSetMode: true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a mongodb replica set container: %w", err)
+	}
+	testComponent.WithContainer(mongoReplicaSetContainer)
 
 	return testComponent, nil
 }
