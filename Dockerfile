@@ -1,6 +1,6 @@
 FROM golang:1.15-alpine
 
-RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev nodejs yarn
+RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev yarn
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
