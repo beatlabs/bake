@@ -6,7 +6,7 @@ RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev
 ENV CGO_ENABLED=1
 
 # Required to access private modules
-ENV GOPRIVATE=github.com/ORG/*
+ENV GOPRIVATE=github.com/taxibeat/*
 
 # Download and install mage file into bin path
 RUN wget -qc https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
