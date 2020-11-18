@@ -9,9 +9,11 @@ jobs:
     steps:      
       - name: Check out source code
         uses: actions/checkout@v2
-      - name: Build and Publish to Dockerhub
+      - name: Get release version
+        id: get_version
         # Expect release tags to be in semver format with a 'v' prefix.
-        pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
+        run: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
+      - name: Build and Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: taxibeat/bake
