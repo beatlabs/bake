@@ -62,7 +62,7 @@ func NewBaseComponent(runtimeExp time.Duration, containerExp uint, prefix, exist
 	// Create a new network only if we didn't ask to use an existing one.
 	var network *dockertest.Network
 	if existingNetworkID == "" {
-		network, err := pool.CreateNetwork(uuid.New().String())
+		network, err = pool.CreateNetwork(uuid.New().String())
 		if err != nil {
 			return nil, fmt.Errorf("failed to create network: %w", err)
 		}
