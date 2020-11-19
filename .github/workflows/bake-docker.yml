@@ -3,15 +3,19 @@ on:
   release:
     types: [published]
 jobs:
-  update:
+  publish:
+    name: Publish docker image to registry
     runs-on: ubuntu-latest
     steps:      
-      - uses: actions/checkout@master
+      - name: Check out source code
+        uses: actions/checkout@v2
+      - name: Get release version
+        # Expect release tags to be in semver format with a 'v' prefix.
+        run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
       - name: Build and Publish to Dockerhub
-        pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: taxibeat/bake
           username: ${{ secrets.DOCKERHUBUSER }}
           password: ${{ secrets.DOCKERHUBPWD }}
-          tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
+          tags: "latest,${{ env.RELEASE_VERSION }}"
