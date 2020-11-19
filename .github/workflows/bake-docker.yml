@@ -3,17 +3,12 @@ on:
   release:
     types: [published]
 jobs:
-  build:
-    name: Bake docker
+  update:
     runs-on: ubuntu-latest
     steps:      
-      - name: Check out source code
-        uses: actions/checkout@v2
-      - name: Get release version
-        id: get_version
-        # Expect release tags to be in semver format with a 'v' prefix.
-        run: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
+      - uses: actions/checkout@master
       - name: Build and Publish to Dockerhub
+        pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: taxibeat/bake
