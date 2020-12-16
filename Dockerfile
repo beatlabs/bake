@@ -24,7 +24,7 @@ RUN wget -qc https://github.com/mantzas/mark/releases/download/v0.9.0/mark-linux
 RUN wget -qc https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin && rm -rf /tmp/linux-amd
 
 # Download and install golangci-lint into go bin path
-RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.28.2
+RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b $(go env GOPATH)/bin v1.33.0
 
 # Download and install goveralls - go coveralls client
 RUN go get github.com/mattn/goveralls
