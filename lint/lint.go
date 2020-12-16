@@ -21,7 +21,6 @@ var defaultLinters = []string{
 	"prealloc",
 	"stylecheck",
 	"unconvert",
-	"exhaustive",
 }
 
 const (
