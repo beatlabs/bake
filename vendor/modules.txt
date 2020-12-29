@@ -40,7 +40,7 @@ github.com/dgryski/go-rendezvous
 github.com/docker/go-connections/nat
 # github.com/docker/go-units v0.4.0
 github.com/docker/go-units
-# github.com/fatih/color v1.9.0
+# github.com/fatih/color v1.10.0
 ## explicit
 github.com/fatih/color
 # github.com/go-redis/redis/v8 v8.3.2
@@ -88,7 +88,7 @@ github.com/konsorten/go-windows-terminal-sequences
 ## explicit
 github.com/magefile/mage/mg
 github.com/magefile/mage/sh
-# github.com/mattn/go-colorable v0.1.6
+# github.com/mattn/go-colorable v0.1.8
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty

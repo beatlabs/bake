@@ -3,7 +3,7 @@ module github.com/taxibeat/bake
 go 1.15
 
 require (
-	github.com/fatih/color v1.9.0
+	github.com/fatih/color v1.10.0
 	github.com/go-redis/redis/v8 v8.3.2
 	github.com/google/uuid v1.1.2
 	github.com/hashicorp/consul/api v1.7.0
