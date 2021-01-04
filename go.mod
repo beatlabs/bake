@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/hashicorp/consul/api v1.8.1
 	github.com/magefile/mage v1.11.0
-	github.com/ory/dockertest/v3 v3.6.2
+	github.com/ory/dockertest/v3 v3.6.3
 	github.com/stretchr/testify v1.6.1
 	go.mongodb.org/mongo-driver v1.4.4
 	golang.org/x/mod v0.4.0
