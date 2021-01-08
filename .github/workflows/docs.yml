@@ -6,14 +6,34 @@ jobs:
   build:
     name: Sync Docs
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - name: Check out source code
         uses: actions/checkout@v2
 
       - name: Sync
-        run:  ./bake.sh doc:confluencesync
+        run: ./bake.sh doc:confluencesync
         env:
-          CONFLUENCE_USERNAME: ${{ secrets.ConfluenceUsername }}
-          CONFLUENCE_PASSWORD: ${{ secrets.ConfluencePassword }}
-          CONFLUENCE_BASEURL: ${{ secrets.ConfluenceBaseURL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          CONFLUENCE_USERNAME: ${{ secrets.MATCHING_CONFLUENCE_USERNAME }}
+          CONFLUENCE_PASSWORD: ${{ secrets.MATCHING_CONFLUENCEPASSWORD }}
+          CONFLUENCE_BASEURL: ${{ secrets.MATCHING_CONFLUENCEBASEURL }}
+          GITHUB_TOKEN: ${{ secrets.MATCHING_GITHUBTOKEN }}
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_USERNAME: matching-ci-bot
+          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
+          SLACK_MESSAGE: 'Success :rocket:'
+          SLACK_TITLE: ${{ github.repository }} doc sync
+          SLACK_COLOR: good
+          SLACK_FOOTER: Powered by the Matching Domain
+        uses: rtCamp/action-slack-notify@v2
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_USERNAME: matching-ci-bot
+          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
+          SLACK_MESSAGE: 'Failure :facepalm1:'
+          SLACK_TITLE: ${{ github.repository }} doc sync
+          SLACK_COLOR: danger
+          SLACK_FOOTER: Powered by the Matching Domain
+        uses: rtCamp/action-slack-notify@v2
