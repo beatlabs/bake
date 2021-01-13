@@ -11,11 +11,8 @@ ENV GOPRIVATE=github.com/taxibeat/*
 # expect a build-time variable
 ARG GH_TOKEN
 
-# use the value to set the ENV var default
-ENV GITHUB_TOKEN=$GH_TOKEN
-
 # Access to Beat private repos
-RUN git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/"
 
 # Download and install skim - proto schema registry tool
 RUN go get github.com/taxibeat/skim/cmd/skim
