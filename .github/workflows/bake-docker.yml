@@ -19,3 +19,4 @@ jobs:
           username: ${{ secrets.DOCKERHUBUSER }}
           password: ${{ secrets.DOCKERHUBPWD }}
           tags: "latest,${{ env.RELEASE_VERSION }}"
+          buildargs: GH_TOKEN=${{ secrets.MATCHING_GITHUBTOKEN }}

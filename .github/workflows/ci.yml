@@ -12,7 +12,7 @@ jobs:
       - name: Check out
         uses: actions/checkout@v2
       - name: Build local image
-        run: docker build -f Dockerfile -t taxibeat/bake:latest .
+        run: docker build -f Dockerfile -t taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_GITHUBTOKEN }}
         shell: bash
       - name: Bake CI
         run: ./bake.sh ci:run
