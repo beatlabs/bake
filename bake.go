@@ -11,5 +11,5 @@ const (
 	GoCmd = "go"
 
 	// GitHubTokenEnvVar defines the env var key for the GitHub token.
-	GitHubTokenEnvVar = "GITHUB_TOKEN"
+	GitHubTokenEnvVar = "GITHUB_TOKEN" // nolint:gosec
 )
