@@ -8,6 +8,17 @@ ENV CGO_ENABLED=1
 # Required to access private modules
 ENV GOPRIVATE=github.com/taxibeat/*
 
+# expect a build-time variable
+ARG GH_TOKEN
+
+# Access to Beat private repos
+RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+
+# Download and install skim - proto schema registry tool
+RUN go get github.com/taxibeat/skim/cmd/skim
+
+# Remove token from config after accessing private repos.
+RUN git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 # Download and install mage file into bin path
 RUN wget -qc https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
 
