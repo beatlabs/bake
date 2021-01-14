@@ -15,14 +15,9 @@ const skimCMD = "skim"
 func SchemaValidateAll(service string) error {
 	fmt.Printf("proto schema: validate all schemas for %s\n", service)
 
-	token := os.Getenv(bake.GitHubTokenEnvVar)
-	if token == "" {
-		return fmt.Errorf("GITHUB_TOKEN env var not set")
-	}
-
 	args := []string{
 		"-t",
-		token,
+		os.Getenv(bake.GitHubTokenEnvVar),
 		"-r",
 		"proto-schemas",
 		"-o",
