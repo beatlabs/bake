@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/fatih/color v1.10.0
-	github.com/go-redis/redis/v8 v8.4.4
+	github.com/go-redis/redis/v8 v8.4.8
 	github.com/google/uuid v1.1.4
 	github.com/hashicorp/consul/api v1.8.1
 	github.com/magefile/mage v1.11.0
