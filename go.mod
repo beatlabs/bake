@@ -11,5 +11,5 @@ require (
 	github.com/ory/dockertest/v3 v3.6.3
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.4.4
-	golang.org/x/mod v0.4.0
+	golang.org/x/mod v0.4.1
 )
