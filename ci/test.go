@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	bake "github.com/taxibeat/bake/internal"
 )
 
 func runTests(cf string, tags []string) error {

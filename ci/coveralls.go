@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	bake "github.com/taxibeat/bake/internal"
 )
 
 const coverFile = "coverage.txt"
@@ -18,7 +18,7 @@ func Coveralls(buildTags ...string) error {
 
 // CoverallsDefault runs the actual CI pipeline with Coveralls integration and default build tags.
 func CoverallsDefault() error {
-	return coveralls([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return coveralls(bake.DefaultBuildTags)
 }
 
 func coveralls(tags []string) error {

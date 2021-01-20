@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	bake "github.com/taxibeat/bake/internal"
 )
 
 const (
@@ -42,7 +42,7 @@ func Run(tags, extraArgs []string, pkg string) error {
 // RunDefault Go tests with cover, race flags enabled, with default build tags and default pkg.
 func RunDefault() error {
 	args := DefaultTestArgs
-	args = append(args, getBuildTagFlag([]string{bake.BuildTagIntegration, bake.BuildTagComponent}))
+	args = append(args, getBuildTagFlag(bake.DefaultBuildTags))
 	args = append(args, defaultPkg)
 	return run(args)
 }
@@ -60,7 +60,7 @@ func Cover(buildTags ...string) error {
 
 // CoverDefault runs Go test and produce full code coverage result and uses default build tags.
 func CoverDefault() error {
-	return cover([]string{bake.BuildTagIntegration, bake.BuildTagComponent})
+	return cover(bake.DefaultBuildTags)
 }
 
 func cover(tags []string) error {

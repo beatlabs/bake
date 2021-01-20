@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	bake "github.com/taxibeat/bake/internal"
 )
 
 const skimCMD = "skim"

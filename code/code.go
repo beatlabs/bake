@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
+	bake "github.com/taxibeat/bake/internal"
 	"golang.org/x/mod/sumdb/dirhash"
 )
 
