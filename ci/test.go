@@ -5,8 +5,9 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
-	bake "github.com/taxibeat/bake/internal"
 )
+
+const goCmd = "go"
 
 func runTests(cf string, tags []string) error {
 	fmt.Printf("ci: running tests with tags: %v\n", tags)
@@ -25,7 +26,7 @@ func runTests(cf string, tags []string) error {
 	}
 	args = append(args, "./...")
 
-	return sh.RunV(bake.GoCmd, args...)
+	return sh.RunV(goCmd, args...)
 }
 
 func getBuildTagFlag(tags []string) string {
