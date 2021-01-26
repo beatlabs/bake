@@ -10,6 +10,11 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
   # Maintain dependencies for Go
   - package-ecosystem: "gomod" # See documentation for possible values
     directory: "/" # Location of package manifests
