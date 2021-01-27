@@ -3,6 +3,7 @@ package test
 
 import (
 	"github.com/magefile/mage/mg"
+	"github.com/taxibeat/bake/docker"
 	"github.com/taxibeat/bake/test"
 )
 
@@ -17,6 +18,10 @@ func (Test) Unit() error {
 // All runs all tests.
 func (Test) All() error {
 	return test.RunDefault()
+}
+
+func (Test) Cleanup() error {
+	return docker.CleanupResources()
 }
 
 // Cover runs all tests and produces a coverage report.

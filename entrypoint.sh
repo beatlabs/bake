@@ -7,14 +7,13 @@ git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://g
 
 if [[ "$#" = 1 ]]; then
     case $1 in
-        --gen-script) cat /home/beat/bake-default.sh; exit 0 ;;
-        --gen-bin) mage -goos linux -compile bake-build; exit 0 ;;
+        --gen-bin) mage -goos linux -compile magebin; exit 0 ;;
     esac
 fi
 
-if [ -f $PWD/bake-build ]; then
+if [ -f $PWD/magebin ]; then
     echo "Using prebuilt bake-build binary"
-    exec $PWD/bake-build $@
+    exec $PWD/magebin $@
 else
     exec mage $@
 fi
