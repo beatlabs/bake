@@ -136,7 +136,7 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 // WriteToFile serializes a session and writes it to a file.
 func (s *Session) WriteToFile(fpath string) error {
 	if inDocker() {
-		return errors.New("not supported")
+		return nil
 	}
 
 	b, err := json.MarshalIndent(sessionDump{
