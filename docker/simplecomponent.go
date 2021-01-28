@@ -54,7 +54,7 @@ func (c *SimpleComponent) Start(session *Session) error {
 
 	for _, container := range c.Containers {
 		log.Printf("Component %q is starting container %q", c.Name, container.Name)
-		err := c.RunContainer(session, container)
+		err := c.runContainer(session, container)
 		if err != nil {
 			return fmt.Errorf("starting component %q: %w", container.Name, err)
 		}
@@ -63,7 +63,7 @@ func (c *SimpleComponent) Start(session *Session) error {
 	return nil
 }
 
-func (c *SimpleComponent) RunContainer(session *Session, conf SimpleContainerConfig) error {
+func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerConfig) error {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		return err
@@ -157,10 +157,6 @@ func (c *SimpleComponent) RunContainer(session *Session, conf SimpleContainerCon
 	}
 
 	return nil
-}
-
-func (c *SimpleComponent) GetName() string {
-	return c.Name
 }
 
 // StreamLogs streams container logs to stdout.

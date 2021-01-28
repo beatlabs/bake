@@ -23,7 +23,6 @@ const SessionFile = ".bakesession"
 // Component is a logical service, it groups together several containers.
 type Component interface {
 	Start(*Session) error
-	GetName() string
 }
 
 // Session is the docker session, used to manage the lifecycle of components.
@@ -154,7 +153,7 @@ type sessionDump struct {
 
 func FromFile(fpath string) (*Session, error) {
 	if inDocker() {
-		return nil, errors.New("not supported")
+		return nil, errors.New("not supported inside of docker")
 	}
 
 	data, err := ioutil.ReadFile(fpath)
@@ -176,14 +175,13 @@ func FromFile(fpath string) (*Session, error) {
 }
 
 func CleanupResources() error {
-	libRegEx, err := regexp.Compile("^.bake.*")
+	re, err := regexp.Compile("^.bake.*")
 	if err != nil {
 		return err
 	}
 
 	err = filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err == nil && libRegEx.MatchString(info.Name()) {
-			println(path, info.Name())
+		if err == nil && re.MatchString(info.Name()) {
 			cleanupSessionResources(path)
 		}
 		return nil
@@ -192,6 +190,8 @@ func CleanupResources() error {
 }
 
 func cleanupSessionResources(fname string) error {
+	fmt.Println(fname)
+
 	session, err := FromFile(fname)
 	if err != nil {
 		return err
