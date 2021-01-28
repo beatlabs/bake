@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake"
 )
 
 const skimCMD = "skim"
@@ -17,7 +16,7 @@ func SchemaValidateAll(service string) error {
 
 	args := []string{
 		"-t",
-		os.Getenv(bake.GitHubTokenEnvVar),
+		os.Getenv("GITHUB_TOKEN"),
 		"-r",
 		"proto-schemas",
 		"-o",
