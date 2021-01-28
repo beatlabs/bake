@@ -11,11 +11,16 @@ import (
 )
 
 const (
-	ComponentName        = "kafka"
-	KafkaServiceName     = "kafka"
+	// ComponentName is the public name of this component.
+	ComponentName = "kafka"
+	// KafkaServiceName is the advertised name of the Kafka service.
+	KafkaServiceName = "kafka"
+	// ZookeeperServiceName is the advertised name of the Zookeeper service.
 	ZookeeperServiceName = "zookeeper"
 )
 
+// WithTopics sets topics in the kafka container config.
+// E.g. MyTopic:1:1:compact.
 func WithTopics(topics ...string) docker.SimpleContainerOptionFunc {
 	return func(c *docker.SimpleContainerConfig) {
 		c.Env = append(c.Env, "KAFKA_CREATE_TOPICS="+strings.Join(topics, ","))

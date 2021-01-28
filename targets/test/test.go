@@ -20,6 +20,7 @@ func (Test) All() error {
 	return test.RunDefault()
 }
 
+// Cleanup removes any local resources created by `mage test:all`.
 func (Test) Cleanup() error {
 	return docker.CleanupResources()
 }

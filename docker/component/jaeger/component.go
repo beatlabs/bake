@@ -9,8 +9,10 @@ import (
 )
 
 const (
+	// ComponentName is the public name of this component.
 	ComponentName = "jaeger"
-	ServiceName   = "jaeger"
+	// ServiceName is the advertised name of this service.
+	ServiceName = "jaeger"
 )
 
 // NewComponent creates a new Redis component.

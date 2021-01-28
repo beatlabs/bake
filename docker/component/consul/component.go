@@ -6,8 +6,10 @@ import (
 )
 
 const (
+	// ComponentName is the public name of this component.
 	ComponentName = "consul"
-	ServiceName   = "consul"
+	// ServiceName is the advertised name of this service.
+	ServiceName = "consul"
 )
 
 // NewComponent creates a new Consul component.

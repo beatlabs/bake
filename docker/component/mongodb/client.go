@@ -10,7 +10,7 @@ import (
 // NewClient creates a new Client.
 func NewClient(ctx context.Context, address string) (*mongo.Client, error) {
 	opts := options.Client()
-	rs := ReplicaSet
+	rs := "rs0"
 	opts.ReplicaSet = &rs
 	opts.ApplyURI("mongodb://" + address)
 

@@ -10,10 +10,13 @@ import (
 )
 
 const (
+	// ComponentName is the public name of this component.
 	ComponentName = "localstack"
-	ServiceName   = "localstack"
+	// ServiceName is the advertised name of this service.
+	ServiceName = "localstack"
 )
 
+// WithServices sets the localstack services in the container config.
 func WithServices(services ...string) docker.SimpleContainerOptionFunc {
 	return func(c *docker.SimpleContainerConfig) {
 		c.Env = append(c.Env, "LOCALSTACK_SERVICES="+strings.Join(services, ","))

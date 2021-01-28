@@ -33,8 +33,6 @@ func TestMain(m *testing.M) {
 		newSession()
 	}
 
-	session.WriteToFile(docker.SessionFile)
-
 	exitCode := m.Run()
 	os.Exit(exitCode)
 }
@@ -70,6 +68,9 @@ func newSession() {
 	checkErr(err)
 
 	err = session.StartComponents(serviceComponent)
+	checkErr(err)
+
+	err = session.WriteToFile(docker.SessionFile)
 	checkErr(err)
 }
 
@@ -144,7 +145,9 @@ func TestExampleService(t *testing.T) {
 
 func checkErr(err error) {
 	if err != nil {
-		session.WriteToFile(docker.SessionFile)
+		if werr := session.WriteToFile(docker.SessionFile); werr != nil {
+			fmt.Printf("session write failed: %v\n", werr)
+		}
 		fmt.Printf("test setup failed: %v\n", err)
 		os.Exit(1)
 	}

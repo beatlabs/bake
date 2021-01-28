@@ -9,7 +9,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"sync"
 
@@ -18,6 +17,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+// SessionFile is the file name used for storing sessions.
 const SessionFile = ".bakesession"
 
 // Component is a logical service, it groups together several containers.
@@ -54,10 +54,12 @@ func NewSession(id, networkID string) (*Session, error) {
 	}, nil
 }
 
+// ID returns the Session ID.
 func (s *Session) ID() string {
 	return s.id
 }
 
+// StartComponents starts the provided components.
 func (s *Session) StartComponents(cs ...Component) error {
 	g := errgroup.Group{}
 	for _, c := range cs {
@@ -69,6 +71,7 @@ func (s *Session) StartComponents(cs ...Component) error {
 	return g.Wait()
 }
 
+// RegisterInternalDockerSevice registers an internal endpoint against the service name.
 func (s *Session) RegisterInternalDockerSevice(serviceName, endpoint string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -82,6 +85,7 @@ func (s *Session) RegisterInternalDockerSevice(serviceName, endpoint string) err
 	return nil
 }
 
+// RegisterHostMappedDockerSevice registers a host mapped endpoint against the service name.
 func (s *Session) RegisterHostMappedDockerSevice(serviceName, endpoint string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -95,6 +99,7 @@ func (s *Session) RegisterHostMappedDockerSevice(serviceName, endpoint string) e
 	return nil
 }
 
+// DockerToDockerServiceAddress retrieves an internal endpoint for a service name.
 func (s *Session) DockerToDockerServiceAddress(serviceName string) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -107,6 +112,7 @@ func (s *Session) DockerToDockerServiceAddress(serviceName string) (string, erro
 	return addr, nil
 }
 
+// HostToDockerServiceAddress retrieves a host mapped endpoint for a service name.
 func (s *Session) HostToDockerServiceAddress(serviceName string) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -119,6 +125,7 @@ func (s *Session) HostToDockerServiceAddress(serviceName string) (string, error)
 	return addr, nil
 }
 
+// AutoServiceAddress retrieves an endpoint for a service name, appropriate for the running code.
 func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 	if s.inDocker {
 		return s.DockerToDockerServiceAddress(serviceName)
@@ -126,6 +133,7 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 	return s.HostToDockerServiceAddress(serviceName)
 }
 
+// WriteToFile serializes a session and writes it to a file.
 func (s *Session) WriteToFile(fpath string) error {
 	if inDocker() {
 		return errors.New("not supported")
@@ -144,6 +152,21 @@ func (s *Session) WriteToFile(fpath string) error {
 	return ioutil.WriteFile(path.Clean(fpath), b, 0600)
 }
 
+// FromEnv retrieves bake related env vars, with defaults.
+func FromEnv() (sessionID, networkID string, err error) {
+	sessionID = os.Getenv("BAKE_SESSION_ID")
+	if sessionID == "" {
+		sessionID = "000"
+	}
+
+	networkID = os.Getenv("BAKE_NETWORK_ID")
+	if networkID == "" {
+		networkID, err = createNetwork(sessionID)
+	}
+
+	return
+}
+
 type sessionDump struct {
 	ID                         string
 	NetworkID                  string
@@ -151,12 +174,13 @@ type sessionDump struct {
 	HostMappedServiceAddresses map[string]string
 }
 
+// FromFile attemps to load a session from a file.
 func FromFile(fpath string) (*Session, error) {
 	if inDocker() {
 		return nil, errors.New("not supported inside of docker")
 	}
 
-	data, err := ioutil.ReadFile(fpath)
+	data, err := ioutil.ReadFile(path.Clean(fpath))
 	if err != nil {
 		return nil, err
 	}
@@ -174,19 +198,16 @@ func FromFile(fpath string) (*Session, error) {
 	}, nil
 }
 
+// CleanupResources finds all session files and prunes Docker resources associated with them.
 func CleanupResources() error {
-	re, err := regexp.Compile("^.bake.*")
-	if err != nil {
-		return err
-	}
-
-	err = filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err == nil && re.MatchString(info.Name()) {
-			cleanupSessionResources(path)
+	return filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err == nil && info.Name() == SessionFile {
+			if err := cleanupSessionResources(path); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
-	return err
 }
 
 func cleanupSessionResources(fname string) error {
@@ -212,7 +233,7 @@ func cleanupSessionResources(fname string) error {
 		for _, name := range c.Names {
 			if strings.HasPrefix(name, "/"+session.id) {
 				fmt.Println(name)
-				pool.RemoveContainerByName(name)
+				err := pool.RemoveContainerByName(name)
 				if err != nil {
 					return err
 				}
@@ -256,20 +277,6 @@ func createNetwork(id string) (string, error) {
 		return "", err
 	}
 	return net.Network.ID, nil
-}
-
-func FromEnv() (sessionID string, networkID string, err error) {
-	sessionID = os.Getenv("BAKE_SESSION_ID")
-	if sessionID == "" {
-		sessionID = "000"
-	}
-
-	networkID = os.Getenv("BAKE_NETWORK_ID")
-	if networkID == "" {
-		networkID, _ = createNetwork(sessionID)
-	}
-
-	return
 }
 
 func inDocker() bool {

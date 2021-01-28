@@ -14,12 +14,14 @@ import (
 	"github.com/ory/dockertest/v3/docker"
 )
 
+// BuildOptions contains simple docker build options.
 type BuildOptions struct {
 	Dockerfile string
 	ContextDir string
 	BuildArgs  []docker.BuildArg
 }
 
+// SimpleContainerConfig defines a Docker container with associated service ports.
 type SimpleContainerConfig struct {
 	Name               string
 	Repository         string
@@ -31,8 +33,10 @@ type SimpleContainerConfig struct {
 	ReadyFunc          func(*Session) error
 }
 
+// SimpleContainerOptionFunc allows for customization of SimpleContainerConfigs.
 type SimpleContainerOptionFunc func(*SimpleContainerConfig)
 
+// WithTag sets a Docker tag in a SimpleContainerConfig.
 func WithTag(tag string) SimpleContainerOptionFunc {
 	return func(c *SimpleContainerConfig) {
 		c.Tag = tag
@@ -173,6 +177,7 @@ func Retry(op func() error) error {
 	return backoff.Retry(op, bo)
 }
 
+// GetFreePort tries to find a free port on the current machine.
 func GetFreePort() (string, error) {
 	/* #nosec */
 	l, err := net.Listen("tcp", ":0")

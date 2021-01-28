@@ -6,14 +6,15 @@ import (
 	"fmt"
 
 	"github.com/taxibeat/bake/docker"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
+	// ComponentName is the public name of this component.
 	ComponentName = "mongo"
-	ServiceName   = "mongo"
-	ReplicaSet    = "rs0"
+	// ServiceName is the advertised name of this service.
+	ServiceName = "mongo"
+	// ReplicaSet is the replica set name.
+	ReplicaSet = "rs0"
 )
 
 // NewComponent creates a new Consul component.
@@ -49,11 +50,9 @@ func readyFunc(session *docker.Session) error {
 	if err != nil {
 		return err
 	}
-	opts := options.Client()
-	opts.ApplyURI("mongodb://" + addr)
 
 	return docker.Retry(func() error {
-		cl, err := mongo.Connect(context.Background(), opts)
+		cl, err := NewClient(context.Background(), addr)
 		if err != nil {
 			return fmt.Errorf("failed to create mongo client: %w", err)
 		}
