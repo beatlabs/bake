@@ -7,14 +7,13 @@ import (
 
 const (
 	ComponentName = "consul"
-	ContainerName = "consul"
 	ServiceName   = "consul"
 )
 
 // NewComponent creates a new Consul component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       ContainerName,
+		Name:       "consul",
 		Repository: "consul",
 		Tag:        "1.8.0",
 		ServicePorts: map[string]string{

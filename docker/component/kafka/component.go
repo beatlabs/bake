@@ -11,17 +11,15 @@ import (
 )
 
 const (
-	ComponentName          = "kafka"
-	KafkaContainerName     = "kafka"
-	ZookeeperContainerName = "zookeeper"
-	KafkaServiceName       = "kafka"
-	ZookeeperServiceName   = "zookeeper"
+	ComponentName        = "kafka"
+	KafkaServiceName     = "kafka"
+	ZookeeperServiceName = "zookeeper"
 )
 
 // NewComponent creates a new Redis component.
 func NewComponent(session *docker.Session, topics []string, opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	zooContainer := docker.SimpleContainerConfig{
-		Name:       ZookeeperContainerName,
+		Name:       "zookeeper",
 		Repository: "wurstmeister/zookeeper",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
@@ -33,17 +31,17 @@ func NewComponent(session *docker.Session, topics []string, opts ...docker.Simpl
 	port, _ := docker.GetFreePort()
 
 	kafkaContainer := docker.SimpleContainerConfig{
-		Name:       KafkaContainerName,
+		Name:       "kafka",
 		Repository: "wurstmeister/kafka",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
 			KafkaServiceName: "9092",
 		},
-		FixedHostServicePorts: map[string]string{
+		StaticServicePorts: map[string]string{
 			KafkaServiceName: port,
 		},
 		Env: []string{
-			fmt.Sprintf("KAFKA_ZOOKEEPER_CONNECT=%s-%s:2181", session.ID(), ZookeeperContainerName),
+			fmt.Sprintf("KAFKA_ZOOKEEPER_CONNECT=%s-zookeeper:2181", session.ID()),
 			"KAFKA_CREATE_TOPICS=" + strings.Join(topics, ","),
 			"KAFKA_LISTENERS=INSIDE://:9092,OUTSIDE://:" + port,
 			"KAFKA_ADVERTISED_LISTENERS=INSIDE://:9092,OUTSIDE://localhost:" + port,

@@ -18,7 +18,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const SessionFile = ".baketest"
+const SessionFile = ".bakesession"
 
 // Component is a logical service, it groups together several containers.
 type Component interface {
@@ -102,7 +102,7 @@ func (s *Session) DockerToDockerServiceAddress(serviceName string) (string, erro
 
 	addr, ok := s.serviceAddresses[serviceName]
 	if !ok {
-		return "", fmt.Errorf("bake internal service address for %q not found", serviceName)
+		return "", fmt.Errorf("internal service address not registered for %q", serviceName)
 	}
 
 	return addr, nil
@@ -114,7 +114,7 @@ func (s *Session) HostToDockerServiceAddress(serviceName string) (string, error)
 
 	addr, ok := s.hostMappedServiceAddresses[serviceName]
 	if !ok {
-		return "", fmt.Errorf("bake external service address for %q not found", serviceName)
+		return "", fmt.Errorf("external service address not registered for %q", serviceName)
 	}
 
 	return addr, nil
@@ -125,13 +125,6 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 		return s.DockerToDockerServiceAddress(serviceName)
 	}
 	return s.HostToDockerServiceAddress(serviceName)
-}
-
-type sessionDump struct {
-	ID                         string
-	NetworkID                  string
-	ServiceAddresses           map[string]string
-	HostMappedServiceAddresses map[string]string
 }
 
 func (s *Session) WriteToFile(fpath string) error {
@@ -150,6 +143,13 @@ func (s *Session) WriteToFile(fpath string) error {
 	}
 
 	return ioutil.WriteFile(path.Clean(fpath), b, 0600)
+}
+
+type sessionDump struct {
+	ID                         string
+	NetworkID                  string
+	ServiceAddresses           map[string]string
+	HostMappedServiceAddresses map[string]string
 }
 
 func FromFile(fpath string) (*Session, error) {

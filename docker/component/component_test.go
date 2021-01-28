@@ -27,31 +27,44 @@ func TestMain(m *testing.M) {
 	var err error
 	session, err = docker.FromFile(docker.SessionFile)
 	if err != nil {
-		sessionID, netID, err := docker.FromEnv()
-		checkErr(err)
-
-		session, err = docker.NewSession(sessionID, netID)
-		checkErr(err)
-
-		err = session.StartComponents(
-			consul.NewComponent(),
-			redis.NewComponent(),
-			mongodb.NewComponent(),
-			kafka.NewComponent(session, []string{"foo:1:1"}),
-		)
-		checkErr(err)
-
-		serviceComponent, err := testservice.NewComponent(session)
-		checkErr(err)
-
-		err = session.StartComponents(serviceComponent)
-		checkErr(err)
+		newSession()
 	}
 
 	session.WriteToFile(docker.SessionFile)
 
 	exitCode := m.Run()
 	os.Exit(exitCode)
+}
+
+func newSession() {
+	sessionID, netID, err := docker.FromEnv()
+	checkErr(err)
+
+	session, err = docker.NewSession(sessionID, netID)
+	checkErr(err)
+
+	err = session.StartComponents(
+		consul.NewComponent(docker.WithTag("1.8.0")),
+		redis.NewComponent(),
+		mongodb.NewComponent(),
+		kafka.NewComponent(session, []string{"foo:1:1"}),
+	)
+	checkErr(err)
+
+	redisAddr, err := session.DockerToDockerServiceAddress(redis.ServiceName)
+	checkErr(err)
+
+	mongoAddr, err := session.DockerToDockerServiceAddress(mongodb.ServiceName)
+	checkErr(err)
+
+	kafkaAddr, err := session.DockerToDockerServiceAddress(kafka.KafkaServiceName)
+	checkErr(err)
+
+	serviceComponent, err := testservice.NewComponent(redisAddr, mongoAddr, kafkaAddr)
+	checkErr(err)
+
+	err = session.StartComponents(serviceComponent)
+	checkErr(err)
 }
 
 func TestClients(t *testing.T) {
@@ -103,7 +116,7 @@ func TestClients(t *testing.T) {
 
 func checkErr(err error) {
 	if err != nil {
-		_ = session.WriteToFile(docker.SessionFile)
+		session.WriteToFile(docker.SessionFile)
 		fmt.Printf("test setup failed: %v\n", err)
 		os.Exit(1)
 	}

@@ -3,41 +3,23 @@ package testservice
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/docker/component/kafka"
-	"github.com/taxibeat/bake/docker/component/mongodb"
-	"github.com/taxibeat/bake/docker/component/redis"
 )
 
 const (
 	ComponentName = "testservice"
-	ContainerName = "testservice"
 	ServiceName   = "testservice"
 )
 
-func NewComponent(session *docker.Session) (*docker.SimpleComponent, error) {
-	redisAddr, err := session.DockerToDockerServiceAddress(redis.ServiceName)
-	if err != nil {
-		return nil, err
-	}
-	mongoAddr, err := session.DockerToDockerServiceAddress(mongodb.ServiceName)
-	if err != nil {
-		return nil, err
-	}
-	kafkaAddr, err := session.DockerToDockerServiceAddress(kafka.KafkaServiceName)
-	if err != nil {
-		return nil, err
-	}
-
+func NewComponent(redisAddr, mongoAddr, kafkaAddr string) (*docker.SimpleComponent, error) {
 	container := docker.SimpleContainerConfig{
 		BuildOpts: &docker.BuildOptions{
 			Dockerfile: "docker/component/testservice/Dockerfile",
 			ContextDir: "../..",
 		},
-		Name:       ContainerName,
-		Repository: ComponentName,
+		Name:       "testservice",
+		Repository: "testservice",
 		Env: []string{
 			"REDIS=" + redisAddr,
 			"MONGO=" + mongoAddr,
@@ -48,12 +30,6 @@ func NewComponent(session *docker.Session) (*docker.SimpleComponent, error) {
 			ServiceName: "8080",
 		},
 		ReadyFunc: readyFunc,
-	}
-
-	existing := os.Getenv("EXISTING_TESTSERVICE")
-	if existing != "" {
-		container.BuildOpts = nil
-		container.Tag = existing
 	}
 
 	return &docker.SimpleComponent{

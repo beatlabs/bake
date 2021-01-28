@@ -21,15 +21,14 @@ type BuildOptions struct {
 }
 
 type SimpleContainerConfig struct {
-	Name                   string
-	Repository             string
-	Tag                    string
-	Env                    []string
-	BuildOpts              *BuildOptions
-	ServicePorts           map[string]string
-	MappedHostServicePorts map[string]string
-	FixedHostServicePorts  map[string]string
-	ReadyFunc              func(*Session) error
+	Name               string
+	Repository         string
+	Tag                string
+	Env                []string
+	BuildOpts          *BuildOptions
+	ServicePorts       map[string]string
+	StaticServicePorts map[string]string
+	ReadyFunc          func(*Session) error
 }
 
 type SimpleContainerOptionFunc func(SimpleContainerConfig) SimpleContainerConfig
@@ -96,40 +95,32 @@ func (c *SimpleComponent) RunContainer(session *Session, conf SimpleContainerCon
 		ExposedPorts: []string{},
 	}
 
+	hostPorts := map[string]string{}
 	for serviceName, nativePort := range conf.ServicePorts {
 		runOpts.ExposedPorts = append(runOpts.ExposedPorts, nativePort+"/tcp")
+
 		if !session.inDocker {
-			var mappedPort string
-			var fixedPort string
-			var ok bool
-			var err error
-			fixedPort, ok = conf.FixedHostServicePorts[serviceName]
+			// staticPort means that we should map this port 1 to 1 on the host,
+			// trusting that the component has obtained a random one.
+			staticPort, ok := conf.StaticServicePorts[serviceName]
 			if ok {
-				runOpts.ExposedPorts = append(runOpts.ExposedPorts, fixedPort+"/tcp")
-				runOpts.PortBindings[docker.Port(fixedPort+"/tcp")] = []docker.PortBinding{
-					{
-						HostIP:   "0.0.0.0",
-						HostPort: fixedPort,
-					},
+				runOpts.ExposedPorts = append(runOpts.ExposedPorts, staticPort+"/tcp")
+				runOpts.PortBindings[docker.Port(staticPort+"/tcp")] = []docker.PortBinding{
+					{HostIP: "0.0.0.0", HostPort: staticPort},
 				}
-			} else {
-				mappedPort, err = GetFreePort()
-				if err != nil {
-					return fmt.Errorf("can not obtain random free port: %w", err)
-				}
-				if conf.MappedHostServicePorts == nil {
-					conf.MappedHostServicePorts = map[string]string{}
-				}
-				conf.MappedHostServicePorts[serviceName] = mappedPort
+				hostPorts[serviceName] = staticPort
+				continue
 			}
 
-			fmt.Println(serviceName, nativePort, mappedPort)
-			runOpts.PortBindings[docker.Port(nativePort+"/tcp")] = []docker.PortBinding{
-				{
-					HostIP:   "0.0.0.0",
-					HostPort: mappedPort,
-				},
+			// by default we obtain a random port to publish for the native port for this service.
+			mappedPort, err := GetFreePort()
+			if err != nil {
+				return fmt.Errorf("can not obtain random free port: %w", err)
 			}
+			runOpts.PortBindings[docker.Port(nativePort+"/tcp")] = []docker.PortBinding{
+				{HostIP: "0.0.0.0", HostPort: mappedPort},
+			}
+			hostPorts[serviceName] = mappedPort
 		}
 	}
 
@@ -146,14 +137,11 @@ func (c *SimpleComponent) RunContainer(session *Session, conf SimpleContainerCon
 			return nil
 		}
 		if !session.inDocker {
-			pport, ok := conf.FixedHostServicePorts[serviceName]
+			hport, ok := hostPorts[serviceName]
 			if !ok {
-				pport, ok = conf.MappedHostServicePorts[serviceName]
-				if !ok {
-					return fmt.Errorf("mapped service port not found for service %s", serviceName)
-				}
+				return fmt.Errorf("host service port not found for service %s", serviceName)
 			}
-			err := session.RegisterHostMappedDockerSevice(serviceName, "localhost:"+pport)
+			err := session.RegisterHostMappedDockerSevice(serviceName, "localhost:"+hport)
 			if err != nil {
 				return nil
 			}

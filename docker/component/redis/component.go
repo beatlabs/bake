@@ -10,14 +10,13 @@ import (
 
 const (
 	ComponentName = "redis"
-	ContainerName = "redis"
 	ServiceName   = "redis"
 )
 
 // NewComponent creates a new Redis component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       ContainerName,
+		Name:       "redis",
 		Repository: "bitnami/redis",
 		Tag:        "latest",
 		Env: []string{

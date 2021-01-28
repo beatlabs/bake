@@ -12,18 +12,14 @@ import (
 
 const (
 	ComponentName = "mongo"
-	ContainerName = "mongo"
 	ServiceName   = "mongo"
-)
-
-const (
-	ReplicaSet = "rs0"
+	ReplicaSet    = "rs0"
 )
 
 // NewComponent creates a new Consul component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       ContainerName,
+		Name:       "mongo",
 		Repository: "bitnami/mongodb",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
