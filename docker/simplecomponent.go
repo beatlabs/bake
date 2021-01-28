@@ -31,12 +31,11 @@ type SimpleContainerConfig struct {
 	ReadyFunc          func(*Session) error
 }
 
-type SimpleContainerOptionFunc func(SimpleContainerConfig) SimpleContainerConfig
+type SimpleContainerOptionFunc func(*SimpleContainerConfig)
 
 func WithTag(tag string) SimpleContainerOptionFunc {
-	return func(c SimpleContainerConfig) SimpleContainerConfig {
+	return func(c *SimpleContainerConfig) {
 		c.Tag = tag
-		return c
 	}
 }
 

@@ -1,23 +1,26 @@
-// Package consul exposes a Consul service and client.
-package consul
+// Package jaeger exposes a Jaeger service.
+package jaeger
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/taxibeat/bake/docker"
 )
 
 const (
-	ComponentName = "consul"
-	ServiceName   = "consul"
+	ComponentName = "jaeger"
+	ServiceName   = "jaeger"
 )
 
-// NewComponent creates a new Consul component.
+// NewComponent creates a new Redis component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "consul",
-		Repository: "consul",
-		Tag:        "1.8.0",
+		Name:       "jaeger",
+		Repository: "jaegertracing/all-in-one",
+		Tag:        "latest",
 		ServicePorts: map[string]string{
-			ServiceName: "8500",
+			ServiceName: "16686",
 		},
 		ReadyFunc: readyFunc,
 	}
@@ -38,12 +41,15 @@ func readyFunc(session *docker.Session) error {
 		return err
 	}
 
-	consulClient, err := NewClient(addr)
-	if err != nil {
-		return err
-	}
-
 	return docker.Retry(func() error {
-		return consulClient.Live()
+		resp, err := http.Get(fmt.Sprintf("http://%s/health", addr))
+		if err != nil {
+			return err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("got status code: %d", resp.StatusCode)
+		}
+		return nil
 	})
 }

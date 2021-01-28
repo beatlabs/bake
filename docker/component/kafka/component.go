@@ -16,8 +16,14 @@ const (
 	ZookeeperServiceName = "zookeeper"
 )
 
+func WithTopics(topics ...string) docker.SimpleContainerOptionFunc {
+	return func(c *docker.SimpleContainerConfig) {
+		c.Env = append(c.Env, "KAFKA_CREATE_TOPICS="+strings.Join(topics, ","))
+	}
+}
+
 // NewComponent creates a new Redis component.
-func NewComponent(session *docker.Session, topics []string, opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
+func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	zooContainer := docker.SimpleContainerConfig{
 		Name:       "zookeeper",
 		Repository: "wurstmeister/zookeeper",
@@ -42,7 +48,6 @@ func NewComponent(session *docker.Session, topics []string, opts ...docker.Simpl
 		},
 		Env: []string{
 			fmt.Sprintf("KAFKA_ZOOKEEPER_CONNECT=%s-zookeeper:2181", session.ID()),
-			"KAFKA_CREATE_TOPICS=" + strings.Join(topics, ","),
 			"KAFKA_LISTENERS=INSIDE://:9092,OUTSIDE://:" + port,
 			"KAFKA_ADVERTISED_LISTENERS=INSIDE://:9092,OUTSIDE://localhost:" + port,
 			"KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT",
@@ -52,7 +57,7 @@ func NewComponent(session *docker.Session, topics []string, opts ...docker.Simpl
 	}
 
 	for _, opt := range opts {
-		kafkaContainer = opt(kafkaContainer)
+		opt(&kafkaContainer)
 	}
 
 	return &docker.SimpleComponent{

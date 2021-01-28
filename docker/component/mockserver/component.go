@@ -1,29 +1,29 @@
-// Package redis exposes a Redis service.
-package redis
+// Package mockserver exposes a Mockserver services.
+package mockserver
 
 import (
-	"context"
+	"fmt"
+	"net/http"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/taxibeat/bake/docker"
 )
 
 const (
-	ComponentName = "redis"
-	ServiceName   = "redis"
+	ComponentName = "mockserver"
+	ServiceName   = "mockserver"
 )
 
 // NewComponent creates a new Redis component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "redis",
-		Repository: "bitnami/redis",
+		Name:       "mockserver",
+		Repository: "mockserver/mockserver",
 		Tag:        "latest",
 		Env: []string{
-			"ALLOW_EMPTY_PASSWORD=yes",
+			"LOG_LEVEL=DEBUG",
 		},
 		ServicePorts: map[string]string{
-			ServiceName: "6379",
+			ServiceName: "1080",
 		},
 		ReadyFunc: readyFunc,
 	}
@@ -44,11 +44,20 @@ func readyFunc(session *docker.Session) error {
 		return err
 	}
 
-	opts := &redis.Options{Addr: addr}
-	cl := redis.NewClient(opts)
+	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://%s/status", addr), nil)
+	if err != nil {
+		return fmt.Errorf("failed to create status request to mockserver: %w", err)
+	}
 
 	return docker.Retry(func() error {
-		_, err := cl.Ping(context.Background()).Result()
-		return err
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			return fmt.Errorf("could not connect to mockserver: %w", err)
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("got status code: %d", resp.StatusCode)
+		}
+		return nil
 	})
 }

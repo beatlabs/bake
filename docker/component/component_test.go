@@ -14,7 +14,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/taxibeat/bake/docker"
 	"github.com/taxibeat/bake/docker/component/consul"
+	"github.com/taxibeat/bake/docker/component/jaeger"
 	"github.com/taxibeat/bake/docker/component/kafka"
+	"github.com/taxibeat/bake/docker/component/localstack"
+	"github.com/taxibeat/bake/docker/component/mockserver"
 	"github.com/taxibeat/bake/docker/component/mongodb"
 	"github.com/taxibeat/bake/docker/component/redis"
 	"github.com/taxibeat/bake/docker/component/testservice"
@@ -44,10 +47,13 @@ func newSession() {
 	checkErr(err)
 
 	err = session.StartComponents(
+		kafka.NewComponent(session, kafka.WithTopics("foo:1:1")),
 		consul.NewComponent(docker.WithTag("1.8.0")),
+		jaeger.NewComponent(),
+		localstack.NewComponent(localstack.WithServices("s3")),
+		mockserver.NewComponent(),
 		redis.NewComponent(),
 		mongodb.NewComponent(),
-		kafka.NewComponent(session, []string{"foo:1:1"}),
 	)
 	checkErr(err)
 
@@ -67,7 +73,7 @@ func newSession() {
 	checkErr(err)
 }
 
-func TestClients(t *testing.T) {
+func TestConsul(t *testing.T) {
 	consulAddr, err := session.AutoServiceAddress(consul.ServiceName)
 	require.NoError(t, err)
 
@@ -79,7 +85,9 @@ func TestClients(t *testing.T) {
 
 	err = consulClient.Put("services/foo/bar", "23")
 	assert.NoError(t, err)
+}
 
+func TestRedis(t *testing.T) {
 	redisAddr, err := session.AutoServiceAddress(redis.ServiceName)
 	require.NoError(t, err)
 
@@ -87,7 +95,9 @@ func TestClients(t *testing.T) {
 
 	_, err = redisClient.Set(context.Background(), "foo", "bar", time.Second).Result()
 	assert.NoError(t, err)
+}
 
+func TestMongo(t *testing.T) {
 	mongoAddr, err := session.AutoServiceAddress(mongodb.ServiceName)
 	require.NoError(t, err)
 
@@ -96,7 +106,9 @@ func TestClients(t *testing.T) {
 
 	err = mongoClient.Ping(context.Background(), nil)
 	assert.NoError(t, err)
+}
 
+func TestKafka(t *testing.T) {
 	kafkaAddr, err := session.AutoServiceAddress(kafka.KafkaServiceName)
 	assert.NoError(t, err)
 	kafkaClient, err := sarama.NewClient([]string{kafkaAddr}, nil)
@@ -105,7 +117,23 @@ func TestClients(t *testing.T) {
 	topics, err := kafkaClient.Topics()
 	assert.NoError(t, err)
 	assert.Contains(t, topics, "foo")
+}
 
+func TestMockServer(t *testing.T) {
+	mockServerAddr, err := session.AutoServiceAddress(mockserver.ServiceName)
+	assert.NoError(t, err)
+	mockServerClient := mockserver.NewClient(mockServerAddr)
+	err = mockServerClient.CreateExpectation(
+		mockserver.Expectation{
+			Request:  mockserver.Request{Method: "GET", Path: "/"},
+			Response: mockserver.Response{Status: 200, Body: struct{}{}},
+		})
+	assert.NoError(t, err)
+	err = mockServerClient.Reset()
+	assert.NoError(t, err)
+}
+
+func TestExampleService(t *testing.T) {
 	testServiceAddr, err := session.AutoServiceAddress(testservice.ServiceName)
 	assert.NoError(t, err)
 

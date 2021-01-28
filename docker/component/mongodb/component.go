@@ -1,4 +1,4 @@
-// Package mongodb exposes a Mongo DB container.
+// Package mongodb exposes a Mongo DB service.
 package mongodb
 
 import (
@@ -35,7 +35,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	}
 
 	for _, opt := range opts {
-		container = opt(container)
+		opt(&container)
 	}
 
 	return &docker.SimpleComponent{

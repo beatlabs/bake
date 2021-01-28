@@ -1,3 +1,4 @@
+// Package testservice exposes a simple test service.
 package testservice
 
 import (
@@ -50,7 +51,7 @@ func readyFunc(session *docker.Session) error {
 			return err
 		}
 
-		if resp.StatusCode != 200 {
+		if resp.StatusCode != http.StatusOK {
 			return fmt.Errorf("got status code: %d", resp.StatusCode)
 		}
 		return nil
