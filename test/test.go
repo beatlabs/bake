@@ -106,5 +106,5 @@ func getBuildTagFlag(buildTags []string) string {
 }
 
 func getParallelFlag(n int) string {
-	return fmt.Sprintf("-p=%d", n)
+	return fmt.Sprintf("-parallel=%d", n)
 }
