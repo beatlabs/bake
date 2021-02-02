@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	goCmd      = "go"
-	defaultPkg = "./..."
-	coverFile  = "coverage.txt"
+	goCmd              = "go"
+	defaultPkg         = "./..."
+	coverFile          = "coverage.txt"
+	defaultParallelism = 1
 )
 
 // DefaultTestArgs used when running tests.
@@ -44,6 +45,7 @@ func Run(tags, extraArgs []string, pkg string) error {
 func RunDefault() error {
 	args := DefaultTestArgs
 	args = append(args, getBuildTagFlag(build.DefaultTags))
+	args = append(args, getParallelFlag(defaultParallelism))
 	args = append(args, defaultPkg)
 	return run(args)
 }
@@ -101,4 +103,8 @@ func cover(tags []string) error {
 
 func getBuildTagFlag(buildTags []string) string {
 	return "-tags=" + strings.Join(buildTags, ",")
+}
+
+func getParallelFlag(n int) string {
+	return fmt.Sprintf("-parallel=%d", n)
 }
