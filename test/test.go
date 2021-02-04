@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	goCmd      = "go"
-	defaultPkg = "./..."
-	coverFile  = "coverage.txt"
+	goCmd        = "go"
+	defaultPkg   = "./..."
+	coverFile    = "coverage.txt"
+	defaultPFlag = 1
 )
 
 // DefaultTestArgs used when running tests.
@@ -44,6 +45,7 @@ func Run(tags, extraArgs []string, pkg string) error {
 func RunDefault() error {
 	args := DefaultTestArgs
 	args = append(args, getBuildTagFlag(build.DefaultTags))
+	args = append(args, getPFlag(defaultPFlag))
 	args = append(args, defaultPkg)
 	return run(args)
 }
@@ -101,4 +103,12 @@ func cover(tags []string) error {
 
 func getBuildTagFlag(buildTags []string) string {
 	return "-tags=" + strings.Join(buildTags, ",")
+}
+
+// The -p flag controls the
+// the number of programs, such as build commands or
+// test binaries, that can be run in parallel.
+// The default is the number of CPUs available.
+func getPFlag(n int) string {
+	return fmt.Sprintf("-p=%d", n)
 }

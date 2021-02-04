@@ -15,6 +15,7 @@ func runTests(cf string, tags []string) error {
 	args := []string{
 		"test",
 		"-mod=vendor",
+		"-p=1",
 		"-count=1",
 		"-cover",
 		"-coverprofile=" + cf,
