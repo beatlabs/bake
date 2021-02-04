@@ -28,17 +28,16 @@ var session *docker.Session
 
 func TestMain(m *testing.M) {
 	var err error
-	session, err = docker.FromFile(docker.SessionFile)
+	session, err = docker.LoadSession()
 	if err != nil {
 		newSession()
 	}
 
-	exitCode := m.Run()
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }
 
 func newSession() {
-	sessionID, netID, err := docker.FromEnv()
+	sessionID, netID, err := docker.GetEnv()
 	checkErr(err)
 
 	session, err = docker.NewSession(sessionID, netID)
@@ -70,7 +69,9 @@ func newSession() {
 	err = session.StartComponents(serviceComponent)
 	checkErr(err)
 
-	err = session.WriteToFile(docker.SessionFile)
+	// Optional: Store snapshot to filesystem.
+	// Should only be used if the tests can be run against dirty resources.
+	err = session.Persist()
 	checkErr(err)
 }
 
@@ -145,8 +146,10 @@ func TestExampleService(t *testing.T) {
 
 func checkErr(err error) {
 	if err != nil {
-		if werr := session.WriteToFile(docker.SessionFile); werr != nil {
-			fmt.Printf("session write failed: %v\n", werr)
+		if session != nil {
+			if werr := session.Persist(); werr != nil {
+				fmt.Printf("session write failed: %v\n", werr)
+			}
 		}
 		fmt.Printf("test setup failed: %v\n", err)
 		os.Exit(1)

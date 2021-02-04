@@ -17,8 +17,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// SessionFile is the file name used for storing sessions.
-const SessionFile = ".bakesession"
+// DefaultSessionFile is the file name used for storing sessions.
+const DefaultSessionFile = ".bakesession"
 
 // Component is a logical service, it groups together several containers.
 type Component interface {
@@ -133,8 +133,8 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 	return s.HostToDockerServiceAddress(serviceName)
 }
 
-// WriteToFile serializes a session and writes it to a file.
-func (s *Session) WriteToFile(fpath string) error {
+// PersistToFile serializes a session and writes it to a file.
+func (s *Session) PersistToFile(fpath string) error {
 	if inDocker() {
 		return nil
 	}
@@ -152,8 +152,13 @@ func (s *Session) WriteToFile(fpath string) error {
 	return ioutil.WriteFile(path.Clean(fpath), b, 0600)
 }
 
-// FromEnv retrieves bake related env vars, with defaults.
-func FromEnv() (sessionID, networkID string, err error) {
+// Persist stores the session data in the default store.
+func (s *Session) Persist() error {
+	return s.PersistToFile(DefaultSessionFile)
+}
+
+// GetEnv retrieves bake related env vars, with defaults.
+func GetEnv() (sessionID, networkID string, err error) {
 	sessionID = os.Getenv("BAKE_SESSION_ID")
 	if sessionID == "" {
 		sessionID = "000"
@@ -174,8 +179,13 @@ type sessionDump struct {
 	HostMappedServiceAddresses map[string]string
 }
 
-// FromFile attemps to load a session from a file.
-func FromFile(fpath string) (*Session, error) {
+// LoadSession attempts to load a Session from the default file location.
+func LoadSession() (*Session, error) {
+	return LoadSessionFromFile(DefaultSessionFile)
+}
+
+// LoadSessionFromFile attemps to load a session from a file.
+func LoadSessionFromFile(fpath string) (*Session, error) {
 	if inDocker() {
 		return nil, errors.New("not supported inside of docker")
 	}
@@ -201,7 +211,7 @@ func FromFile(fpath string) (*Session, error) {
 // CleanupResources finds all session files and prunes Docker resources associated with them.
 func CleanupResources() error {
 	return filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err == nil && info.Name() == SessionFile {
+		if err == nil && info.Name() == DefaultSessionFile {
 			if err := cleanupSessionResources(path); err != nil {
 				return err
 			}
@@ -213,7 +223,12 @@ func CleanupResources() error {
 func cleanupSessionResources(fname string) error {
 	fmt.Println(fname)
 
-	session, err := FromFile(fname)
+	session, err := LoadSessionFromFile(fname)
+	if err != nil {
+		return err
+	}
+
+	err = os.Remove(fname)
 	if err != nil {
 		return err
 	}
@@ -242,11 +257,6 @@ func cleanupSessionResources(fname string) error {
 	}
 
 	err = deleteNetwork(session.networkID)
-	if err != nil {
-		return err
-	}
-
-	err = os.Remove(fname)
 	if err != nil {
 		return err
 	}
