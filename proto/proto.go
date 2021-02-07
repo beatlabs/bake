@@ -70,33 +70,16 @@ func SchemaGenerate(service, schema, version string) error {
 		return err
 	}
 
-	generatedFilePath := fmt.Sprintf("%s/go/%s/%s/%s.pb.go", tmpDir, service, schema, schema)
-	_, err = os.Open(generatedFilePath)
+	schemas, err := getGeneratedSchemas(tmpDir, service)
 	if err != nil {
-		return fmt.Errorf("failed to open expected generated file: %s", err)
+		return err
 	}
-
-	wd, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("failed to get working dir: %v", wd)
-	}
-
-	outDir := fmt.Sprintf("%s/%s/%s", wd, defaultGeneratedLocation, schema)
-	err = os.MkdirAll(outDir, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("failed to create out dir: %v", err)
-	}
-
-	outFile := fmt.Sprintf("%s/%s.pb.go", outDir, schema)
-	err = os.Rename(generatedFilePath, outFile)
-	if err != nil {
-		return fmt.Errorf("failed to move generated file: %v", err)
-	}
-
-	return nil
+	return moveGeneratedSchemas(schemas)
 }
 
 func SchemaGenerateAll(service string) error {
+	fmt.Printf("proto schema: generate all schemas for %s\n", service)
+
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
@@ -121,40 +104,54 @@ func SchemaGenerateAll(service string) error {
 		return err
 	}
 
-	generatedDirPath := fmt.Sprintf("%s/go/%s", tmpDir, service)
-	_, err = os.Open(generatedDirPath)
+	schemas, err := getGeneratedSchemas(tmpDir, service)
 	if err != nil {
-		return fmt.Errorf("failed to open expected generated dir: %s", err)
+		return err
+	}
+	return moveGeneratedSchemas(schemas)
+}
+
+func getGeneratedSchemas(tmpDir, service string) ([]string, error) {
+	generatedDirPath := fmt.Sprintf("%s/go/%s", tmpDir, service)
+	_, err := os.Open(generatedDirPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open expected generated dir: %s", err)
 	}
 
+	// TODO: rename "schema"
 	var schemas []string
 	filepath.Walk(generatedDirPath, func(path string, fInfo os.FileInfo, err error) error {
 		if fInfo.IsDir() {
 			return nil
 		}
-		schema := strings.Split(fInfo.Name(), ".")[0]
-		schemas = append(schemas, schema)
+		schemas = append(schemas, path)
 		return nil
 	})
+	return schemas, nil
+}
 
+func moveGeneratedSchemas(schemas []string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get working dir: %v", wd)
 	}
 
 	for _, schema := range schemas {
-		outDir := fmt.Sprintf("%s/%s/%s", wd, defaultGeneratedLocation, schema)
-		err = os.MkdirAll(outDir, os.ModePerm)
+		fileName := filepath.Base(schema)
+		schemaName := strings.Split(fileName, ".")[0]
+
+		outDir := fmt.Sprintf("%s/%s/%s", wd, defaultGeneratedLocation, schemaName)
+		err := os.MkdirAll(outDir, os.ModePerm)
 		if err != nil {
 			return fmt.Errorf("failed to create out dir: %v", err)
 		}
 
-		outFile := fmt.Sprintf("%s/%s.pb.go", outDir, schema)
-		err = os.Rename(fmt.Sprintf("%s/%s/%s.pb.go", generatedDirPath, schema, schema), outFile)
+		outFile := fmt.Sprintf("%s/%s", outDir, fileName)
+		err = os.Rename(schema, outFile)
 		if err != nil {
 			return fmt.Errorf("failed to move generated file: %v", err)
 		}
+		fmt.Printf("schema generated successfully under %s\n", outFile)
 	}
-
 	return nil
 }
