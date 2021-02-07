@@ -14,6 +14,8 @@ import (
 	_ "github.com/taxibeat/bake/targets/test"
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/doc"
+	// mage:import
+	_ "github.com/taxibeat/bake/targets/proto"
 )
 
 // Lint groups together lint related tasks.
