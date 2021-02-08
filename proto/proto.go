@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	skimCMD                  = "skim"
+	skimCMD = "skim"
+
 	defaultOwner             = "taxibeat"
 	defaultRegistry          = "proto-schemas"
 	defaultSchemasLocation   = "proto/schemas"
@@ -23,19 +24,14 @@ const (
 func SchemaValidateAll(service string) error {
 	fmt.Printf("proto schema: validate all schemas for %s\n", service)
 
-	args := []string{
+	args := append(
+		getDefaultSkimArgs(service),
 		"-t",
 		os.Getenv("GITHUB_TOKEN"),
-		"-r",
-		defaultRegistry,
-		"-o",
-		defaultOwner,
-		"-n",
-		service,
 		"validate-all",
 		"-s",
 		defaultSchemasLocation,
-	}
+	)
 
 	return sh.RunV(skimCMD, args...)
 }
@@ -50,13 +46,8 @@ func SchemaGenerate(service, schema, version string) error {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
 
-	args := []string{
-		"-r",
-		defaultRegistry,
-		"-o",
-		defaultOwner,
-		"-n",
-		service,
+	args := append(
+		getDefaultSkimArgs(service),
 		"generate",
 		"-s",
 		defaultSchemasLocation,
@@ -64,7 +55,7 @@ func SchemaGenerate(service, schema, version string) error {
 		tmpDir,
 		"--schema",
 		pathToSchema,
-	}
+	)
 
 	err = sh.RunV(skimCMD, args...)
 	if err != nil {
@@ -87,19 +78,14 @@ func SchemaGenerateAll(service string) error {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
 
-	args := []string{
-		"-r",
-		defaultRegistry,
-		"-o",
-		defaultOwner,
-		"-n",
-		service,
+	args := append(
+		getDefaultSkimArgs(service),
 		"generate-all",
 		"-s",
 		defaultSchemasLocation,
 		"-out",
 		tmpDir,
-	}
+	)
 
 	err = sh.RunV(skimCMD, args...)
 	if err != nil {
@@ -111,6 +97,17 @@ func SchemaGenerateAll(service string) error {
 		return err
 	}
 	return moveGeneratedFiles(generatedFiles)
+}
+
+func getDefaultSkimArgs(service string) []string {
+	return []string{
+		"-r",
+		defaultRegistry,
+		"-o",
+		defaultOwner,
+		"-n",
+		service,
+	}
 }
 
 func getGeneratedFiles(tmpDir string) ([]string, error) {
