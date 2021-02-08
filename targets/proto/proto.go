@@ -25,7 +25,7 @@ func (Proto) SchemaGenerate(service, schema, version string) error {
 	return proto.SchemaGenerate(service, schema, version)
 }
 
-// SchemaGenerate generates a single proto schema.
+// SchemaGenerateAll generates all the schemas found.
 func (Proto) SchemaGenerateAll(service string) error {
 	if service == "" {
 		return errors.New("service is mandatory")

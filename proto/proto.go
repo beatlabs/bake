@@ -40,6 +40,7 @@ func SchemaValidateAll(service string) error {
 	return sh.RunV(skimCMD, args...)
 }
 
+// SchemaGenerate generates a single schema for a specific version.
 func SchemaGenerate(service, schema, version string) error {
 	pathToSchema := fmt.Sprintf("%s/%s/%s.proto", schema, version, schema)
 	fmt.Printf("proto schema: generate schema %s\n", pathToSchema)
@@ -77,6 +78,7 @@ func SchemaGenerate(service, schema, version string) error {
 	return moveGeneratedFiles(generatedFiles)
 }
 
+// SchemaGenerateAll generates all the schemas found.
 func SchemaGenerateAll(service string) error {
 	fmt.Printf("proto schema: generate all schemas for %s\n", service)
 
@@ -113,7 +115,7 @@ func SchemaGenerateAll(service string) error {
 
 func getGeneratedFiles(tmpDir, service string) ([]string, error) {
 	generatedDirPath := fmt.Sprintf("%s/go/%s", tmpDir, service)
-	_, err := os.Open(generatedDirPath)
+	_, err := os.Open(generatedDirPath) // nolint: gosec
 	if err != nil {
 		return nil, fmt.Errorf("failed to open expected generated dir: %s", err)
 	}
