@@ -71,7 +71,7 @@ func SchemaGenerate(service, schema, version string) error {
 		return err
 	}
 
-	generatedFiles, err := getGeneratedFiles(tmpDir, service)
+	generatedFiles, err := getGeneratedFiles(tmpDir)
 	if err != nil {
 		return err
 	}
@@ -106,23 +106,20 @@ func SchemaGenerateAll(service string) error {
 		return err
 	}
 
-	generatedFiles, err := getGeneratedFiles(tmpDir, service)
+	generatedFiles, err := getGeneratedFiles(tmpDir)
 	if err != nil {
 		return err
 	}
 	return moveGeneratedFiles(generatedFiles)
 }
 
-func getGeneratedFiles(tmpDir, service string) ([]string, error) {
-	generatedDirPath := fmt.Sprintf("%s/go/%s", tmpDir, service)
-	_, err := os.Open(generatedDirPath) // nolint: gosec
-	if err != nil {
-		return nil, fmt.Errorf("failed to open expected generated dir: %s", err)
-	}
-
+func getGeneratedFiles(tmpDir string) ([]string, error) {
 	var generatedFiles []string
-	err = filepath.Walk(generatedDirPath, func(path string, fInfo os.FileInfo, err error) error {
+	err := filepath.Walk(tmpDir, func(path string, fInfo os.FileInfo, err error) error {
 		if fInfo.IsDir() {
+			return nil
+		}
+		if filepath.Ext(path) != ".go" {
 			return nil
 		}
 		generatedFiles = append(generatedFiles, path)
