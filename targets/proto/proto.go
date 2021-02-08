@@ -11,7 +11,7 @@ import (
 // Proto groups together proto related tasks.
 type Proto mg.Namespace
 
-// SchemaGenerate generates a single proto schema with the following arguments: service, schema, version.
+// SchemaGenerate generates a single proto schema.
 func (Proto) SchemaGenerate(service, schema, version string) error {
 	if service == "" {
 		return errors.New("service is mandatory")
@@ -25,7 +25,7 @@ func (Proto) SchemaGenerate(service, schema, version string) error {
 	return proto.SchemaGenerate(service, schema, version)
 }
 
-// SchemaGenerateAll generates all the schemas found with the following argument: service.
+// SchemaGenerateAll generates all the schemas found.
 func (Proto) SchemaGenerateAll(service string) error {
 	if service == "" {
 		return errors.New("service is mandatory")
