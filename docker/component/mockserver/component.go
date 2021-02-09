@@ -9,16 +9,15 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "mockserver"
 	// ServiceName is the advertised name of this service.
-	ServiceName = "mockserver"
+	ServiceName   = "mockserver"
+	componentName = "mockserver"
 )
 
 // NewComponent creates a new Redis component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "mockserver",
+		Name:       componentName,
 		Repository: "mockserver/mockserver",
 		Tag:        "latest",
 		Env: []string{
@@ -35,7 +34,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{container},
 	}
 }

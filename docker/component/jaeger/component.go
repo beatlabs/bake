@@ -9,16 +9,15 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "jaeger"
 	// ServiceName is the advertised name of this service.
-	ServiceName = "jaeger"
+	ServiceName   = "jaeger"
+	componentName = "jaeger"
 )
 
 // NewComponent creates a new Redis component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "jaeger",
+		Name:       componentName,
 		Repository: "jaegertracing/all-in-one",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
@@ -32,7 +31,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{container},
 	}
 }

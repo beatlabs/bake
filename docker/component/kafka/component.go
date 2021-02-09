@@ -11,12 +11,11 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "kafka"
 	// KafkaServiceName is the advertised name of the Kafka service.
 	KafkaServiceName = "kafka"
 	// ZookeeperServiceName is the advertised name of the Zookeeper service.
 	ZookeeperServiceName = "zookeeper"
+	componentName        = "kafka"
 )
 
 // WithTopics sets topics in the kafka container config.
@@ -66,7 +65,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{zooContainer, kafkaContainer},
 	}
 }

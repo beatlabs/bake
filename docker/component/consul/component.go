@@ -6,16 +6,15 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "consul"
 	// ServiceName is the advertised name of this service.
-	ServiceName = "consul"
+	ServiceName   = "consul"
+	componentName = "consul"
 )
 
 // NewComponent creates a new Consul component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "consul",
+		Name:       componentName,
 		Repository: "consul",
 		Tag:        "1.8.0",
 		ServicePorts: map[string]string{
@@ -29,7 +28,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{container},
 	}
 }

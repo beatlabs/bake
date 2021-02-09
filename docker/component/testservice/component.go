@@ -9,10 +9,9 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "testservice"
 	// ServiceName is the advertised name of this service.
-	ServiceName = "testservice"
+	ServiceName   = "testservice"
+	componentName = "testservice"
 )
 
 // NewComponent constructs a component.
@@ -22,8 +21,8 @@ func NewComponent(redisAddr, mongoAddr, kafkaAddr string) (*docker.SimpleCompone
 			Dockerfile: "docker/component/testservice/Dockerfile",
 			ContextDir: "../..",
 		},
-		Name:       "testservice",
-		Repository: "testservice",
+		Name:       componentName,
+		Repository: componentName,
 		Env: []string{
 			"REDIS=" + redisAddr,
 			"MONGO=" + mongoAddr,
@@ -37,7 +36,7 @@ func NewComponent(redisAddr, mongoAddr, kafkaAddr string) (*docker.SimpleCompone
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{container},
 	}, nil
 }

@@ -9,18 +9,17 @@ import (
 )
 
 const (
-	// ComponentName is the public name of this component.
-	ComponentName = "mongo"
 	// ServiceName is the advertised name of this service.
 	ServiceName = "mongo"
 	// ReplicaSet is the replica set name.
-	ReplicaSet = "rs0"
+	ReplicaSet    = "rs0"
+	componentName = "mongo"
 )
 
 // NewComponent creates a new Consul component.
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
-		Name:       "mongo",
+		Name:       componentName,
 		Repository: "bitnami/mongodb",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
@@ -40,7 +39,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	}
 
 	return &docker.SimpleComponent{
-		Name:       ComponentName,
+		Name:       componentName,
 		Containers: []docker.SimpleContainerConfig{container},
 	}
 }
