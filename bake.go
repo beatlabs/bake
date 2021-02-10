@@ -1,2 +1,2 @@
-// Package main is a placeholder pkg.
-package main
+// Package bake is a placeholder pkg.
+package bake
