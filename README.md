@@ -32,7 +32,7 @@ For a complete list of available targets run `mage`.
 
 Some examples:
 
-Run unit tests:
+Run unit tests (using local Go and Go caches):
 
 ```bash
 mage test:unit
@@ -42,6 +42,12 @@ And all tests (unit+integration+component):
 
 ```bash
 mage test:all
+```
+
+Clear Docker resources used for integration/component tests:
+
+```bash
+mage test:cleanup
 ```
 
 Take a look at the `magefile.go` of this project to see how it works.
@@ -102,6 +108,8 @@ Instead of executing `mage` we now execute the script, e.g:
 ```
 
 This is the recommended way to run the CI target in Jenkins.
+
+Note: you can use the `SKIP_CLEANUP=1` env var to keep Docker resources available after finishing the run.
 
 ## Tools included in the Bake image
 

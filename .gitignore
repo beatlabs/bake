@@ -15,4 +15,5 @@
 # vendor/
 
 # mage bake
-/bake-build
+/magebin
+.bakesession
