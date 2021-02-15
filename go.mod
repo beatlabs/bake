@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/Shopify/toxiproxy v2.1.4+incompatible // indirect
-	github.com/cenkalti/backoff/v3 v3.0.0
+	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
