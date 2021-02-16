@@ -4,9 +4,9 @@ package main
 
 import (
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/ci"
-	"github.com/taxibeat/bake/lint"
 	"github.com/taxibeat/bake/targets/code"
+	"github.com/taxibeat/bake/targets/lint"
+	"github.com/taxibeat/bake/test"
 
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/code"
@@ -14,15 +14,9 @@ import (
 	_ "github.com/taxibeat/bake/targets/test"
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/doc"
+	// mage:import
+	_ "github.com/taxibeat/bake/targets/lint"
 )
-
-// Lint groups together lint related tasks.
-type Lint mg.Namespace
-
-// Go runs the go linter.
-func (l Lint) Go() error {
-	return lint.GoDefault()
-}
 
 // CI groups together ci related tasks.
 type CI mg.Namespace
@@ -30,17 +24,7 @@ type CI mg.Namespace
 // Run CI with Coveralls and default build tags.
 func (CI) Run() error {
 	goTargets := code.Go{}
-	err := goTargets.FmtCheck()
-	if err != nil {
-		return err
-	}
-	err = goTargets.CheckVendor()
-	if err != nil {
-		return err
-	}
-	err = Lint{}.Go()
-	if err != nil {
-		return err
-	}
-	return ci.CoverageDefault()
+	mg.SerialDeps(goTargets.FmtCheck, goTargets.CheckVendor, lint.Lint{}.Go)
+
+	return test.CoverDefault()
 }
