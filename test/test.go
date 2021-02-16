@@ -11,10 +11,11 @@ import (
 )
 
 const (
-	goCmd        = "go"
-	defaultPkg   = "./..."
-	coverFile    = "coverage.txt"
-	defaultPFlag = 1
+	goCmd            = "go"
+	defaultPkg       = "./..."
+	coverFile        = "coverage.txt"
+	defaultPFlag     = 1
+	defaultCoverPkgs = "./cmd/...,./internal/...,./pkg/..."
 )
 
 // DefaultTestArgs used when running tests.
@@ -79,7 +80,7 @@ func cover(tags []string) error {
 	args := []string{
 		"test",
 		"-mod=vendor",
-		"-coverpkg=./...",
+		"-coverpkg=" + defaultCoverPkgs,
 		"-covermode=atomic",
 		"-coverprofile=" + coverFile,
 		"-race",
