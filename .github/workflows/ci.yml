@@ -19,7 +19,6 @@ jobs:
       - name: Bake CI
         run: ./bake.sh ci:run
         env:
-          COVERALLS_TOKEN: ${{ secrets.COVERALLSTOKEN }}
           GITHUB_TOKEN: ${{ secrets.MATCHING_GITHUBTOKEN }}
 
       - name: Convert coverage file to lcov
