@@ -27,12 +27,12 @@ func coveralls(tags []string) error {
 		return err
 	}
 
-	defer func() {
-		err := os.Remove(coverFile)
-		if err != nil {
-			fmt.Printf("failed to delete coverage file: %v\n", err)
-		}
-	}()
+	// defer func() {
+	// 	err := os.Remove(coverFile)
+	// 	if err != nil {
+	// 		fmt.Printf("failed to delete coverage file: %v\n", err)
+	// 	}
+	// }()
 
 	if os.Getenv("COVERALLS_TOKEN") == "" {
 		fmt.Printf("coveralls token is not set, skipping code coverage upload step.\n")

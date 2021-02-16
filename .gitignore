@@ -17,3 +17,4 @@
 # mage bake
 /magebin
 .bakesession
+coverage.txt
