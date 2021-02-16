@@ -42,5 +42,5 @@ func (CI) Run() error {
 	if err != nil {
 		return err
 	}
-	return ci.CoveragesDefault()
+	return ci.CoverageDefault()
 }

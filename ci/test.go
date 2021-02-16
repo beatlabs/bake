@@ -20,7 +20,7 @@ func Coverage(buildTags ...string) error {
 }
 
 // CoverageDefault //runs tests and produces a coverfile with default build tags.
-func CoveragesDefault() error {
+func CoverageDefault() error {
 	return runTests(coverFile, build.DefaultTags)
 }
 
