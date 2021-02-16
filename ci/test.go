@@ -1,3 +1,4 @@
+// Package ci contains all the ci tasks that a project should have.
 package ci
 
 import (
