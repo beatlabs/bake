@@ -5,9 +5,23 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/build"
 )
 
-const goCmd = "go"
+const (
+	goCmd     = "go"
+	coverFile = "coverage.txt"
+)
+
+// Coverage runs tests and produces a coverfile with provided build tags.
+func Coverage(buildTags ...string) error {
+	return runTests(coverFile, buildTags)
+}
+
+// CoverageDefault //runs tests and produces a coverfile with default build tags.
+func CoveragesDefault() error {
+	return runTests(coverFile, build.DefaultTags)
+}
 
 func runTests(cf string, tags []string) error {
 	fmt.Printf("ci: running tests with tags: %v\n", tags)
