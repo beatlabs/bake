@@ -3,7 +3,6 @@ package test
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/magefile/mage/sh"
@@ -69,13 +68,6 @@ func CoverDefault() error {
 
 func cover(tags []string) error {
 	fmt.Printf("test: running cover with tags: %v\n", tags)
-
-	defer func() {
-		err := os.Remove(coverFile)
-		if err != nil {
-			fmt.Printf("failed to delete coverage file: %v\n", err)
-		}
-	}()
 
 	args := []string{
 		"test",
