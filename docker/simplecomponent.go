@@ -173,7 +173,7 @@ func (c *SimpleComponent) StreamLogs() {
 func Retry(op func() error) error {
 	bo := backoff.NewExponentialBackOff()
 	bo.MaxInterval = time.Second * 2
-	bo.MaxElapsedTime = time.Second * 15
+	bo.MaxElapsedTime = time.Minute
 	return backoff.Retry(op, bo)
 }
 
