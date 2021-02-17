@@ -73,7 +73,7 @@ func cover(tags []string) error {
 		"-mod=vendor",
 		"-coverpkg=./...",
 		"-covermode=atomic",
-		"-coverprofile=./...",
+		"-coverprofile=" + coverFile,
 		"-race",
 	}
 
