@@ -20,7 +20,7 @@ RUN go get github.com/taxibeat/skim/cmd/skim
 # Remove token from config after accessing private repos.
 RUN git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 # Download and install mage file into bin path
-RUN wget -qc https://github.com/magefile/mage/releases/download/v1.9.0/mage_1.9.0_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
+RUN wget -qc https://github.com/magefile/mage/releases/download/v1.11.0/mage_1.11.0_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
 RUN wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.6/hadolint-Linux-x86_64 && chmod +x /usr/bin/hadolint
