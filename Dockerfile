@@ -1,4 +1,4 @@
-FROM golang:1.15-alpine
+FROM golang:1.16.0-alpine
 
 RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev yarn
 
