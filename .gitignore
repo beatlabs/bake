@@ -17,3 +17,5 @@
 # mage bake
 /magebin
 .bakesession
+coverage.txt
+coverage.lcov
