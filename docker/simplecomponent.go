@@ -81,7 +81,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 			BuildArgs:    conf.BuildOpts.BuildArgs,
 		})
 		if err != nil {
-			return err
+			return fmt.Errorf("build image %s: %w", c.Name+":"+session.id, err)
 		}
 		conf.Repository = c.Name
 		conf.Tag = session.id
@@ -130,7 +130,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 	hcOpts := func(hc *docker.HostConfig) { hc.PublishAllPorts = false }
 	_, err = pool.RunWithOptions(runOpts, hcOpts)
 	if err != nil {
-		return err
+		return fmt.Errorf("run %s: %w", fullContainerName, err)
 	}
 
 	// Update session service registry.
