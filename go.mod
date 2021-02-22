@@ -11,7 +11,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/fatih/color v1.10.0
 	github.com/frankban/quicktest v1.11.3 // indirect
-	github.com/go-redis/redis/v8 v8.5.0
+	github.com/go-redis/redis/v8 v8.6.0
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/hashicorp/consul/api v1.8.1
 	github.com/magefile/mage v1.11.0
