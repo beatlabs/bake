@@ -1,6 +1,16 @@
-FROM golang:1.15-alpine
+FROM golang:1.15
 
-RUN apk add --no-cache ca-certificates wget bash git docker-cli tar gcc musl-dev yarn
+RUN apt-get -y update && \
+    apt-get install -y \
+    apt-transport-https \	
+    ca-certificates \
+    gnupg-agent \
+    software-properties-common	
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \	
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \	
+    apt-get -y update && \	
+    apt-get install -y docker-ce
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
