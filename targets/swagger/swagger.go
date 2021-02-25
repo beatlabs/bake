@@ -8,25 +8,30 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
 var (
-	defaultSwagCmd   = "swag"
-	defaultOutputDir = "internal/infra/http/docs"
-	defaultAPIDir    = "api"
+	swagCmd   = "swag"
+	OutputDir = "internal/infra/http/docs"
+	APIDir    = "api"
+	MainGo    = "cmd/replaceme/main.go"
 )
 
+// Swagger groups together Swagger related tasks.
+type Swagger mg.Namespace
+
 // Create creates a swagger files from source code annotations.
-func Create(main, output, api string) error {
-	if err := generate(main, output); err != nil {
+func (Swagger) Create() error {
+	if err := generate(MainGo, OutputDir); err != nil {
 		return err
 	}
 
 	for _, file := range []string{"swagger.json", "swagger.yaml"} {
-		source := filepath.Join(output, file)
-		destination := filepath.Join(api, file)
-		fmt.Printf("moving %s to directory %s\n", source, api)
+		source := filepath.Join(OutputDir, file)
+		destination := filepath.Join(APIDir, file)
+		fmt.Printf("moving %s to directory %s\n", source, APIDir)
 		if err := os.Rename(source, destination); err != nil {
 			return err
 		}
@@ -34,13 +39,8 @@ func Create(main, output, api string) error {
 	return nil
 }
 
-// CreateDefault creates a swagger files from source code annotations with default arguments.
-func CreateDefault(main string) error {
-	return Create(main, defaultOutputDir, defaultAPIDir)
-}
-
 // Check ensures that the generated files are up to date.
-func Check(main, api string) error {
+func (Swagger) Check() error {
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		return err
@@ -51,24 +51,19 @@ func Check(main, api string) error {
 		}
 	}()
 
-	if err := generate(main, dir); err != nil {
+	if err := generate(MainGo, dir); err != nil {
 		return err
 	}
 
 	for _, file := range []string{"swagger.json", "swagger.yaml"} {
 		generated := filepath.Join(dir, file)
-		existing := filepath.Join(api, file)
+		existing := filepath.Join(APIDir, file)
 		fmt.Printf("comparing, generated: %s existing: %s\n", generated, existing)
 		if err := compareFiles(generated, existing); err != nil {
 			return err
 		}
 	}
 	return nil
-}
-
-// CheckDefault ensures that the generated files are up to date with default arguments.
-func CheckDefault(main string) error {
-	return Check(main, defaultAPIDir)
 }
 
 func generate(main, output string) error {
@@ -79,7 +74,7 @@ func generate(main, output string) error {
 		"--output",
 		output,
 	}
-	if err := sh.RunV(defaultSwagCmd, args...); err != nil {
+	if err := sh.RunV(swagCmd, args...); err != nil {
 		return err
 	}
 
