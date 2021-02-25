@@ -18,11 +18,16 @@ const (
 )
 
 var (
-	Owner             = "taxibeat"
-	Registry          = "proto-schemas"
-	SchemasLocation   = "proto/schemas"
+	// Owner is the schema owner.
+	Owner = "taxibeat"
+	// Registry is the schema registry.
+	Registry = "proto-schemas"
+	// SchemasLocation is the path to the schemas.
+	SchemasLocation = "proto/schemas"
+	// GeneratedLocation is the target location fot the generated files.
 	GeneratedLocation = "proto/generated"
-	Service           = "" // Should be set in magefile init func.
+	// Service is the service name. Should be set externally.
+	Service = ""
 )
 
 // Proto groups together proto related tasks.

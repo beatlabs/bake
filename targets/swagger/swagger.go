@@ -13,10 +13,13 @@ import (
 )
 
 var (
-	swagCmd   = "swag"
+	swagCmd = "swag"
+	// OutputDir is the output directory for the generated files.
 	OutputDir = "internal/infra/http/docs"
-	APIDir    = "api"
-	MainGo    = "cmd/replaceme/main.go"
+	// APIDir is the final directory.
+	APIDir = "api"
+	// MainGo is the path to the application entrypoint.
+	MainGo = "cmd/replaceme/main.go"
 )
 
 // Swagger groups together Swagger related tasks.

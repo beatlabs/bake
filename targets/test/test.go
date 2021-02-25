@@ -11,18 +11,19 @@ import (
 )
 
 var (
-	// GoBuildTags to use with Golangci-lint.
+	// GoBuildTags used when running all tests.
 	GoBuildTags = []string{
 		"component",
 		"integration",
 	}
-	// TestArgs used when running tests.
+	// TestArgs used in test targets.
 	TestArgs = []string{
 		"test",
 		"-mod=vendor",
 		"-cover",
 		"-race",
 	}
+	// CoverArgs used in coverage targets.
 	CoverArgs = []string{
 		"test",
 		"-mod=vendor",
@@ -31,8 +32,10 @@ var (
 		"-coverprofile=coverage.txt",
 		"-race",
 	}
+	// PFlag is the -p flag value.
 	PFlag = 1
-	Pkgs  = "./..."
+	// Pkgs is the pkg pattern to target.
+	Pkgs = "./..."
 )
 
 const (
