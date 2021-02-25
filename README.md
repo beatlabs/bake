@@ -104,7 +104,7 @@ And add `bake-build` to your `.gitignore`.
 Instead of executing `mage` we now execute the script, e.g:
 
 ```bash
-./bake.sh ci:run
+./bake.sh ci
 ```
 
 This is the recommended way to run the CI target in Jenkins.

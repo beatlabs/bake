@@ -25,11 +25,8 @@ func init() {
 	docker.DockerFiles = []string{"./Dockerfile"}
 }
 
-// CI groups together ci related tasks.
-type CI mg.Namespace
-
 // Run CI with Coveralls and default build tags.
-func (CI) Run() error {
+func CI() error {
 	goTargets := gocode.Go{}
 	mg.SerialDeps(goTargets.FmtCheck, goTargets.CheckVendor, golint.Lint{}.Go, docker.Lint{}.Docker)
 
