@@ -25,10 +25,10 @@ func init() {
 	docker.DockerFiles = []string{"./Dockerfile"}
 }
 
-// Run CI with Coveralls and default build tags.
+// CI executes all CI targets.
 func CI() error {
 	goTargets := gocode.Go{}
 	mg.SerialDeps(goTargets.FmtCheck, goTargets.CheckVendor, golint.Lint{}.Go, docker.Lint{}.Docker)
 
-	return test.Test{}.Cover()
+	return test.Test{}.CoverAll()
 }

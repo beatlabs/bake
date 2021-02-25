@@ -42,7 +42,7 @@ const (
 // Test groups together test related tasks.
 type Test mg.Namespace
 
-// Unit runs unit tests only.
+// Unit runs unit tests.
 func (Test) Unit() error {
 	args := append(TestArgs, Pkgs)
 	return run(args)
@@ -56,8 +56,8 @@ func (Test) All() error {
 	return run(args)
 }
 
-// Cover runs all tests and produces a coverage report.
-func (Test) Cover() error {
+// CoverUnit runs unit tests and produces a coverage report.
+func (Test) CoverUnit() error {
 	args := append(CoverArgs, Pkgs)
 	return run(args)
 }
