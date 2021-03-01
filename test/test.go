@@ -85,7 +85,7 @@ func cover(tags []string) error {
 
 	fmt.Printf("Executing cmd: %s %s\n", goCmd, strings.Join(args, " "))
 
-	err := sh.Run(goCmd, args...)
+	err := sh.RunV(goCmd, args...)
 	if err != nil {
 		return err
 	}
