@@ -162,13 +162,6 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 	return nil
 }
 
-// StreamLogs streams container logs to stdout.
-func (c *SimpleComponent) StreamLogs() {
-	for i, cont := range c.Containers {
-		go streamContainerLogs(cont.Name, colors[i%len(colors)])
-	}
-}
-
 // Retry is an exponential backoff retry helper.
 func Retry(op func() error) error {
 	bo := backoff.NewExponentialBackOff()
