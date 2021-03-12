@@ -32,8 +32,6 @@ var (
 		"-coverprofile=coverage.txt",
 		"-race",
 	}
-	// PFlag is the -p flag value.
-	PFlag = 1
 	// Pkgs is the pkg pattern to target.
 	Pkgs = "./..."
 )
@@ -54,7 +52,6 @@ func (Test) Unit() error {
 // All runs all tests.
 func (Test) All() error {
 	args := append(TestArgs, getBuildTagFlag(GoBuildTags))
-	args = append(args, getPFlag(PFlag))
 	args = append(args, Pkgs)
 	return run(args)
 }
@@ -68,7 +65,6 @@ func (Test) CoverUnit() error {
 // CoverAll runs all tests and produces a coverage report.
 func (Test) CoverAll() error {
 	args := append(CoverArgs, getBuildTagFlag(GoBuildTags))
-	args = append(args, getPFlag(PFlag))
 	args = append(args, Pkgs)
 	return run(args)
 }
@@ -86,12 +82,4 @@ func run(args []string) error {
 
 func getBuildTagFlag(buildTags []string) string {
 	return "-tags=" + strings.Join(buildTags, ",")
-}
-
-// The -p flag controls the
-// the number of programs, such as build commands or
-// test binaries, that can be run in parallel.
-// The default is the number of CPUs available.
-func getPFlag(n int) string {
-	return fmt.Sprintf("-p=%d", n)
 }
