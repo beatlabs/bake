@@ -224,7 +224,7 @@ go.opentelemetry.io/otel/trace
 # golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 golang.org/x/crypto/ocsp
 golang.org/x/crypto/pbkdf2
-# golang.org/x/mod v0.4.1
+# golang.org/x/mod v0.4.2
 ## explicit
 golang.org/x/mod/sumdb/dirhash
 # golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb
