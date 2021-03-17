@@ -11,60 +11,60 @@ Bake contains build tools to help make us elevate the developer experience of ou
 
 The repository provides two major components:
 
-- Mage targets and helpers, to support a more structured and common make experience.
+- Mage targets and helpers, to support a more structured and common make-like experience.
 - A Bake Docker image containing pinned versions of Go and several CI tools (linters/code generators/etc), to guarantee a consistent experience.
 
-## Working with Mage
+## Working with Mage targets
 
-Bake uses [mage](https://magefile.org/) which is an alternative to make.
+Bake uses [Mage](https://magefile.org/) which is an alternative to make.
 
 Mage targets are written in Go and can be found in `magefile.go` in the root directory of the repository.
 
-This repository provides several pre-built mage targets for tests, linting, documentation generation, and others.
+This repository provides several pre-built Mage targets for tests, linting, documentation generation, and others.
 
 You can see the `magefile.go` in this repo for reference.
 
-## Executing mage targets locally
+## Executing targets directly
 
-In order to run mage targets in your local environment, you can install mage as well as any dependencies you may need (e.g. `golangci-lint`).
+In order to run Mage targets in your local environment, you should install `mage` as well as any dependencies the targets may need (e.g. `go`, `golangci-lint`).
 
 For a complete list of available targets run `mage`.
 
 Some examples:
 
-Run unit tests (using local Go and Go caches):
+Run unit tests (using local Go installation, test caching).
 
-```bash
+```shell
 mage test:unit
 ```
 
-And all tests (unit+integration+component):
+And all tests (unit+integration+component).
 
-```bash
+```shell
 mage test:all
 ```
 
-Clear Docker resources used for integration/component tests:
+Clear Docker resources used for integration/component tests.
 
-```bash
+```shell
 mage test:cleanup
 ```
 
 Take a look at the `magefile.go` of this project to see how it works.
 
-## Using the Bake Docker image
+## Executing targets with the Bake Docker image
 
-In order to run mage targets in a controlled environment with no external dependencies we can use the Bake image.
+In order to run Mage targets in a controlled environment with no external dependencies we can use the Bake image.
 
-This is a clean slate approach (requiring nothing but Docker to be installed) which behaves the same both locally and in Jenkins thus providing strong reproducibility guarantees. The trade-off is that it's slower since we must spin up a container to run the mage targets, and can't make use of test caches or mage caches for example.
+This is a fully isolated approach (requiring nothing but Docker to be installed) that behaves the same on any linux/mac execution environment. This has the aim of providing parity between CI and local environments.
 
-In order to use the Bake image please follow these instructions:
+The trade-off is that it's slower since we must spin up a Bake Docker container to execute the Mage targets and we don't make use of test caches or Mage caches.
 
-#### 1. Generate a github personal access token
+### 1. Generate a github personal access token
 
 This is required in order to access private repos (including the go packages in the bake repo).
 
-A token can be generated at [https://github.com/settings/tokens](https://github.com/settings/tokens) and must have 'repo' scope and be SSO enabled
+A token can be generated at [here](https://github.com/settings/tokens) and must have 'repo' scope and be SSO enabled.
 
 You can export it in your shell 
 
@@ -78,28 +78,11 @@ or set it inline before executing bake:
 GITHUB_TOKEN=my-token ./bake.sh
 ```
 
-#### 2. Create a `bake.sh` script
+### 2. Create a `bake.sh` script
 
-In order to generate an initial `bake.sh` you can run copy the one from this repo or run:
+In order to generate an initial `bake.sh` you can run copy the one from this repo or from a project where bake has already been setup and modify to your needs, e.g. add any env vars that your targets may require.
 
-```bash
-$ docker run --rm -it -e GITHUB_TOKEN=$GITHUB_TOKEN taxibeat/bake:<version> --gen-script > bake.sh
-```
-
-And modify to your needs, e.g. add any env vars that your targets may require.
-
-#### 3. Optional - Speed up bake
-
-One of the most time consuming steps when running a mage target via the Bake image is waiting for Mage to compile it's ad-hoc binary.
-This can be circumvented by manually creating that binary, which saves a few seconds. The downside is that if the `magefile.go` changes then this manually created binary will be out of date, and must be manually updated/deleted.
-
-```bash
-$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) taxibeat/bake:<version> --gen-bin
-```
-
-And add `bake-build` to your `.gitignore`.
-
-#### 4. Executing targets
+### 3. Executing targets
 
 Instead of executing `mage` we now execute the script, e.g:
 
@@ -107,13 +90,13 @@ Instead of executing `mage` we now execute the script, e.g:
 ./bake.sh ci
 ```
 
-This is the recommended way to run the CI target in Jenkins.
+This is the recommended way to run the CI target in Jenkins/Github Actions.
 
-Note: you can use the `SKIP_CLEANUP=1` env var to keep Docker resources available after finishing the run.
+Note: You can set a `SKIP_CLEANUP=1` env var to keep Docker resources available after finishing the run, which can be helpful to debug failed runs.
 
 ## Tools included in the Bake image
 
-The bake image is used for local and CI/CD and contains all the tools we need in our local and CI/CD environments:
+The bake Docker image contains the tools required to execute all Mage targets.
 
 - [mage](https://magefile.org/) a make file replacement with Go code
 - [hadolint](https://github.com/hadolint/hadolint) docker file linting
@@ -127,6 +110,14 @@ The image is built and uploaded to the repository's package storage on every new
 
 The version of the Bake image and of the Bake Go module are kept in sync, and should be updated together in projects that use Bake.
 
-## Example projects
+## Repos using Bake
 
 - https://github.com/taxibeat/direction
+- https://github.com/taxibeat/route
+- https://github.com/taxibeat/sonar
+- https://github.com/taxibeat/dispatch
+- https://github.com/taxibeat/eta
+
+## Recipes
+
+For a list of useful recipes please see [doc/recipes.md](doc/recipes.md).
