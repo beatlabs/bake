@@ -22,7 +22,7 @@ $ dlv test ./test --build-flags '--tags=component' -- -test.run TestGetRoute
 This will start several Docker containers, one for the service itself and a two for dependent services consul and mockserver.
 
 ```shell
-$ docke ps --format {{.Names}}
+$ docker ps --format {{.Names}}
 000-route-comptest-route
 000-route-comptest-consul
 000-route-comptest-mockserver
