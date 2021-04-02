@@ -239,7 +239,7 @@ func cleanupSessionResources(fname string) error {
 		return err
 	}
 
-	containers, err := pool.Client.ListContainers(docker.ListContainersOptions{})
+	containers, err := pool.Client.ListContainers(docker.ListContainersOptions{All: true})
 	if err != nil {
 		return err
 	}

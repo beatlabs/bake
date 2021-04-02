@@ -87,7 +87,7 @@ In order to generate an initial `bake.sh` you can run copy the one from this rep
 Instead of executing `mage` we now execute the script, e.g:
 
 ```bash
-./bake.sh ci:run
+./bake.sh ci
 ```
 
 This is the recommended way to run the CI target in Jenkins/Github Actions.
