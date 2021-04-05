@@ -34,6 +34,10 @@ var (
 	}
 	// Pkgs is the pkg pattern to target.
 	Pkgs = "./..."
+	// CoverExcludePatterns is a list of pkg patterns to prune from coverage.txt
+	CoverExcludePatterns = []string{"proto/generated"}
+	// CoverExcludeFile is the coverage file to prune.
+	CoverExcludeFile = "coverage.txt"
 )
 
 const (
@@ -51,22 +55,26 @@ func (Test) Unit() error {
 
 // All runs all tests.
 func (Test) All() error {
-	args := append(TestArgs, getBuildTagFlag(GoBuildTags))
-	args = append(args, Pkgs)
+	args := append(TestArgs, getBuildTagFlag(GoBuildTags), Pkgs)
 	return run(args)
 }
 
 // CoverUnit runs unit tests and produces a coverage report.
 func (Test) CoverUnit() error {
 	args := append(CoverArgs, Pkgs)
-	return run(args)
+	if err := run(args); err != nil {
+		return err
+	}
+	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
 }
 
 // CoverAll runs all tests and produces a coverage report.
 func (Test) CoverAll() error {
-	args := append(CoverArgs, getBuildTagFlag(GoBuildTags))
-	args = append(args, Pkgs)
-	return run(args)
+	args := append(CoverArgs, getBuildTagFlag(GoBuildTags), Pkgs)
+	if err := run(args); err != nil {
+		return err
+	}
+	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
 }
 
 // Cleanup removes any local resources created by `mage test:all`.
