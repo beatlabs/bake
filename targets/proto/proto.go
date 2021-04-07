@@ -45,10 +45,11 @@ func (Proto) SchemaGenerate(schema, version string) error {
 	pathToSchema := fmt.Sprintf("%s/%s/%s.proto", schema, version, schema)
 	fmt.Printf("proto schema: generate schema %s\n", pathToSchema)
 
-	tmpDir, err := ioutil.TempDir("", "")
+	tmpDir, err := ioutil.TempDir(".", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
+	defer os.RemoveAll(tmpDir)
 
 	args := append(
 		getDefaultSkimArgs(Service),
@@ -61,6 +62,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 		pathToSchema,
 	)
 
+	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
 	err = sh.RunV(skimCMD, args...)
 	if err != nil {
 		return err
@@ -77,10 +79,11 @@ func (Proto) SchemaGenerate(schema, version string) error {
 func (Proto) SchemaGenerateAll() error {
 	fmt.Printf("proto schema: generate all schemas for service: %q\n", Service)
 
-	tmpDir, err := ioutil.TempDir("", "")
+	tmpDir, err := ioutil.TempDir(".", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
+	defer os.RemoveAll(tmpDir)
 
 	args := append(
 		getDefaultSkimArgs(Service),
@@ -91,6 +94,7 @@ func (Proto) SchemaGenerateAll() error {
 		tmpDir,
 	)
 
+	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
 	err = sh.RunV(skimCMD, args...)
 	if err != nil {
 		return err
