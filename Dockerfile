@@ -1,4 +1,15 @@
+FROM golang:1.15 as builder
+
+ARG GH_TOKEN
+
+# Install Skim
+RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
+    go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
+    git config --global --remove-section url."https://$GH_TOKEN@github.com/"
+
 FROM golang:1.15
+
+COPY --from=builder /go/bin/skim /go/bin/skim
 
 RUN apt-get update && \
     apt-get install -y \
@@ -24,14 +35,6 @@ ENV CGO_ENABLED=1
 
 # Required to access private modules
 ENV GOPRIVATE=github.com/taxibeat/*
-
-# expect a build-time variable
-ARG GH_TOKEN
-
-# Install Skim
-RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
-    go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
-    git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
 # Skim dependencies
 ARG BUF_VERSION=0.24.0
