@@ -28,14 +28,10 @@ ENV GOPRIVATE=github.com/taxibeat/*
 # expect a build-time variable
 ARG GH_TOKEN
 
-# Access to Beat private repos
-RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/"
-
-# Download and install skim - proto schema registry tool
-RUN go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/
-
-# Remove token from config after accessing private repos.
-RUN git config --global --remove-section url."https://$GH_TOKEN@github.com/"
+# Install Skim
+RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
+    go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
+    git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
 # Skim dependencies
 ARG BUF_VERSION=0.24.0
