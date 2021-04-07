@@ -42,8 +42,8 @@ ARG BUF_VERSION=0.24.0
 ARG PROTOC_VERSION=3.13.0
 ARG PROTODOC_VERSION=1.3.2
 
-RUN cd /usr/local/bin && \
-    curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-Linux-x86_64 && \
+WORKDIR /usr/local/bin
+RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-Linux-x86_64 && \
     mv buf-Linux-x86_64 buf-linux && \
     curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/protoc-gen-buf-check-breaking-Linux-x86_64 && \
     mv protoc-gen-buf-check-breaking-Linux-x86_64 protoc-gen-buf-check-breaking && \
@@ -60,6 +60,8 @@ RUN cd /usr/local/bin && \
     mv protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6/protoc-gen-doc . && \
     go get -u google.golang.org/protobuf/cmd/protoc-gen-go && \
     GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go
+
+WORKDIR /go
 
 # Download and install mage file into bin path
 ARG MAGE_VERSION=1.11.0
