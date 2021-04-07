@@ -49,7 +49,11 @@ func (Proto) SchemaGenerate(schema, version string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			fmt.Printf("failed to remove temp dir: %s\n", tmpDir)
+		}
+	}()
 
 	args := append(
 		getDefaultSkimArgs(Service),
@@ -83,7 +87,11 @@ func (Proto) SchemaGenerateAll() error {
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			fmt.Printf("failed to remove temp dir: %s\n", tmpDir)
+		}
+	}()
 
 	args := append(
 		getDefaultSkimArgs(Service),
