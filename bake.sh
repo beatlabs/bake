@@ -5,10 +5,6 @@ set -e
 image_name="ghcr.io/taxibeat/bake"
 image_tag="latest"
 
-if ! [[ `cat ${HOME}/.docker/config.json | grep ghcr.io` ]]; then
-  echo "docker config not found for ghcr.io, please log in"	
-fi
-
 # GID to be added to user groups in the running container
 # so that the user can interact with docker.
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
