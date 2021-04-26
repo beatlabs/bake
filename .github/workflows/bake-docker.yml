@@ -15,8 +15,9 @@ jobs:
       - name: Build and Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
+          registry: ghcr.io
           name: taxibeat/bake
-          username: ${{ secrets.DOCKERHUBUSER }}
-          password: ${{ secrets.DOCKERHUBPWD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           tags: "latest,${{ env.RELEASE_VERSION }}"
           buildargs: GH_TOKEN=${{ secrets.MATCHING_GITHUBTOKEN }}
