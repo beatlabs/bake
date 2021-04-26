@@ -64,18 +64,19 @@ The trade-off is that it's slower since we must spin up a Bake Docker container 
 
 This is required in order to access private repos (including the go packages in the bake repo).
 
-A token can be generated at [here](https://github.com/settings/tokens) and must have 'repo' scope and be SSO enabled.
+A token can be generated at [here](https://github.com/settings/tokens) and must have `repo` `read:packages` scope and be **SSO enabled**.
 
-You can export it in your shell 
+Export it in your shell
 
 ```bash
 export GITHUB_TOKEN=my-token
 ```
 
-or set it inline before executing bake:
+Login to `ghcr.io`
 
 ```bash
-GITHUB_TOKEN=my-token ./bake.sh
+$ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
+> Login Succeeded
 ```
 
 ### 2. Create a `bake.sh` script
@@ -91,8 +92,6 @@ Instead of executing `mage` we now execute the script, e.g:
 ```
 
 This is the recommended way to run the CI target in Jenkins/Github Actions.
-
-Note: You can set a `SKIP_CLEANUP=1` env var to keep Docker resources available after finishing the run, which can be helpful to debug failed runs.
 
 ## Tools included in the Bake image
 
