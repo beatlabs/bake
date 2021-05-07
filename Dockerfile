@@ -1,4 +1,4 @@
-FROM golang:1.15 as builder
+FROM golang:1.16.4 as builder
 
 ARG GH_TOKEN
 
@@ -7,7 +7,7 @@ RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://g
     go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM golang:1.15
+FROM golang:1.16.4
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
