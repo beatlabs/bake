@@ -79,6 +79,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 			OutputStream: ioutil.Discard,
 			ContextDir:   conf.BuildOpts.ContextDir,
 			BuildArgs:    conf.BuildOpts.BuildArgs,
+			RmTmpContainer: true,
 		})
 		if err != nil {
 			return fmt.Errorf("build image %s: %w", c.Name+":"+session.id, err)
