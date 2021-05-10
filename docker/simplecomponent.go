@@ -74,11 +74,12 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 
 	if conf.BuildOpts != nil {
 		err := pool.Client.BuildImage(docker.BuildImageOptions{
-			Name:         c.Name + ":" + session.id,
-			Dockerfile:   conf.BuildOpts.Dockerfile,
-			OutputStream: ioutil.Discard,
-			ContextDir:   conf.BuildOpts.ContextDir,
-			BuildArgs:    conf.BuildOpts.BuildArgs,
+			Name:           c.Name + ":" + session.id,
+			Dockerfile:     conf.BuildOpts.Dockerfile,
+			OutputStream:   ioutil.Discard,
+			ContextDir:     conf.BuildOpts.ContextDir,
+			BuildArgs:      conf.BuildOpts.BuildArgs,
+			RmTmpContainer: true,
 		})
 		if err != nil {
 			return fmt.Errorf("build image %s: %w", c.Name+":"+session.id, err)
