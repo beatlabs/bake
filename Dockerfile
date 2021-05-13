@@ -1,4 +1,4 @@
-FROM golang:1.16 as builder
+FROM golang:1.15 as builder
 
 ARG GH_TOKEN
 
@@ -58,7 +58,7 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
     tar xf protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     mv protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6/protoc-gen-doc . && \
     go get -u google.golang.org/protobuf/cmd/protoc-gen-go && \
-    GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go
+    GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
 
 WORKDIR /go
 
