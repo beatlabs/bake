@@ -1,13 +1,14 @@
-FROM golang:1.15 as builder
+FROM golang:1.16 as builder
 
 ARG GH_TOKEN
 
 # Install Skim
+ENV GOPRIVATE=github.com/taxibeat/*
 RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
     go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM golang:1.15
+FROM golang:1.16
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
@@ -58,7 +59,7 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
     tar xf protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     mv protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6/protoc-gen-doc . && \
     go get -u google.golang.org/protobuf/cmd/protoc-gen-go && \
-    GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go
+    GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
 WORKDIR /go
 
@@ -86,11 +87,12 @@ RUN wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O - |
 ARG GOLANGCILINT_VERSION=1.33.0
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
+# Restore permissions as per https://hub.docker.com/_/golang
+RUN chmod 777 -R /go
+
 # Very permissive because we don't know what user the container will run as
 RUN mkdir /home/beat && chmod 777 /home/beat
 ENV HOME /home/beat
-
-COPY bake.sh /home/beat/bake-default.sh
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
