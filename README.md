@@ -100,7 +100,7 @@ The bake Docker image contains the tools required to execute all Mage targets.
 - [mage](https://magefile.org/) a make file replacement with Go code
 - [hadolint](https://github.com/hadolint/hadolint) docker file linting
 - [swaggo](https://github.com/swaggo/swag) for generating swagger files from annotations
-- [mark](https://github.com/mantzas/mark) for syncing markdown documentation to Confluence
+- [mark](https://github.com/kovetskiy/mark) for syncing markdown documentation to Confluence
 - [golangci-lint](https://github.com/golangci/golangci-lint) a multi-linter for Go
 - [helm](https://helm.sh/) a k8s package manager
 - [goveralls](https://github.com/mattn/goveralls) a Coveralls cli tool
