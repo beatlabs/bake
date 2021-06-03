@@ -12,7 +12,7 @@ jobs:
       - name: Get release version
         # Expect release tags to be in semver format with a 'v' prefix.
         run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
-      - name: Build and Publish to Dockerhub
+      - name: Build and Publish Image
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           registry: ghcr.io
@@ -20,4 +20,4 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           tags: "latest,${{ env.RELEASE_VERSION }}"
-          buildargs: GH_TOKEN=${{ secrets.MATCHING_GITHUBTOKEN }}
+          buildargs: GH_TOKEN=${{ secrets.MATCHING_BAKE }}
