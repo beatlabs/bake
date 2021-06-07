@@ -13,13 +13,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build local image
-        run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_GITHUBTOKEN }}
+        run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
         shell: bash
 
       - name: Bake CI
         run: ./bake.sh ci
         env:
-          GITHUB_TOKEN: ${{ secrets.MATCHING_GITHUBTOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
 
       - name: Convert coverage file to lcov
         run: |
