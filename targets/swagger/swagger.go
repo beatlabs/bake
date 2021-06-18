@@ -77,11 +77,7 @@ func generate(main, output string) error {
 		"--output",
 		output,
 	}
-	if err := sh.RunV(swagCmd, args...); err != nil {
-		return err
-	}
-
-	return nil
+	return sh.RunV(swagCmd, args...)
 }
 
 func compareFiles(file1, file2 string) error {

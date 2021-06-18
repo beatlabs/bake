@@ -12,7 +12,7 @@ import (
 // GoLinters to be used with Golangci-lint.
 var GoLinters = []string{
 	"govet",
-	"golint",
+	"revive",
 	"gofumpt",
 	"gosec",
 	"unparam",
