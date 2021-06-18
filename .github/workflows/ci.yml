@@ -43,6 +43,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_FOOTER: Powered by the Matching Domain
         uses: rtCamp/action-slack-notify@v2
+
       - name: Notify slack fail
         if: failure()
         env:
