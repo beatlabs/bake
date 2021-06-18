@@ -10,13 +10,19 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v2
 
+      - name: Docker login
+        run: echo $GITHUB_TOKEN | docker login ghcr.io -u beat-matching-bot --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
       - name: Sync
         run: ./bake.sh doc:confluencesync
         env:
           CONFLUENCE_USERNAME: ${{ secrets.MATCHING_CONFLUENCE_USERNAME }}
           CONFLUENCE_PASSWORD: ${{ secrets.MATCHING_CONFLUENCEPASSWORD }}
           CONFLUENCE_BASEURL: ${{ secrets.MATCHING_CONFLUENCEBASEURL }}
-          GITHUB_TOKEN: ${{ secrets.MATCHING_GITHUBTOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
       - name: Notify slack success
         if: success()
         env:
@@ -27,6 +33,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_FOOTER: Powered by the Matching Domain
         uses: rtCamp/action-slack-notify@v2
+
       - name: Notify slack fail
         if: failure()
         env:
