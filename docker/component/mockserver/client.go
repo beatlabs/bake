@@ -28,24 +28,36 @@ type CallTimes struct {
 
 // Request is the request that an expectation matches against.
 type Request struct {
-	Method          string           `json:"method"`
-	Path            string           `json:"path"`
-	QueryParameters []QueryParameter `json:"queryStringParameters,omitempty"`
-	Body            interface{}      `json:"body,omitempty"`
+	Method          string              `json:"method"`
+	Path            string              `json:"path"`
+	Headers         map[string][]string `json:"headers,omitempty"`
+	QueryParameters []QueryParameter    `json:"queryStringParameters,omitempty"`
+	Body            interface{}         `json:"body,omitempty"`
 }
 
 // WithJSONBody returns a Request with a JSON body set.
 func (r Request) WithJSONBody(body interface{}) Request {
-	type jsonBody struct {
+	r.Body = struct {
 		Type      string      `json:"type"`
 		MatchType string      `json:"matchType"`
 		JSON      interface{} `json:"json"`
-	}
-
-	r.Body = jsonBody{
+	}{
 		Type:      "json",
 		MatchType: "STRICT",
 		JSON:      body,
+	}
+
+	return r
+}
+
+// WithParametersBody returns a Request with a JSON body set.
+func (r Request) WithParametersBody(parameters map[string][]string) Request {
+	r.Body = struct {
+		Type       string              `json:"type"`
+		Parameters map[string][]string `json:"parameters"`
+	}{
+		Type:       "PARAMETERS",
+		Parameters: parameters,
 	}
 
 	return r
