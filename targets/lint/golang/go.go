@@ -21,15 +21,14 @@ var GolangciFlags = []string{
 	"--enable=govet,revive,gofumpt,gosec,unparam,goconst,prealloc,stylecheck,unconvert",
 }
 
-// ConfigFilePath sets the --config flag in the golangci-lint command.
+// ConfigFilePath sets the --config flag in the golangci-lint command, instead of GolangciFlags.
 var ConfigFilePath string
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
 // Go runs the golangci-lint linter.
-// If ConfigFilePath is set a config file is used, otherwise
-// command flags are generated from GoRawFlags, GoLinters and GoBuildTags.
+// If ConfigFilePath is set a config file is used, otherwise GolangciFlags are used.
 func (l Lint) Go() error {
 	var args string
 	if ConfigFilePath != "" {
