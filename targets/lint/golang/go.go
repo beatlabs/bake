@@ -30,14 +30,18 @@ type Lint mg.Namespace
 // Go runs the golangci-lint linter.
 // If ConfigFilePath is set a config file is used, otherwise GolangciFlags are used.
 func (l Lint) Go() error {
-	var args string
-	if ConfigFilePath != "" {
-		args = "--config " + ConfigFilePath
-	} else {
-		args = strings.Join(GolangciFlags, " ")
+	args := "run "
+
+	if mg.Verbose() {
+		args += "-v "
 	}
 
-	args = "run -v " + args
+	if ConfigFilePath != "" {
+		args += "--config " + ConfigFilePath
+	} else {
+		args += strings.Join(GolangciFlags, " ")
+	}
+
 	cmd := "golangci-lint"
 	fmt.Printf("Executing cmd: %s %s\n", cmd, args)
 
