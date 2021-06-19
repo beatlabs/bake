@@ -2,7 +2,6 @@
 package golang
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/magefile/mage/mg"
@@ -42,8 +41,5 @@ func (l Lint) Go() error {
 		args += strings.Join(GolangciFlags, " ")
 	}
 
-	cmd := "golangci-lint"
-	fmt.Printf("Executing cmd: %s %s\n", cmd, args)
-
-	return sh.RunV(cmd, strings.Split(args, " ")...)
+	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
 }
