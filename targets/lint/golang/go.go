@@ -9,7 +9,7 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-// GoLinters to be used with Golangci-lint.
+// GoLinters set the --enable flag in the golangci-lint command.
 var GoLinters = []string{
 	"govet",
 	"revive",
@@ -22,41 +22,51 @@ var GoLinters = []string{
 	"unconvert",
 }
 
-// GoBuildTags to use with Golangci-lint.
+// GoBuildTags set the --built-tags flag in the golangci-lint command.
 var GoBuildTags = []string{
 	"component",
 	"integration",
 }
 
+// GoRawFlags are passed directly to the golanci-lint command.
+var GoRawFlags = []string{
+	"--no-config",
+	"--disable-all",
+	"--exclude-use-default=false",
+	"--deadline=5m",
+	"--modules-download-mode=vendor",
+}
+
+// ConfigFilePath sets the --config flag in the golangci-lint command.
+var ConfigFilePath string
+
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
-// Go runs the go linter.
+// Go runs the golangci-lint linter.
+// If ConfigFilePath is set a config file is used, otherwise
+// command flags are generated from GoRawFlags, GoLinters and GoBuildTags.
 func (l Lint) Go() error {
-	fmt.Printf("lint: running go lint. linters: %v tags: %v\n", GoLinters, GoBuildTags)
+	var args string
+	if ConfigFilePath != "" {
+		args = "--config " + ConfigFilePath
+	} else {
+		if len(GoRawFlags) > 0 {
+			args = strings.Join(GoRawFlags, " ")
+		}
 
-	buildTagFlag := ""
-	if len(GoBuildTags) > 0 {
-		buildTagFlag = getBuildTagFlag(GoBuildTags)
+		if len(GoBuildTags) > 0 {
+			args += " --build-tags=" + strings.Join(GoBuildTags, ",")
+		}
+
+		if len(GoLinters) > 0 {
+			args += " --enable " + strings.Join(GoLinters, ",")
+		}
 	}
 
-	linterFlag := ""
-	if len(GoLinters) > 0 {
-		linterFlag = getLinterFlag(GoLinters)
-	}
-
+	args = "run -v " + args
 	cmd := "golangci-lint"
-	args := strings.Split(fmt.Sprintf("run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", linterFlag, buildTagFlag), " ")
+	fmt.Printf("Executing cmd: %s %s\n", cmd, args)
 
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
-
-	return sh.RunV(cmd, args...)
-}
-
-func getBuildTagFlag(tags []string) string {
-	return "--build-tags=" + strings.Join(tags, ",")
-}
-
-func getLinterFlag(linters []string) string {
-	return "--enable " + strings.Join(linters, ",")
+	return sh.RunV(cmd, strings.Split(args, " ")...)
 }
