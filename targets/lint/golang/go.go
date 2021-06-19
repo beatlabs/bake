@@ -9,32 +9,16 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-// GoLinters set the --enable flag in the golangci-lint command.
-var GoLinters = []string{
-	"govet",
-	"revive",
-	"gofumpt",
-	"gosec",
-	"unparam",
-	"goconst",
-	"prealloc",
-	"stylecheck",
-	"unconvert",
-}
-
-// GoBuildTags set the --built-tags flag in the golangci-lint command.
-var GoBuildTags = []string{
-	"component",
-	"integration",
-}
-
-// GoRawFlags are passed directly to the golanci-lint command.
-var GoRawFlags = []string{
+// GolangciFlags are passed directly to the golanci-lint command.
+var GolangciFlags = []string{
 	"--no-config",
-	"--disable-all",
 	"--exclude-use-default=false",
 	"--deadline=5m",
 	"--modules-download-mode=vendor",
+	"--build-tags=component,integration",
+	"--disable-all",
+	"--enable=govet",
+	"--enable=govet,revive,gofumpt,gosec,unparam,goconst,prealloc,stylecheck,unconvert",
 }
 
 // ConfigFilePath sets the --config flag in the golangci-lint command.
@@ -51,17 +35,7 @@ func (l Lint) Go() error {
 	if ConfigFilePath != "" {
 		args = "--config " + ConfigFilePath
 	} else {
-		if len(GoRawFlags) > 0 {
-			args = strings.Join(GoRawFlags, " ")
-		}
-
-		if len(GoBuildTags) > 0 {
-			args += " --build-tags=" + strings.Join(GoBuildTags, ",")
-		}
-
-		if len(GoLinters) > 0 {
-			args += " --enable " + strings.Join(GoLinters, ",")
-		}
+		args = strings.Join(GolangciFlags, " ")
 	}
 
 	args = "run -v " + args
