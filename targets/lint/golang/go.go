@@ -10,13 +10,7 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-// GolangciFlags are passed directly to the golanci-lint command in addition to the config file.
-var GolangciFlags = []string{}
-
-// GolangciConfigPath sets the path to a config file to be used instead of the default one.
-var GolangciConfigPath string
-
-const defaultFile = `
+const config = `
 run:
   timeout: 5m
   tests: true
@@ -55,18 +49,12 @@ func (l Lint) Go() error {
 		args += "-v "
 	}
 
-	if GolangciConfigPath != "" {
-		args += "--config " + GolangciConfigPath
-	} else {
-		path, err := persistDefaultFile()
-		if err != nil {
-			return err
-		}
-		defer func() { _ = os.Remove(path) }()
-		args += "--config " + path
+	path, err := persistDefaultFile()
+	if err != nil {
+		return err
 	}
-
-	args += " " + strings.Join(GolangciFlags, " ")
+	defer func() { _ = os.Remove(path) }()
+	args += "--config " + path
 
 	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
 }
@@ -77,7 +65,7 @@ func persistDefaultFile() (string, error) {
 		return "", err
 	}
 
-	if _, err = file.Write([]byte(defaultFile)); err != nil {
+	if _, err = file.Write([]byte(config)); err != nil {
 		return "", err
 	}
 
