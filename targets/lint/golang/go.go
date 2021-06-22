@@ -2,32 +2,52 @@
 package golang
 
 import (
+	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
-// GolangciFlags are passed directly to the golanci-lint command.
-var GolangciFlags = []string{
-	"--no-config",
-	"--exclude-use-default=false",
-	"--deadline=5m",
-	"--modules-download-mode=vendor",
-	"--build-tags=component,integration",
-	"--disable-all",
-	"--enable=govet",
-	"--enable=govet,revive,gofumpt,gosec,unparam,goconst,prealloc,stylecheck,unconvert",
-}
+// GolangciFlags are passed directly to the golanci-lint command in addition to the config file.
+var GolangciFlags = []string{}
 
-// ConfigFilePath sets the --config flag in the golangci-lint command, instead of GolangciFlags.
-var ConfigFilePath string
+// GolangciConfigPath sets the path to a config file to be used instead of the default one.
+var GolangciConfigPath string
+
+const defaultFile = `
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: vendor
+  build-tags:
+    - component
+    - integration
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - revive
+    - gofumpt
+    - gosec
+    - unparam
+    - goconst
+    - prealloc
+    - stylecheck
+    - unconvert
+    - errcheck
+    - deadcode
+
+issues:
+  exclude-use-default: false
+`
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
 // Go runs the golangci-lint linter.
-// If ConfigFilePath is set a config file is used, otherwise GolangciFlags are used.
 func (l Lint) Go() error {
 	args := "run "
 
@@ -35,11 +55,35 @@ func (l Lint) Go() error {
 		args += "-v "
 	}
 
-	if ConfigFilePath != "" {
-		args += "--config " + ConfigFilePath
+	if GolangciConfigPath != "" {
+		args += "--config " + GolangciConfigPath
 	} else {
-		args += strings.Join(GolangciFlags, " ")
+		path, err := persistDefaultFile()
+		if err != nil {
+			return err
+		}
+		defer func() { _ = os.Remove(path) }()
+		args += "--config " + path
 	}
 
+	args += " " + strings.Join(GolangciFlags, " ")
+
 	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
+}
+
+func persistDefaultFile() (string, error) {
+	file, err := ioutil.TempFile(os.TempDir(), "bake-*.yml")
+	if err != nil {
+		return "", err
+	}
+
+	if _, err = file.Write([]byte(defaultFile)); err != nil {
+		return "", err
+	}
+
+	if err := file.Close(); err != nil {
+		return "", err
+	}
+
+	return file.Name(), nil
 }
