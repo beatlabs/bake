@@ -19,7 +19,7 @@ var (
 	// APIDir is the final directory.
 	APIDir = "api"
 	// MainGo is the path to the application entrypoint.
-	MainGo = "cmd/replaceme/main.go"
+	MainGo = ""
 )
 
 // Swagger groups together Swagger related tasks.
