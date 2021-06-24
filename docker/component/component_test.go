@@ -40,6 +40,8 @@ func newSession() {
 	sessionID, netID, err := docker.GetEnv()
 	checkErr(err)
 
+	sessionID += "-bake"
+
 	session, err = docker.NewSession(sessionID, netID)
 	checkErr(err)
 
