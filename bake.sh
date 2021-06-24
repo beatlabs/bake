@@ -53,5 +53,6 @@ docker run \
   --env CONFLUENCE_USERNAME="$CONFLUENCE_USERNAME" \
   --env CONFLUENCE_PASSWORD="$CONFLUENCE_PASSWORD" \
   --env CONFLUENCE_BASEURL="$CONFLUENCE_BASEURL" \
+  --env BAKE_PUBLISH_PORTS="true" \
   $image_name:$image_tag \
   $@
