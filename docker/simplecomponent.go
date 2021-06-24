@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"time"
 
@@ -128,7 +129,8 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		}
 	}
 
-	hcOpts := func(hc *docker.HostConfig) { hc.PublishAllPorts = false }
+	publishPorts, _ := strconv.ParseBool(os.Getenv("BAKE_PUBLISH_PORTS"))
+	hcOpts := func(hc *docker.HostConfig) { hc.PublishAllPorts = publishPorts }
 	_, err = pool.RunWithOptions(runOpts, hcOpts)
 	if err != nil {
 		return fmt.Errorf("run %s: %w", fullContainerName, err)
