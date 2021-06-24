@@ -12,17 +12,22 @@ import (
 
 // CI runs the Continuous Integration pipeline.
 func CI() error {
-	targets := []interface{}{
-		gocode.Go{}.CheckVendor,
+	var targets []interface{}
+
+	targets = append(targets,
 		gocode.Go{}.FmtCheck,
-		golint.Lint{}.Go,
 		dockerlint.Lint{}.Docker,
-		test.Test{}.CoverAll,
-	}
+	)
 
 	if swagger.MainGo != "" {
 		targets = append(targets, swagger.Swagger{}.Check)
 	}
+
+	targets = append(targets,
+		gocode.Go{}.CheckVendor,
+		golint.Lint{}.Go,
+		test.Test{}.CoverAll,
+	)
 
 	mg.SerialDeps(targets...)
 
