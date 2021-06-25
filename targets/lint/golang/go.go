@@ -2,61 +2,76 @@
 package golang
 
 import (
-	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
-// GoLinters to be used with Golangci-lint.
-var GoLinters = []string{
-	"govet",
-	"revive",
-	"gofumpt",
-	"gosec",
-	"unparam",
-	"goconst",
-	"prealloc",
-	"stylecheck",
-	"unconvert",
-}
+const config = `
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: vendor
+  build-tags:
+    - component
+    - integration
 
-// GoBuildTags to use with Golangci-lint.
-var GoBuildTags = []string{
-	"component",
-	"integration",
-}
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - revive
+    - gofumpt
+    - gosec
+    - unparam
+    - goconst
+    - prealloc
+    - stylecheck
+    - unconvert
+    - errcheck
+    - deadcode
+
+issues:
+  exclude-use-default: false
+`
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
-// Go runs the go linter.
+// Go runs the golangci-lint linter.
 func (l Lint) Go() error {
-	fmt.Printf("lint: running go lint. linters: %v tags: %v\n", GoLinters, GoBuildTags)
+	args := "run "
 
-	buildTagFlag := ""
-	if len(GoBuildTags) > 0 {
-		buildTagFlag = getBuildTagFlag(GoBuildTags)
+	if mg.Verbose() {
+		args += "-v "
 	}
 
-	linterFlag := ""
-	if len(GoLinters) > 0 {
-		linterFlag = getLinterFlag(GoLinters)
+	path, err := persistDefaultFile()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = os.Remove(path) }()
+	args += "--config " + path
+
+	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
+}
+
+func persistDefaultFile() (string, error) {
+	file, err := ioutil.TempFile(os.TempDir(), "bake-*.yml")
+	if err != nil {
+		return "", err
 	}
 
-	cmd := "golangci-lint"
-	args := strings.Split(fmt.Sprintf("run %s %s --exclude-use-default=false --deadline=5m --modules-download-mode=vendor", linterFlag, buildTagFlag), " ")
+	if _, err = file.Write([]byte(config)); err != nil {
+		return "", err
+	}
 
-	fmt.Printf("Executing cmd: %s %s\n", cmd, strings.Join(args, " "))
+	if err := file.Close(); err != nil {
+		return "", err
+	}
 
-	return sh.RunV(cmd, args...)
-}
-
-func getBuildTagFlag(tags []string) string {
-	return "--build-tags=" + strings.Join(tags, ",")
-}
-
-func getLinterFlag(linters []string) string {
-	return "--enable " + strings.Join(linters, ",")
+	return file.Name(), nil
 }
