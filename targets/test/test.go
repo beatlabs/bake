@@ -53,7 +53,7 @@ func (Test) Unit() error {
 	return run(args)
 }
 
-// Integration runs integration tests.
+// Integration runs unit and integration tests.
 func (Test) Integration() error {
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{integrationTestTag}), Pkgs)
 	return run(args)
