@@ -10,17 +10,22 @@ import (
 	"github.com/taxibeat/bake/docker"
 )
 
+const (
+	goCmd              = "go"
+	componentTestTag   = "component"
+	integrationTestTag = "integration"
+)
+
 var (
 	// GoBuildTags used when running all tests.
-	GoBuildTags = []string{
-		"component",
-		"integration",
-	}
+	GoBuildTags = []string{componentTestTag, integrationTestTag}
+
 	// TestArgs used in test targets.
 	TestArgs = []string{
 		"test",
 		"-mod=vendor",
 		"-cover",
+		"-count=1",
 		"-race",
 	}
 	// CoverArgs used in coverage targets.
@@ -40,16 +45,18 @@ var (
 	CoverExcludeFile = "coverage.txt"
 )
 
-const (
-	goCmd = "go"
-)
-
 // Test groups together test related tasks.
 type Test mg.Namespace
 
 // Unit runs unit tests.
 func (Test) Unit() error {
 	args := append(TestArgs, Pkgs)
+	return run(args)
+}
+
+// Integration runs integration tests.
+func (Test) Integration() error {
+	args := append(TestArgs, getBuildTagFlag([]string{integrationTestTag}), Pkgs)
 	return run(args)
 }
 
