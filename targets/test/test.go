@@ -25,7 +25,6 @@ var (
 		"test",
 		"-mod=vendor",
 		"-cover",
-		"-count=1",
 		"-race",
 	}
 	// CoverArgs used in coverage targets.
@@ -56,13 +55,13 @@ func (Test) Unit() error {
 
 // Integration runs integration tests.
 func (Test) Integration() error {
-	args := append(TestArgs, getBuildTagFlag([]string{integrationTestTag}), Pkgs)
+	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{integrationTestTag}), Pkgs)
 	return run(args)
 }
 
 // All runs all tests.
 func (Test) All() error {
-	args := append(TestArgs, getBuildTagFlag(GoBuildTags), Pkgs)
+	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag(GoBuildTags), Pkgs)
 	return run(args)
 }
 
@@ -97,4 +96,8 @@ func run(args []string) error {
 
 func getBuildTagFlag(buildTags []string) string {
 	return "-tags=" + strings.Join(buildTags, ",")
+}
+
+func appendCacheBustingArg(args []string) []string {
+	return append(args, "-count=1")
 }
