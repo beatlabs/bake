@@ -59,7 +59,7 @@ func (Test) Integration() error {
 	return run(args)
 }
 
-// Component runs component tests.
+// Component runs unit and component tests.
 func (Test) Component() error {
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{componentTestTag}), Pkgs)
 	return run(args)
