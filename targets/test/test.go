@@ -10,12 +10,16 @@ import (
 	"github.com/taxibeat/bake/docker"
 )
 
+const (
+	goCmd              = "go"
+	componentTestTag   = "component"
+	integrationTestTag = "integration"
+)
+
 var (
 	// GoBuildTags used when running all tests.
-	GoBuildTags = []string{
-		"component",
-		"integration",
-	}
+	GoBuildTags = []string{componentTestTag, integrationTestTag}
+
 	// TestArgs used in test targets.
 	TestArgs = []string{
 		"test",
@@ -40,10 +44,6 @@ var (
 	CoverExcludeFile = "coverage.txt"
 )
 
-const (
-	goCmd = "go"
-)
-
 // Test groups together test related tasks.
 type Test mg.Namespace
 
@@ -53,9 +53,21 @@ func (Test) Unit() error {
 	return run(args)
 }
 
+// Integration runs unit and integration tests.
+func (Test) Integration() error {
+	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{integrationTestTag}), Pkgs)
+	return run(args)
+}
+
+// Component runs unit and component tests.
+func (Test) Component() error {
+	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{componentTestTag}), Pkgs)
+	return run(args)
+}
+
 // All runs all tests.
 func (Test) All() error {
-	args := append(TestArgs, getBuildTagFlag(GoBuildTags), Pkgs)
+	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag(GoBuildTags), Pkgs)
 	return run(args)
 }
 
@@ -90,4 +102,8 @@ func run(args []string) error {
 
 func getBuildTagFlag(buildTags []string) string {
 	return "-tags=" + strings.Join(buildTags, ",")
+}
+
+func appendCacheBustingArg(args []string) []string {
+	return append(args, "-count=1")
 }
