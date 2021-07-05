@@ -33,6 +33,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage.lcov
 
+      - name: Upload container logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-logs
+          retention-days: 2
+          path: .bake-container-logs
+
       - name: Notify slack success
         if: success()
         env:
