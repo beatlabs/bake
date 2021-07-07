@@ -23,6 +23,9 @@ BAKE_NETWORK_ID=$(docker network create "${BAKE_SESSION_ID}")
 printf "Bake Session ID: $BAKE_SESSION_ID\nBake Network ID: $BAKE_NETWORK_ID\n\n"
 
 cleanup () {
+  logsdir='.bake-container-logs'
+  mkdir -p $logsdir
+  docker ps --format '{{.Names}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} sh -c "docker logs {} > $logsdir/{}.log 2>&1"
   docker ps --format '{{.Names}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} docker rm -f {} > /dev/null
   # docker image list --format '{{.Repository}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
   docker image list --format '{{.Repository}}:{{.Tag}}' | grep ":$BAKE_SESSION_ID\$" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null

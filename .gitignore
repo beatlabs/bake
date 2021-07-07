@@ -17,5 +17,6 @@
 # mage bake
 /magebin
 .bakesession
+.bake-container-logs
 coverage.txt
 coverage.lcov
