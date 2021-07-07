@@ -121,14 +121,14 @@ func (p Proto) SchemaValidateAll() error {
 
 	args := append(
 		getDefaultSkimArgs(Service),
-		"-t",
-		os.Getenv("GITHUB_TOKEN"),
 		"validate-all",
 		"-s",
 		SchemasLocation,
 	)
 
-	return sh.RunV(skimCMD, args...)
+	env := map[string]string{"SKIM_TOKEN": os.Getenv("GITHUB_TOKEN")}
+
+	return sh.RunWithV(env, skimCMD, args...)
 }
 
 func getDefaultSkimArgs(service string) []string {
