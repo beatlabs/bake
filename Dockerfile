@@ -68,7 +68,7 @@ ARG MAGE_VERSION=1.11.0
 RUN wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
-ARG HADOLINT_VERSION=1.17.6
+ARG HADOLINT_VERSION=2.6.0
 RUN wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64 && chmod +x /usr/bin/hadolint
 
 # Download and install swag into bin path
