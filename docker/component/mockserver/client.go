@@ -8,16 +8,33 @@ import (
 	"strings"
 )
 
+// TimeUnit represents a time unit.
+type TimeUnit string
+
+const (
+	// Seconds represents the Seconds time unit.
+	Seconds TimeUnit = "SECONDS"
+	// Milliseconds represents the Milliseconds time unit.
+	Milliseconds TimeUnit = "MILLISECONDS"
+)
+
 // QueryParameter is a query parameter for mockserver.
 type QueryParameter struct {
 	Name   string   `json:"name"`
 	Values []string `json:"values"`
 }
 
+// Delay representes the amount of that that mockserver delays the response by.
+type Delay struct {
+	TimeUnit TimeUnit `json:"timeUnit"`
+	Value    int      `json:"value"`
+}
+
 // Response is an untyped response from mockserver expectation.
 type Response struct {
 	Status int         `json:"statusCode"`
 	Body   interface{} `json:"body"`
+	Delay  Delay       `json:"delay,omitempty"`
 }
 
 // CallTimes configures the call times for an expectation.

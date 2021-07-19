@@ -129,8 +129,12 @@ func TestMockServer(t *testing.T) {
 	mockServerClient := mockserver.NewClient(mockServerAddr)
 	err = mockServerClient.CreateExpectation(
 		mockserver.Expectation{
-			Request:  mockserver.Request{Method: "GET", Path: "/"},
-			Response: mockserver.Response{Status: 200, Body: struct{}{}},
+			Request: mockserver.Request{Method: "GET", Path: "/"},
+			Response: mockserver.Response{
+				Status: 200,
+				Body:   struct{}{},
+				Delay:  mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
+			},
 		})
 	assert.NoError(t, err)
 	err = mockServerClient.Reset()
