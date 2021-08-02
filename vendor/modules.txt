@@ -63,7 +63,7 @@ github.com/eapache/queue
 github.com/fatih/color
 # github.com/frankban/quicktest v1.11.3
 ## explicit
-# github.com/go-redis/redis/v8 v8.11.0
+# github.com/go-redis/redis/v8 v8.11.1
 ## explicit
 github.com/go-redis/redis/v8
 github.com/go-redis/redis/v8/internal
