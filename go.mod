@@ -20,7 +20,7 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.7.1
-	golang.org/x/mod v0.4.2
+	golang.org/x/mod v0.5.0
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
 	gopkg.in/Shopify/sarama.v1 v1.20.1
 )
