@@ -82,9 +82,11 @@ github.com/gogo/protobuf/proto
 github.com/golang/snappy
 # github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 github.com/google/shlex
-# github.com/hashicorp/consul/api v1.9.1
+# github.com/hashicorp/consul/api v1.10.0
 ## explicit
 github.com/hashicorp/consul/api
+# github.com/hashicorp/consul/sdk v0.8.0
+## explicit
 # github.com/hashicorp/go-cleanhttp v0.5.1
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-hclog v0.12.0
