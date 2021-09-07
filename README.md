@@ -99,6 +99,12 @@ Instead of executing `mage` we now execute the script, e.g:
 ./bake.sh ci
 ```
 
+If you need sudo for docker:
+
+```bash
+sudo ./bake.sh ci
+```
+
 This is the recommended way to run the CI target in Jenkins/Github Actions.
 
 ## Tools included in the Bake image
