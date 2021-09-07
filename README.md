@@ -79,6 +79,14 @@ $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 > Login Succeeded
 ```
 
+If you need sudo for docker:
+
+```bash
+$ echo $GITHUB_TOKEN | sudo docker login ghcr.io -u YOUR-USERNAME --password-stdin
+> Login Succeeded
+```
+
+
 ### 2. Create a `bake.sh` script
 
 In order to generate an initial `bake.sh` you can run copy the one from this repo or from a project where bake has already been setup and modify to your needs, e.g. add any env vars that your targets may require.
