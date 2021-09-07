@@ -82,7 +82,7 @@ $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 If you need sudo for docker:
 
 ```bash
-$ echo $GITHUB_TOKEN | sudo docker login ghcr.io -u YOUR-USERNAME --password-stdin
+$ sudo echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 > Login Succeeded
 ```
 
@@ -98,12 +98,13 @@ Instead of executing `mage` we now execute the script, e.g:
 ```bash
 ./bake.sh ci
 ```
-
-If you need sudo for docker:
+:exclamation: if you need sudo for docker you cannot leverage on the exported environment variable, instead you should use the following command:
 
 ```bash
-sudo ./bake.sh ci
+sudo GITHUB_TOKEN=<your_token> ./bake.sh ci
 ```
+
+
 
 This is the recommended way to run the CI target in Jenkins/Github Actions.
 
