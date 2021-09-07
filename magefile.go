@@ -22,5 +22,5 @@ import (
 
 func init() {
 	docker.DockerFiles = []string{"./Dockerfile"}
-	test.CoverExcludePatterns = []string{"doc", "docker/component/testservice/"}
+	test.CoverExcludePatterns = []string{"doc/", "docker/component/testservice/"}
 }
