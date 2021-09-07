@@ -82,7 +82,7 @@ $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 If you need sudo for docker:
 
 ```bash
-$ sudo echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
+$ echo $GITHUB_TOKEN | sudo docker login ghcr.io -u YOUR-USERNAME --password-stdin
 > Login Succeeded
 ```
 
