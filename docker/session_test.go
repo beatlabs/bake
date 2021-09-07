@@ -1,11 +1,11 @@
 package docker
 
 import (
+	"os"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHostMapping(t *testing.T) {
@@ -47,5 +47,6 @@ func TestPersistAndLoadingSession(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, loadedSession.id, sess.id)
 
-	_ = CleanupResources()
+	err = os.Remove(DefaultSessionFile)
+	require.NoError(t, err)
 }
