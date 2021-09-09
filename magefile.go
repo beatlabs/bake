@@ -4,6 +4,7 @@ package main
 
 import (
 	"github.com/taxibeat/bake/targets/lint/docker"
+	"github.com/taxibeat/bake/targets/test"
 
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/code/golang"
@@ -21,4 +22,5 @@ import (
 
 func init() {
 	docker.DockerFiles = []string{"./Dockerfile"}
+	test.CoverExcludePatterns = []string{"doc/", "docker/component/testservice/"}
 }

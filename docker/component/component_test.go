@@ -89,6 +89,9 @@ func TestConsul(t *testing.T) {
 
 	err = consulClient.Put("services/foo/bar", "23")
 	assert.NoError(t, err)
+
+	err = consulClient.Delete("services/foo/bar")
+	assert.NoError(t, err)
 }
 
 func TestRedis(t *testing.T) {
