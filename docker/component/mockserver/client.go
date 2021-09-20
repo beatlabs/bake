@@ -34,7 +34,7 @@ type Delay struct {
 type Response struct {
 	Status int         `json:"statusCode"`
 	Body   interface{} `json:"body"`
-	Delay  Delay       `json:"delay,omitempty"`
+	Delay  *Delay      `json:"delay,omitempty"`
 }
 
 // CallTimes configures the call times for an expectation.
