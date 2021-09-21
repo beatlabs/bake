@@ -136,7 +136,7 @@ func TestMockServer(t *testing.T) {
 			Response: mockserver.Response{
 				Status: 200,
 				Body:   struct{}{},
-				Delay:  mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
+				Delay:  &mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
 			},
 		})
 	assert.NoError(t, err)
