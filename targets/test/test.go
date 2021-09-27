@@ -26,7 +26,6 @@ var (
 		"-mod=vendor",
 		"-cover",
 		"-race",
-		"-shuffle on",
 	}
 	// CoverArgs used in coverage targets.
 	CoverArgs = []string{
@@ -36,7 +35,6 @@ var (
 		"-covermode=atomic",
 		"-coverprofile=coverage.txt",
 		"-race",
-		"-shuffle on",
 	}
 	// Pkgs is the pkg pattern to target.
 	Pkgs = "./..."
