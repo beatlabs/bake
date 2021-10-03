@@ -138,7 +138,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 
 	// Update session service registry.
 	for serviceName, port := range conf.ServicePorts {
-		err := session.RegisterInternalDockerSevice(serviceName, runOpts.Name+":"+port)
+		err := session.RegisterInternalDockerService(serviceName, runOpts.Name+":"+port)
 		if err != nil {
 			return nil
 		}
@@ -147,7 +147,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 			if !ok {
 				return fmt.Errorf("host service port not found for service %s", serviceName)
 			}
-			err := session.RegisterHostMappedDockerSevice(serviceName, "localhost:"+hport)
+			err := session.RegisterHostMappedDockerService(serviceName, "localhost:"+hport)
 			if err != nil {
 				return nil
 			}

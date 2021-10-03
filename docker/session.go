@@ -71,8 +71,8 @@ func (s *Session) StartComponents(cs ...Component) error {
 	return g.Wait()
 }
 
-// RegisterInternalDockerSevice registers an internal endpoint against the service name.
-func (s *Session) RegisterInternalDockerSevice(serviceName, endpoint string) error {
+// RegisterInternalDockerService registers an internal endpoint against the service name.
+func (s *Session) RegisterInternalDockerService(serviceName, endpoint string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -85,8 +85,8 @@ func (s *Session) RegisterInternalDockerSevice(serviceName, endpoint string) err
 	return nil
 }
 
-// RegisterHostMappedDockerSevice registers a host mapped endpoint against the service name.
-func (s *Session) RegisterHostMappedDockerSevice(serviceName, endpoint string) error {
+// RegisterHostMappedDockerService registers a host mapped endpoint against the service name.
+func (s *Session) RegisterHostMappedDockerService(serviceName, endpoint string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -135,7 +135,7 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 
 // PersistToFile serializes a session and writes it to a file.
 func (s *Session) PersistToFile(fpath string) error {
-	if inDocker() {
+	if s.inDocker {
 		return nil
 	}
 
@@ -181,12 +181,12 @@ type sessionDump struct {
 
 // LoadSession attempts to load a Session from the default file location.
 func LoadSession() (*Session, error) {
-	return LoadSessionFromFile(DefaultSessionFile)
+	return LoadSessionFromFile(inDocker(), DefaultSessionFile)
 }
 
-// LoadSessionFromFile attemps to load a session from a file.
-func LoadSessionFromFile(fpath string) (*Session, error) {
-	if inDocker() {
+// LoadSessionFromFile attempts to load a session from a file.
+func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
+	if inDocker {
 		return nil, errors.New("not supported inside of docker")
 	}
 
@@ -223,7 +223,7 @@ func CleanupResources() error {
 func cleanupSessionResources(fname string) error {
 	fmt.Println(fname)
 
-	session, err := LoadSessionFromFile(fname)
+	session, err := LoadSessionFromFile(inDocker(), fname)
 	if err != nil {
 		return err
 	}

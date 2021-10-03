@@ -89,6 +89,9 @@ func TestConsul(t *testing.T) {
 
 	err = consulClient.Put("services/foo/bar", "23")
 	assert.NoError(t, err)
+
+	err = consulClient.Delete("services/foo/bar")
+	assert.NoError(t, err)
 }
 
 func TestRedis(t *testing.T) {
@@ -133,7 +136,7 @@ func TestMockServer(t *testing.T) {
 			Response: mockserver.Response{
 				Status: 200,
 				Body:   struct{}{},
-				Delay:  mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
+				Delay:  &mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
 			},
 		})
 	assert.NoError(t, err)

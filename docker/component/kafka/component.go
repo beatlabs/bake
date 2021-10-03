@@ -1,4 +1,4 @@
-// Package kafka exposes Kaka and Zookeeper containers.
+// Package kafka exposes Kafka and Zookeeper containers.
 package kafka
 
 import (

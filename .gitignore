@@ -20,3 +20,4 @@
 .bake-container-logs
 coverage.txt
 coverage.lcov
+.idea/
