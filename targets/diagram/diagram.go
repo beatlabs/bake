@@ -76,17 +76,17 @@ func (Diagram) GeneratePng() error {
 func moveAllFilesInDirTo(destination string) error {
 	matches, err := filepath.Glob("*")
 	if err != nil {
-		return fmt.Errorf("error while searching matches in current tmp folder: %v\n", err)
+		return fmt.Errorf("error while searching matches in current tmp folder: %v", err)
 	}
 	if len(matches) < 1 {
-		return fmt.Errorf("failed to find matches in current tmp folder\n")
+		return fmt.Errorf("failed to find matches in current tmp folder")
 	}
 
 	for _, match := range matches {
 		fname := path.Base(match)
 		err = os.Rename(match, path.Join(destination, fname))
 		if err != nil {
-			return fmt.Errorf("failed to move generated file from [%s] to [%s]: %v\n", match, path.Join(destination, fname), err)
+			return fmt.Errorf("failed to move generated file from [%s] to [%s]: %v", match, path.Join(destination, fname), err)
 		}
 	}
 
