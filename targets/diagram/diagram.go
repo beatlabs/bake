@@ -56,17 +56,17 @@ func (Diagram) GeneratePng() error {
 	absolutePaths := relativeToAbsolute(wd, relativePaths)
 
 	if err := os.Chdir(tmpDir); err != nil {
-		return fmt.Errorf("failed to navigate to tmpDir: %s\n", tmpDir)
+		return fmt.Errorf("failed to navigate to tmp directory: %s", tmpDir)
 	}
 
 	for _, f := range absolutePaths {
 		err := sh.RunV(python3CMD, f)
 		if err != nil {
-			return fmt.Errorf("error generating diagram for file [%s]: %v\nabort generation of remaining diagrams\n", f, err)
+			return fmt.Errorf("abort generation of remaining diagrams, failed generating diagram for file [%s]: %v", f, err)
 		}
 		err = moveAllFilesInDirTo(path.Dir(f))
 		if err != nil {
-			return fmt.Errorf("error while moving files: %v\nabort generation of remaining diagrams\n", err)
+			return fmt.Errorf("abort generation of remaining diagrams, failed to move files: %v", err)
 		}
 	}
 
