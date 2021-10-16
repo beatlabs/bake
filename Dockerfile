@@ -91,7 +91,7 @@ RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/ins
 
 # Install diagrams dependency for diagram generation (py -> png)
 ARG DIAGRAMS_VERSION=0.20.0
-RUN pip install diagrams==${DIAGRAMS_VERSION}
+RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
