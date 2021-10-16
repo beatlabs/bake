@@ -21,19 +21,3 @@ with Diagram(name="Bake Architecture", filename="bake", show=False):
             helm = Helm("Helm - Helm chart linting")
             golangci = Go("golangci-lint - Fast Go linters runner")
             skim = Go("Skim - Beat internal schema breaking changes detector")
-
-        #
-
-#     with Cluster("Sonar"):
-#         sonar = Go()
-#         rest >> sonar
-#         aws >> sonar
-#         sns >> sonar
-#         vehicleServices >> sonar
-#         driverPositions >> sonar
-#         partnerShifts >> sonar
-#         fleet >> sonar
-#         dracarys >> sonar
-#         sonar >> fraudPrevention
-#         sonar >> audit
-#         sonar >> eta
