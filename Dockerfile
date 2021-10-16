@@ -21,6 +21,8 @@ RUN apt-get update && \
     ca-certificates \
     gnupg-agent \
     software-properties-common \
+    python3-pip \
+    graphviz \
     && rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
@@ -86,6 +88,10 @@ RUN wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O - |
 # Download and install golangci-lint into go bin path
 ARG GOLANGCILINT_VERSION=1.41.1
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
+
+# Install diagrams dependency for diagram generation (py -> png)
+ARG DIAGRAMS_VERSION=0.20.0
+RUN pip install diagrams==${DIAGRAMS_VERSION}
 
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
