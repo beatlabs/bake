@@ -16,6 +16,7 @@ var Args = []string{
 	"--ignore", "DL3008", // Pin versions in apt get install
 	"--ignore", "DL4001", // Either use Wget or Curl but not both
 	"--ignore", "DL4006", // Set the SHELL option -o pipefail
+	"--ignore", "DL3059", // Multiple consecutive `RUN` instructions. Consider consolidation.
 }
 
 const cmd = "hadolint"
