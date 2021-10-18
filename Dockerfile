@@ -21,8 +21,8 @@ RUN apt-get update && \
     ca-certificates \
     gnupg-agent \
     software-properties-common \
-    python3-pip \
-    graphviz \
+    python3-pip `# dependency: diagrams`\
+    graphviz `# dependency: diagrams`\
     && rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
