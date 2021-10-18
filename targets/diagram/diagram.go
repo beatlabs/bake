@@ -28,9 +28,12 @@ var InputDiagramPath = []string{}
 // Diagram groups together test related diagram tasks.
 type Diagram mg.Namespace
 
-// GeneratePng will search for *.py files in the InputDiagramPath list and
-// compile the found *.py files into *.png files
-func (Diagram) GeneratePng() error {
+// Generate will search for '*.py' files in the InputDiagramPath list and
+// 'compile' them into the associated output diagram image files. The image
+// output name and format (png, jpg, svg, and pdf) are defined within the input
+// '*.py'. The output will be located in the same folder of the corresponding
+// input.
+func (Diagram) Generate() error {
 	relativePaths := existingInputPythonFiles()
 
 	tmpDir, err := ioutil.TempDir(".", "")
