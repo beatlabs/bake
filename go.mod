@@ -10,7 +10,7 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/fatih/color v1.10.0 // indirect
-	github.com/go-redis/redis/v8 v8.11.3
+	github.com/go-redis/redis/v8 v8.11.4
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/hashicorp/consul/api v1.11.0
 	github.com/magefile/mage v1.11.0
