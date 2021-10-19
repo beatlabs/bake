@@ -33,6 +33,8 @@ linters:
     - unconvert
     - errcheck
     - deadcode
+    - ineffassign
+    - structcheck
 
 issues:
   exclude-use-default: false

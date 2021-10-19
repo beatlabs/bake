@@ -13,6 +13,7 @@ The repository provides two major components:
 
 - Mage targets and helpers, to support a more structured and common make-like experience.
 - A Bake Docker image containing pinned versions of Go and several CI tools (linters/code generators/etc), to guarantee a consistent experience.
+  ![Image of Yaktocat](doc/bake.png)
 
 ## Working with Mage targets
 
