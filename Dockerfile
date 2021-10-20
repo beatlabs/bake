@@ -2,8 +2,10 @@ FROM golang:1.17 as builder
 
 ARG GH_TOKEN
 
+# Required to access private modules
+ENV GOPRIVATE=github.com/taxibeat/**
+
 # Install Skim
-ENV GOPRIVATE=github.com/taxibeat/*
 RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
     go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
@@ -35,9 +37,6 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
-
-# Required to access private modules
-ENV GOPRIVATE=github.com/taxibeat/*
 
 # Skim dependencies
 ARG BUF_VERSION=0.24.0
