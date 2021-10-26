@@ -59,8 +59,8 @@ func (s *Session) ID() string {
 	return s.id
 }
 
-// IsInDocker indicates whether this session was started from inside a Docker container.
-func (s *Session) IsInDocker() bool {
+// InDocker indicates whether this session was started from inside a Docker container.
+func (s *Session) InDocker() bool {
 	return s.inDocker
 }
 
@@ -294,6 +294,7 @@ func createNetwork(id string) (string, error) {
 	return net.Network.ID, nil
 }
 
+// InDocker indicates whether the current process is running inside a Docker container.
 func InDocker() bool {
 	_, staterr := os.Stat("/.dockerenv")
 	return !os.IsNotExist(staterr)
