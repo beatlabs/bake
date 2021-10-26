@@ -48,7 +48,7 @@ func NewSession(id, networkID string) (*Session, error) {
 	return &Session{
 		id:                         id,
 		networkID:                  networkID,
-		inDocker:                   inDocker(),
+		inDocker:                   InDocker(),
 		serviceAddresses:           map[string]string{},
 		hostMappedServiceAddresses: map[string]string{},
 	}, nil
@@ -57,6 +57,11 @@ func NewSession(id, networkID string) (*Session, error) {
 // ID returns the Session ID.
 func (s *Session) ID() string {
 	return s.id
+}
+
+// InDocker indicates whether this session was started from inside a Docker container.
+func (s *Session) InDocker() bool {
+	return s.inDocker
 }
 
 // StartComponents starts the provided components.
@@ -181,7 +186,7 @@ type sessionDump struct {
 
 // LoadSession attempts to load a Session from the default file location.
 func LoadSession() (*Session, error) {
-	return LoadSessionFromFile(inDocker(), DefaultSessionFile)
+	return LoadSessionFromFile(InDocker(), DefaultSessionFile)
 }
 
 // LoadSessionFromFile attempts to load a session from a file.
@@ -223,7 +228,7 @@ func CleanupResources() error {
 func cleanupSessionResources(fname string) error {
 	fmt.Println(fname)
 
-	session, err := LoadSessionFromFile(inDocker(), fname)
+	session, err := LoadSessionFromFile(InDocker(), fname)
 	if err != nil {
 		return err
 	}
@@ -289,7 +294,8 @@ func createNetwork(id string) (string, error) {
 	return net.Network.ID, nil
 }
 
-func inDocker() bool {
+// InDocker indicates whether the current process is running inside a Docker container.
+func InDocker() bool {
 	_, staterr := os.Stat("/.dockerenv")
 	return !os.IsNotExist(staterr)
 }
