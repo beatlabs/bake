@@ -59,6 +59,11 @@ func (s *Session) ID() string {
 	return s.id
 }
 
+// IsInDocker indicates whether this session was started from inside a Docker container.
+func (s *Session) IsInDocker() bool {
+	return s.inDocker
+}
+
 // StartComponents starts the provided components.
 func (s *Session) StartComponents(cs ...Component) error {
 	g := errgroup.Group{}
