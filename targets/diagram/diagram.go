@@ -23,7 +23,7 @@ const (
 // e.g.:
 // InputDiagramPath = []string{"doc/architecture/arch.py", "doc/topology/servers.py"}
 // Default:
-InputDiagramPath = []string{"doc/architecture"}
+var InputDiagramPath = []string{"doc/architecture"}
 
 // Diagram groups together test related diagram tasks.
 type Diagram mg.Namespace
