@@ -22,8 +22,8 @@ const (
 // diagrams source (*.py) files to be compiled into diagrams (*.png) files
 // e.g.:
 // InputDiagramPath = []string{"doc/architecture/arch.py", "doc/topology/servers.py"}
-// InputDiagramPath = []string{"doc/architecture"}
-var InputDiagramPath = []string{}
+// Default:
+InputDiagramPath = []string{"doc/architecture"}
 
 // Diagram groups together test related diagram tasks.
 type Diagram mg.Namespace
