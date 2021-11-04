@@ -30,7 +30,7 @@ func (y Yarn) Install() error {
 	return sh.RunV(cmd, y.prepScript()...)
 }
 
-// Install runs the yarn test subcommand.
+// Test runs the yarn test subcommand.
 func (y Yarn) Test() error {
 	args := append(y.prepScript(), strings.Split(TestCmd, " ")...)
 	mg.SerialDeps(y.Install)
