@@ -12,37 +12,25 @@ import (
 const cmd = "yarn"
 
 var (
-	NpmToken   string
-	Cwd        = "web"
-	TestSuffix = "--watchAll=false"
+	NpmToken    string
+	Cwd         = "web"
+	UnitTestCmd = "test --watchAll=false"
 )
 
 // Yarn groups yarn related targets.
 type Yarn mg.Namespace
 
 func (y Yarn) Install() error {
-	args := y.preScript()
-	return sh.RunV(cmd, args...)
+	return sh.RunV(cmd, y.prepScript()...)
 }
 
 func (y Yarn) Test() error {
-	args := y.preScript()
-
-	args = append(args, "test")
-
-	if TestSuffix != "" {
-		args = append(args, TestSuffix)
-	}
-
+	args := append(y.prepScript(), strings.Split(UnitTestCmd, " ")...)
 	mg.SerialDeps(y.Install)
 	return sh.RunV(cmd, args...)
 }
 
-func (y Yarn) setToken() error {
-	return sh.RunV("npm", strings.Split(fmt.Sprintf("config set //registry.npmjs.org/:_authToken=%s", NpmToken), " ")...)
-}
-
-func (y Yarn) preScript() []string {
+func (y Yarn) prepScript() []string {
 	if NpmToken != "" {
 		mg.SerialDeps(y.setToken)
 	}
@@ -53,4 +41,8 @@ func (y Yarn) preScript() []string {
 	}
 
 	return args
+}
+
+func (y Yarn) setToken() error {
+	return sh.RunV("npm", strings.Split(fmt.Sprintf("config set //registry.npmjs.org/:_authToken=%s", NpmToken), " ")...)
 }
