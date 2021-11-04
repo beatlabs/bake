@@ -15,6 +15,7 @@ var (
 	NpmToken    string
 	Cwd         = "web"
 	UnitTestCmd = "test --watchAll=false"
+	LintCmd     = "lint"
 )
 
 // Yarn groups yarn related targets.
@@ -26,6 +27,12 @@ func (y Yarn) Install() error {
 
 func (y Yarn) Test() error {
 	args := append(y.prepScript(), strings.Split(UnitTestCmd, " ")...)
+	mg.SerialDeps(y.Install)
+	return sh.RunV(cmd, args...)
+}
+
+func (y Yarn) Lint() error {
+	args := append(y.prepScript(), strings.Split(LintCmd, " ")...)
 	mg.SerialDeps(y.Install)
 	return sh.RunV(cmd, args...)
 }
