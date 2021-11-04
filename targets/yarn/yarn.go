@@ -34,6 +34,7 @@ func (y Yarn) Test() error {
 		args = append(args, TestSuffix)
 	}
 
+	mg.SerialDeps(y.Install)
 	return sh.RunV(cmd, args...)
 }
 
