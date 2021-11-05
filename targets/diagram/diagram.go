@@ -28,11 +28,12 @@ var InputDiagramPath = []string{"doc/architecture"}
 // Diagram groups together test related diagram tasks.
 type Diagram mg.Namespace
 
-// Generate will search for '*.py' files in the InputDiagramPath list and
-// 'compile' them into the associated output diagram image files. The image
+// Generate creates diagrams from python files.
+// It searches for '*.py' files in the InputDiagramPath list and
+// 'compiles' them into the associated output diagram image files. The image
 // output name and format (png, jpg, svg, and pdf) are defined within the input
-// '*.py'. The output will be located in the same folder of the corresponding
-// input.
+// '*.py'.
+// The output will be located in the same folder of the corresponding input.
 func (Diagram) Generate() error {
 	relativePaths := existingInputPythonFiles()
 
