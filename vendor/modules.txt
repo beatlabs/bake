@@ -4,7 +4,7 @@ github.com/Azure/go-ansiterm/winterm
 # github.com/DataDog/zstd v1.4.5
 ## explicit
 github.com/DataDog/zstd
-# github.com/Microsoft/go-winio v0.5.0
+# github.com/Microsoft/go-winio v0.5.1
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5
@@ -16,7 +16,7 @@ github.com/armon/go-metrics
 # github.com/cenkalti/backoff/v3 v3.2.2
 ## explicit
 github.com/cenkalti/backoff/v3
-# github.com/cenkalti/backoff/v4 v4.1.1
+# github.com/cenkalti/backoff/v4 v4.1.2
 github.com/cenkalti/backoff/v4
 # github.com/cespare/xxhash/v2 v2.1.2
 github.com/cespare/xxhash/v2
@@ -26,7 +26,7 @@ github.com/containerd/continuity/pathdriver
 github.com/davecgh/go-spew/spew
 # github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f
 github.com/dgryski/go-rendezvous
-# github.com/docker/cli v20.10.8+incompatible
+# github.com/docker/cli v20.10.11+incompatible
 github.com/docker/cli/cli/compose/interpolation
 github.com/docker/cli/cli/compose/loader
 github.com/docker/cli/cli/compose/schema
@@ -121,12 +121,12 @@ github.com/moby/term
 github.com/moby/term/windows
 # github.com/opencontainers/go-digest v1.0.0-rc1
 github.com/opencontainers/go-digest
-# github.com/opencontainers/image-spec v1.0.1
+# github.com/opencontainers/image-spec v1.0.2
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
 # github.com/opencontainers/runc v1.0.2
 github.com/opencontainers/runc/libcontainer/user
-# github.com/ory/dockertest/v3 v3.8.0
+# github.com/ory/dockertest/v3 v3.8.1
 ## explicit
 github.com/ory/dockertest/v3
 github.com/ory/dockertest/v3/docker
