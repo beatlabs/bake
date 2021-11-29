@@ -17,8 +17,9 @@ require (
 	github.com/ory/dockertest/v3 v3.8.0
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
+	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/stretchr/testify v1.7.0
-	go.mongodb.org/mongo-driver v1.7.4
+	go.mongodb.org/mongo-driver v1.8.0
 	golang.org/x/mod v0.5.1
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
 	gopkg.in/Shopify/sarama.v1 v1.20.1
