@@ -27,6 +27,14 @@ RUN apt-get update && \
     graphviz `# dependency: diagrams`\
     && rm -rf /var/lib/apt/lists/*
 
+ARG NODE_VERSION=16
+ARG YARN_VERSION=1.22.17
+ARG NPM_VERSION=8.1.2
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+RUN apt-get install -y --no-install-recommends nodejs=${NODE_VERSION}.*
+RUN npm install -g npm@${NPM_VERSION}
+RUN npm install -g yarn@${YARN_VERSION}
+
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \	
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \	
