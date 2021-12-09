@@ -85,7 +85,7 @@ ARG SWAG_VERSION=1.6.6
 RUN wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_x86_64.tar.gz -O - | tar -xz -C /usr/bin swag
 
 # Download and install mark into bin path
-ARG MARK_VERSION=5.8
+ARG MARK_VERSION=6.7
 RUN wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_x86_64.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
