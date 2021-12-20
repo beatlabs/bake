@@ -13,7 +13,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/hashicorp/consul/api v1.11.0
-	github.com/magefile/mage v1.11.0
+	github.com/magefile/mage v1.12.1
 	github.com/ory/dockertest/v3 v3.8.1
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
