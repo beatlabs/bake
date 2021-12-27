@@ -1,0 +1,19 @@
+{
+	"ID": "000",
+	"NetworkID": "6a43cfd91ff99c5a4e455eb99ea3d97870ecd1038782741c40b1aabf53264665",
+	"ServiceAddresses": {
+		"kafka": "000-kafka:9092",
+		"localstack": "000-localstack:4566",
+		"mockserver": "000-mockserver:1080",
+		"mongo": "000-mongo:27017",
+		"test-service": "000-test-service:8080",
+		"zookeeper": "000-zookeeper:2181"
+	},
+	"HostMappedServiceAddresses": {
+		"localstack": "localhost:64950",
+		"mockserver": "localhost:64953",
+		"mongo": "localhost:64952",
+		"test-service": "localhost:65071",
+		"zookeeper": "localhost:64951"
+	}
+}

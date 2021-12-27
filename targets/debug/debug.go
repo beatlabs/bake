@@ -5,6 +5,7 @@ package debug
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/magefile/mage/mg"
 	"github.com/taxibeat/bake/docker"
@@ -41,10 +42,10 @@ func (Debug) Env(serviceName string, output string) error {
 	var dumper env.Dumper
 	switch output {
 	case string(stdout):
-		dumper = env.NewStdoutDumper()
+		dumper = env.NewStdoutDumper(os.Stdout)
 		break
 	case string(file):
-		dumper = env.NewFileDumper(envFilename)
+		dumper, _ = env.NewFileDumper(envFilename)
 	}
 
 	if dumper == nil {

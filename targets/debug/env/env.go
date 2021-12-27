@@ -54,8 +54,8 @@ func GetServiceEnvs(session *docker.Session, serviceName string) (map[string]str
 
 	envsRaw := strings.Split(cmdOut.String(), "\n")
 	envs := make(map[string]string)
-	for _, env := range envsRaw {
-		envData := strings.SplitN(env, "=", 2)
+	for _, envRaw := range envsRaw {
+		envData := strings.SplitN(envRaw, "=", 2)
 		if len(envData) == 2 {
 			if ok, _ := skipEnvSet[envData[0]]; !ok {
 				envs[envData[0]] = envData[1]
@@ -95,11 +95,11 @@ func buildServiceMap(session *docker.Session) (map[string]string, error) {
 	for _, svc := range session.ServiceNames() {
 		dockerAddress, err := session.DockerToDockerServiceAddress(svc)
 		if err != nil {
-			return nil, fmt.Errorf("failed to find docker endpoint for service %s", svc)
+			return nil, err
 		}
 		localAddress, err := session.AutoServiceAddress(svc)
 		if err != nil {
-			return nil, fmt.Errorf("failed to find local endpoint for service %s", svc)
+			return nil, err
 		}
 		// this hack is required for replica set mongo to be able to connect directly
 		// otherwise client is not able to ping mongo container.

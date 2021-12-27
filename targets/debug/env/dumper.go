@@ -1,8 +1,9 @@
 package env
 
 import (
-	"bytes"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -12,17 +13,22 @@ type Dumper interface {
 }
 
 // StdoutDumper simple stdout dumper
-type StdoutDumper struct{}
+type StdoutDumper struct {
+	writer io.Writer
+}
 
-// NewStdoutDumper creates stdout dumper
-func NewStdoutDumper() *StdoutDumper {
-	return &StdoutDumper{}
+// NewStdoutDumper creates new stdout dumper
+func NewStdoutDumper(writer io.Writer) *StdoutDumper {
+	return &StdoutDumper{writer: writer}
 }
 
 // Dump envs to stdout
 func (d StdoutDumper) Dump(envs map[string]string) error {
 	for key, val := range envs {
-		fmt.Printf("%s=%s\n", key, val)
+		_, err := fmt.Fprintf(d.writer, "%s=%s\n", key, val)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -33,15 +39,18 @@ type FileDumper struct {
 }
 
 // NewFileDumper creates a file dumper
-func NewFileDumper(filename string) *FileDumper {
-	return &FileDumper{filename: filename}
+func NewFileDumper(filename string) (*FileDumper, error) {
+	if filename == "" {
+		return nil, errors.New("filename must be provided")
+	}
+	return &FileDumper{filename: filename}, nil
 }
 
 // Dump envs to configured file
 func (d FileDumper) Dump(envs map[string]string) error {
-	var buf bytes.Buffer
+	var content string
 	for key, val := range envs {
-		buf.WriteString(fmt.Sprintf("%s=%s\n", key, val))
+		content += fmt.Sprintf("%s=%s\n", key, val)
 	}
 
 	f, err := os.Create(d.filename)
@@ -54,7 +63,7 @@ func (d FileDumper) Dump(envs map[string]string) error {
 		}
 	}()
 
-	_, err = f.Write(buf.Bytes())
+	_, err = f.Write([]byte(content))
 	if err != nil {
 		return fmt.Errorf("failed to write to file %s: %w", d.filename, err)
 	}
