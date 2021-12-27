@@ -157,7 +157,7 @@ func createTestSession(t *testing.T, services []string) *docker.Session {
 }
 
 func loadTestSessionFromFile(t *testing.T, filename string) *docker.Session {
-	session, err := docker.LoadSessionFromFile(docker.InDocker(), filename)
+	session, err := docker.LoadSessionFromFile(false, filename)
 	require.NoError(t, err)
 	return session
 }
