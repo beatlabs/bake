@@ -21,22 +21,32 @@ const (
 	envFilename = ".env.localhost"
 )
 
+var (
+	// BakeSessionLocation where current bake session file is located
+	BakeSessionLocation = "test/.bakesession"
+	// ServiceName name of service under test
+	// use name as it appears in the .bakesession file
+	ServiceName = ""
+	// ExtraRules allows to add extra replacement rules
+	ExtraRules = env.ReplacementRuleList{}
+)
+
 // Debug groups together debugging tests.
 type Debug mg.Namespace
 
 // Env outputs envs variables from given service, replaces docker hosts with corresponding localhost endpoints
 // serviceName is the name of service to output env variables from.
 // output is where to dump loaded envs, there are two options: stdout, file
-func (Debug) Env(serviceName string, output string) error {
+func (Debug) Env(output string) error {
 	// load current bake session if any, otherwise fail.
-	session, err := docker.LoadSession()
+	session, err := docker.LoadSessionFromFile(docker.InDocker(), BakeSessionLocation)
 	if err != nil {
 		return errors.New("bake session is not running")
 	}
 	// load env variables from existing service.
-	envs, err := env.GetServiceEnvs(session, serviceName)
+	envs, err := env.GetServiceEnvs(session, ServiceName, ExtraRules)
 	if err != nil {
-		return fmt.Errorf("failed to fetch env from service %s: %w", serviceName, err)
+		return fmt.Errorf("failed to fetch env from service %s: %w", ServiceName, err)
 	}
 
 	var dumper env.Dumper

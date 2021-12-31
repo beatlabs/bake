@@ -31,13 +31,17 @@ func TestGetServiceEnvs(t *testing.T) {
 		"--env=TEST_SERVICE_SQS_QUEUE=the_queue",
 		"--env=TEST_SERVICE_KAFKA_BROKERS=000-kafka:9092",
 		"--env=TEST_SERVICE_API_ENDPOINT=http://000-mockserver:1080",
+		"--env=TEST_VALUE=docker-value",
 		"alpine",
 		"pwd",
 	}
 	runDockerCmd(t, args)
 
+	extraRules := ReplacementRuleList{
+		NewSimpleReplacement("docker", "localhost"),
+	}
 	session := loadTestSessionFromFile(t, "./testdata/ok.json")
-	envs, err := GetServiceEnvs(session, testServiceName)
+	envs, err := GetServiceEnvs(session, testServiceName, extraRules)
 	require.NoError(t, err)
 
 	assert.Equal(t, map[string]string{
@@ -47,6 +51,7 @@ func TestGetServiceEnvs(t *testing.T) {
 		"TEST_SERVICE_SQS_QUEUE":     "the_queue",
 		"TEST_SERVICE_KAFKA_BROKERS": "localhost:64949",
 		"TEST_SERVICE_API_ENDPOINT":  "http://localhost:64953",
+		"TEST_VALUE":                 "localhost-value",
 	}, envs)
 
 	runDockerCmd(t, []string{"rm", testContainerName})
@@ -55,7 +60,7 @@ func TestGetServiceEnvs(t *testing.T) {
 func TestGetServiceEnvs_NoService(t *testing.T) {
 	t.Parallel()
 	session := loadTestSessionFromFile(t, "./testdata/ok.json")
-	envs, err := GetServiceEnvs(session, "not-existing-service")
+	envs, err := GetServiceEnvs(session, "not-existing-service", ReplacementRuleList{})
 	assert.Empty(t, envs)
 	assert.EqualError(t, err, "service with name not-existing-service is not found")
 }
@@ -93,52 +98,6 @@ func TestBuildContainerName(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tt.expContainerName, containerName)
-			}
-		})
-	}
-}
-
-func TestBuildServiceMap(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]struct {
-		sessionFile string
-		expMap      map[string]string
-		expErr      string
-	}{
-		"ok": {
-			sessionFile: "./testdata/ok.json",
-			expMap: map[string]string{
-				"000-kafka:9092":        "localhost:64949",
-				"000-localstack:4566":   "localhost:64950",
-				"000-mockserver:1080":   "localhost:64953",
-				"000-mongo:27017":       "localhost:64952/?connect=direct",
-				"000-test-service:8080": "localhost:65071",
-				"000-zookeeper:2181":    "localhost:64951",
-			},
-		},
-		"empty": {
-			sessionFile: "./testdata/empty.json",
-			expMap:      map[string]string{},
-		},
-		"missed localhost": {
-			sessionFile: "./testdata/no_localhost.json",
-			expErr:      `external service address not registered for "kafka"`,
-		},
-	}
-
-	for name, tt := range testCases {
-		tt := tt
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			session := loadTestSessionFromFile(t, tt.sessionFile)
-			serviceMap, err := buildServiceMap(session)
-			if tt.expErr != "" {
-				assert.Empty(t, serviceMap)
-				assert.EqualError(t, err, tt.expErr)
-			} else {
-				assert.NoError(t, err)
-				assert.Equal(t, tt.expMap, serviceMap)
 			}
 		})
 	}

@@ -9,7 +9,6 @@ import (
 
 	"github.com/magefile/mage/sh"
 	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/docker/component/mongodb"
 )
 
 const (
@@ -39,7 +38,7 @@ var (
 
 // GetServiceEnvs inspects docker container envs from given service
 // If service does not exist (docker container should exist, it can be stopped), then it fails because there is no service to debug.
-func GetServiceEnvs(session *docker.Session, serviceName string) (map[string]string, error) {
+func GetServiceEnvs(session *docker.Session, serviceName string, extraRules ReplacementRuleList) (map[string]string, error) {
 	containerName, err := buildContainerName(session, serviceName)
 	if err != nil {
 		return nil, err
@@ -63,16 +62,15 @@ func GetServiceEnvs(session *docker.Session, serviceName string) (map[string]str
 		}
 	}
 
-	serviceMap, err := buildServiceMap(session)
+	replacementRulesList, err := newReplacementRulesList(session)
 	if err != nil {
-		return nil, fmt.Errorf("could not build service map: %w", err)
+		return nil, fmt.Errorf("could not create replacement rules: %w", err)
+	}
+	for _, r := range extraRules {
+		replacementRulesList = append(replacementRulesList, r)
 	}
 
-	for i := range envs {
-		for dockerEndpoint, hostEndpoint := range serviceMap {
-			envs[i] = strings.ReplaceAll(envs[i], dockerEndpoint, hostEndpoint)
-		}
-	}
+	envs = replacementRulesList.Replace(envs)
 
 	return envs, nil
 }
@@ -86,30 +84,6 @@ func buildContainerName(session *docker.Session, serviceName string) (string, er
 	}
 
 	return fmt.Sprintf("%s-%s", session.ID(), serviceName), nil
-}
-
-// buildServiceMap where key is docker related endpoint and value is corresponding localhost endpoint
-func buildServiceMap(session *docker.Session) (map[string]string, error) {
-	serviceMap := map[string]string{}
-
-	for _, svc := range session.ServiceNames() {
-		dockerAddress, err := session.DockerToDockerServiceAddress(svc)
-		if err != nil {
-			return nil, err
-		}
-		localAddress, err := session.AutoServiceAddress(svc)
-		if err != nil {
-			return nil, err
-		}
-		// this hack is required for replica set mongo to be able to connect directly
-		// otherwise client is not able to ping mongo container.
-		if svc == mongodb.ServiceName {
-			localAddress += "/?connect=direct"
-		}
-		serviceMap[dockerAddress] = localAddress
-	}
-
-	return serviceMap, nil
 }
 
 func run(env map[string]string, args []string) (bytes.Buffer, error) {
