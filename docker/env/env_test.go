@@ -25,33 +25,35 @@ func TestGetServiceEnvs(t *testing.T) {
 	args := []string{
 		"run",
 		"--name=" + testContainerName,
+		"--env=PATRON_HTTP_DEFAULT_PORT=8080",
 		"--env=TEST_SERVICE=test_service",
 		"--env=TEST_SERVICE_MONGO_URI=mongodb://root:password@000-mongo:27017",
 		"--env=TEST_SERVICE_SQS_ENDPOINT=http://000-localstack:4566",
 		"--env=TEST_SERVICE_SQS_QUEUE=the_queue",
 		"--env=TEST_SERVICE_KAFKA_BROKERS=000-kafka:9092",
 		"--env=TEST_SERVICE_API_ENDPOINT=http://000-mockserver:1080",
-		"--env=TEST_VALUE=docker-value",
+		"--env=TEST_VALUE=docker-new",
 		"alpine",
 		"pwd",
 	}
 	runDockerCmd(t, args)
 
 	extraRules := ReplacementRuleList{
-		NewSimpleReplacement("docker", "localhost"),
+		NewSubstrReplacement("docker", "localhost"),
 	}
 	session := loadTestSessionFromFile(t, "./testdata/ok.json")
 	envs, err := GetServiceEnvs(session, testServiceName, extraRules)
 	require.NoError(t, err)
 
 	assert.Equal(t, map[string]string{
+		"PATRON_HTTP_DEFAULT_PORT":   "65071",
 		"TEST_SERVICE":               "test_service",
 		"TEST_SERVICE_MONGO_URI":     "mongodb://root:password@localhost:64952/?connect=direct",
 		"TEST_SERVICE_SQS_ENDPOINT":  "http://localhost:64950",
 		"TEST_SERVICE_SQS_QUEUE":     "the_queue",
 		"TEST_SERVICE_KAFKA_BROKERS": "localhost:64949",
 		"TEST_SERVICE_API_ENDPOINT":  "http://localhost:64953",
-		"TEST_VALUE":                 "localhost-value",
+		"TEST_VALUE":                 "localhost-new",
 	}, envs)
 
 	runDockerCmd(t, []string{"rm", testContainerName})
@@ -91,7 +93,7 @@ func TestBuildContainerName(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			session := createTestSession(t, tt.services)
-			containerName, err := buildContainerName(session, tt.serviceName)
+			containerName, err := BuildContainerName(session, tt.serviceName)
 			if tt.expErr != "" {
 				assert.Empty(t, containerName)
 				assert.EqualError(t, err, tt.expErr)

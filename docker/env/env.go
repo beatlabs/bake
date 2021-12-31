@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	inspectEnvFormat = "{{range $index, $value := .Config.Env}}{{$value}}{{println}}{{end}}"
+	inspectEnvFormat = "{{range $index, $new := .Config.Env}}{{$new}}{{println}}{{end}}"
 	dockerCmd        = "docker"
 )
 
@@ -31,7 +31,7 @@ var (
 
 	// inspectFormatEnv in order to make format pass correctly without replacing $ variables
 	inspectFormatEnv = map[string]string{
-		"value": "$value",
+		"new":   "$new",
 		"index": "$index",
 	}
 )
@@ -39,7 +39,7 @@ var (
 // GetServiceEnvs inspects docker container envs from given service
 // If service does not exist (docker container should exist, it can be stopped), then it fails because there is no service to debug.
 func GetServiceEnvs(session *docker.Session, serviceName string, extraRules ReplacementRuleList) (map[string]string, error) {
-	containerName, err := buildContainerName(session, serviceName)
+	containerName, err := BuildContainerName(session, serviceName)
 	if err != nil {
 		return nil, err
 	}
@@ -62,22 +62,21 @@ func GetServiceEnvs(session *docker.Session, serviceName string, extraRules Repl
 		}
 	}
 
-	replacementRulesList, err := newReplacementRulesList(session)
+	replacementRulesList, err := newReplacementRulesList(session, serviceName)
 	if err != nil {
 		return nil, fmt.Errorf("could not create replacement rules: %w", err)
 	}
-	for _, r := range extraRules {
-		replacementRulesList = append(replacementRulesList, r)
-	}
 
-	envs = replacementRulesList.Replace(envs)
+	envs = replacementRulesList.
+		Merge(extraRules).
+		Replace(envs)
 
 	return envs, nil
 }
 
-// buildContainerName from session id and service name.
+// BuildContainerName from session id and service name.
 // fails if service is not registered in bake session
-func buildContainerName(session *docker.Session, serviceName string) (string, error) {
+func BuildContainerName(session *docker.Session, serviceName string) (string, error) {
 	_, err := session.AutoServiceAddress(serviceName)
 	if err != nil {
 		return "", fmt.Errorf("service with name %s is not found", serviceName)

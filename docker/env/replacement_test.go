@@ -1,13 +1,12 @@
 package env
 
 import (
-	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReplacement_SimpleRule(t *testing.T) {
+func TestReplacement_SubstrRule(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]struct {
@@ -38,7 +37,7 @@ func TestReplacement_SimpleRule(t *testing.T) {
 			target:  "localhost:64952",
 			output:  "000-kafka:9092",
 		},
-		"other value": {
+		"other new": {
 			envName: "TEST_VALUE",
 			input:   "the_queue_name",
 			source:  "000-mongo:27017",
@@ -58,10 +57,14 @@ func TestReplacement_SimpleRule(t *testing.T) {
 		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			rule := NewSimpleReplacement(tt.source, tt.target)
-			res := rule.Replace(tt.input)
+			rule := NewSubstrReplacement(tt.source, tt.target)
+			var res string
+			if rule.Supports(tt.envName, tt.input) {
+				res = rule.Replace(tt.input)
+			} else {
+				res = tt.output
+			}
 			assert.Equal(t, tt.output, res)
-			assert.Equal(t, tt.source, rule.Name())
 		})
 	}
 }
@@ -104,6 +107,13 @@ func TestReplacement_MongoUriRule(t *testing.T) {
 			target:  "localhost:64952",
 			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority",
 		},
+		"mongo uri with connect param": {
+			envName: "TEST_MONGO_URI",
+			input:   "mongodb://root:password@000-mongo:27017?connect=direct",
+			source:  "000-mongo:27017",
+			target:  "localhost:64952",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct",
+		},
 		"mongo uri with query params with ending /": {
 			envName: "TEST_MONGO_URI",
 			input:   "mongodb://root:password@000-mongo:27017/?retryWrites=true&w=majority",
@@ -132,11 +142,15 @@ func TestReplacement_MongoUriRule(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			rule := mongoURIReplacementRule{
-				SimpleReplacementRule{source: tt.source, target: tt.target},
+				SubstrReplacementRule{old: tt.source, new: tt.target},
 			}
-			res := rule.Replace(tt.input)
+			var res string
+			if rule.Supports(tt.envName, tt.input) {
+				res = rule.Replace(tt.input)
+			} else {
+				res = tt.output
+			}
 			assert.Equal(t, tt.output, res)
-			assert.Equal(t, tt.source, rule.Name())
 		})
 	}
 }
@@ -152,12 +166,12 @@ func TestNewReplacementList(t *testing.T) {
 		"ok": {
 			sessionFile: "./testdata/ok.json",
 			expList: ReplacementRuleList{
-				&SimpleReplacementRule{source: "000-kafka:9092", target: "localhost:64949"},
-				&SimpleReplacementRule{source: "000-localstack:4566", target: "localhost:64950"},
-				&SimpleReplacementRule{source: "000-mockserver:1080", target: "localhost:64953"},
-				&mongoURIReplacementRule{SimpleReplacementRule{source: "000-mongo:27017", target: "localhost:64952"}},
-				&SimpleReplacementRule{source: "000-test-service:8080", target: "localhost:65071"},
-				&SimpleReplacementRule{source: "000-zookeeper:2181", target: "localhost:64951"},
+				&SubstrReplacementRule{old: "000-kafka:9092", new: "localhost:64949"},
+				&SubstrReplacementRule{old: "000-localstack:4566", new: "localhost:64950"},
+				&SubstrReplacementRule{old: "000-mockserver:1080", new: "localhost:64953"},
+				&mongoURIReplacementRule{SubstrReplacementRule{old: "000-mongo:27017", new: "localhost:64952"}},
+				&FullReplacementRule{envName: "PATRON_HTTP_DEFAULT_PORT", new: "65071"},
+				&SubstrReplacementRule{old: "000-zookeeper:2181", new: "localhost:64951"},
 			},
 		},
 		"empty": {
@@ -175,11 +189,7 @@ func TestNewReplacementList(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			session := loadTestSessionFromFile(t, tt.sessionFile)
-			replacementList, err := newReplacementRulesList(session)
-			sort.SliceStable(replacementList, func(i, j int) bool {
-				return replacementList[i].Name() < replacementList[j].Name()
-			})
-
+			replacementList, err := newReplacementRulesList(session, testServiceName)
 			if tt.expErr != "" {
 				assert.Empty(t, replacementList)
 				assert.EqualError(t, err, tt.expErr)
