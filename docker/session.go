@@ -138,6 +138,15 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 	return s.HostToDockerServiceAddress(serviceName)
 }
 
+// ServiceNames list of registered service names
+func (s *Session) ServiceNames() []string {
+	serviceNames := make([]string, 0, len(s.serviceAddresses))
+	for serviceName := range s.serviceAddresses {
+		serviceNames = append(serviceNames, serviceName)
+	}
+	return serviceNames
+}
+
 // PersistToFile serializes a session and writes it to a file.
 func (s *Session) PersistToFile(fpath string) error {
 	if s.inDocker {
