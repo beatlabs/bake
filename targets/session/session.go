@@ -49,7 +49,7 @@ func (Session) DumpEnv() error {
 	if err != nil {
 		return fmt.Errorf("failed to write envs to file %s: %w", OutputFileLocation, err)
 	}
-	fmt.Printf("envariament variables from %s are dumped to file '%s'\n", ServiceName, OutputFileLocation)
+	fmt.Printf("environment variables from %s are dumped to file '%s'\n", ServiceName, OutputFileLocation)
 	fmt.Printf("please stop service %s (use command below):\n", ServiceName)
 	fmt.Printf("docker stop %s\n", containerName)
 	fmt.Println("now you can run service on localhost")
