@@ -1,4 +1,4 @@
-// Package env helps output docker env state for localhost debugging
+// Package env contains helpers to export a service's env vars with some substitution in order to replace docker-to-docker to host-to-docker addresses.
 package env
 
 import (
