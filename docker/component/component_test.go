@@ -155,13 +155,14 @@ func TestExampleService(t *testing.T) {
 }
 
 func checkErr(err error) {
-	if err != nil {
-		if session != nil {
-			if werr := session.Persist(); werr != nil {
-				fmt.Printf("session write failed: %v\n", werr)
-			}
-		}
-		fmt.Printf("test setup failed: %v\n", err)
-		os.Exit(1)
+	if err == nil {
+		return
 	}
+
+	if session != nil {
+		docker.CleanupSessionResources(session)
+	}
+
+	fmt.Printf("test setup failed: %v\n", err)
+	os.Exit(1)
 }
