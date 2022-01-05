@@ -2,6 +2,7 @@
 package session
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -25,11 +26,15 @@ var (
 // Session groups together interactions with bake session services
 type Session mg.Namespace
 
-// DumpEnv outputs envs variables from the service
-// replaces docker hosts with corresponding localhost endpoints
-// replaces service http port with localhost port
-// can add extra replacement rules if needed
+// DumpEnv outputs envs variables from the service.
+// It Replaces docker hosts with corresponding localhost endpoints
+// substituting docker-to-docker addresses to host-to-docker ones.
+// Extra replacement rules can be added.
 func (Session) DumpEnv() error {
+	if ServiceName == "" {
+		return errors.New("please set session.ServiceName in your magefile")
+	}
+
 	// load current bake session if any, otherwise fail.
 	session, err := docker.LoadSessionFromFile(docker.InDocker(), BakeSessionLocation)
 	if err != nil {
