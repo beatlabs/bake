@@ -160,7 +160,9 @@ func checkErr(err error) {
 	}
 
 	if session != nil {
-		docker.CleanupSessionResources(session)
+		if cerr := docker.CleanupSessionResources(session); cerr != nil {
+			fmt.Printf("failed to cleanup resources: %v\n", err)
+		}
 	}
 
 	fmt.Printf("test setup failed: %v\n", err)

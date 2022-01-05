@@ -234,6 +234,7 @@ func CleanupResources() error {
 	})
 }
 
+// CleanupSessionResourcesFromFile cleans up docker resources for a Session from a session file.
 func CleanupSessionResourcesFromFile(fname string) error {
 	session, err := LoadSessionFromFile(InDocker(), fname)
 	if err != nil {
@@ -253,6 +254,7 @@ func CleanupSessionResourcesFromFile(fname string) error {
 	return nil
 }
 
+// CleanupSessionResources cleans up Docker resources for a Session.
 func CleanupSessionResources(session *Session) error {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
