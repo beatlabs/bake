@@ -35,6 +35,8 @@ linters:
     - deadcode
     - ineffassign
     - structcheck
+    - tparallel
+    - whitespace
 
 issues:
   exclude-use-default: false
