@@ -226,7 +226,7 @@ func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
 func CleanupResources() error {
 	return filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err == nil && info.Name() == DefaultSessionFile {
-			if err := cleanupSessionResources(path); err != nil {
+			if err := CleanupSessionResourcesFromFile(path); err != nil {
 				return err
 			}
 		}
@@ -234,10 +234,14 @@ func CleanupResources() error {
 	})
 }
 
-func cleanupSessionResources(fname string) error {
-	fmt.Println(fname)
-
+// CleanupSessionResourcesFromFile cleans up docker resources for a Session from a session file.
+func CleanupSessionResourcesFromFile(fname string) error {
 	session, err := LoadSessionFromFile(InDocker(), fname)
+	if err != nil {
+		return err
+	}
+
+	err = CleanupSessionResources(session)
 	if err != nil {
 		return err
 	}
@@ -247,8 +251,12 @@ func cleanupSessionResources(fname string) error {
 		return err
 	}
 
-	var pool *dockertest.Pool
-	pool, err = dockertest.NewPool("")
+	return nil
+}
+
+// CleanupSessionResources cleans up Docker resources for a Session.
+func CleanupSessionResources(session *Session) error {
+	pool, err := dockertest.NewPool("")
 	if err != nil {
 		return err
 	}
@@ -261,7 +269,7 @@ func cleanupSessionResources(fname string) error {
 	for _, c := range containers {
 		for _, name := range c.Names {
 			if strings.HasPrefix(name, "/"+session.id) {
-				fmt.Println(name)
+				fmt.Println("Removing container:", name)
 				err := pool.RemoveContainerByName(name)
 				if err != nil {
 					return err
