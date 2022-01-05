@@ -55,7 +55,7 @@ func (c *SimpleComponent) Start(session *Session) error {
 	}
 
 	for _, container := range c.Containers {
-		fmt.Printf("Component %q is starting container %q", c.Name, container.Name)
+		fmt.Printf("Component %q is starting container %q\n", c.Name, container.Name)
 		err := c.runContainer(session, container)
 		if err != nil {
 			return fmt.Errorf("starting component %q: %w", container.Name, err)
