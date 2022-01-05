@@ -3,8 +3,6 @@ package docker
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net"
 	"os"
 	"strconv"
@@ -57,7 +55,7 @@ func (c *SimpleComponent) Start(session *Session) error {
 	}
 
 	for _, container := range c.Containers {
-		log.Printf("Component %q is starting container %q", c.Name, container.Name)
+		fmt.Printf("Component %q is starting container %q", c.Name, container.Name)
 		err := c.runContainer(session, container)
 		if err != nil {
 			return fmt.Errorf("starting component %q: %w", container.Name, err)
@@ -77,7 +75,9 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		err := pool.Client.BuildImage(docker.BuildImageOptions{
 			Name:           c.Name + ":" + session.id,
 			Dockerfile:     conf.BuildOpts.Dockerfile,
-			OutputStream:   ioutil.Discard,
+			SuppressOutput: true,
+			OutputStream:   os.Stdout,
+			ErrorStream:    os.Stderr,
 			ContextDir:     conf.BuildOpts.ContextDir,
 			BuildArgs:      conf.BuildOpts.BuildArgs,
 			RmTmpContainer: true,
