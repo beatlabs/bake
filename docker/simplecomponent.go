@@ -152,7 +152,6 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 				return nil
 			}
 		}
-
 	}
 
 	if conf.ReadyFunc != nil {
