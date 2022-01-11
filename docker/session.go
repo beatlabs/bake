@@ -59,6 +59,11 @@ func (s *Session) ID() string {
 	return s.id
 }
 
+// NetworkID returns the Docker NetworkID ID.
+func (s *Session) NetworkID() string {
+	return s.networkID
+}
+
 // InDocker indicates whether this session was started from inside a Docker container.
 func (s *Session) InDocker() bool {
 	return s.inDocker
