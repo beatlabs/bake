@@ -19,7 +19,8 @@ var (
 	// APIDir is the final directory.
 	APIDir = "api"
 	// MainGo is the path to the application entrypoint.
-	MainGo = ""
+	MainGo    = ""
+	ExtraArgs = []string{"--parseVendor"}
 )
 
 // Swagger groups together Swagger related tasks.
@@ -27,7 +28,7 @@ type Swagger mg.Namespace
 
 // Create creates a swagger files from source code annotations.
 func (Swagger) Create() error {
-	if err := generate(MainGo, OutputDir); err != nil {
+	if err := generate(OutputDir); err != nil {
 		return err
 	}
 
@@ -54,7 +55,7 @@ func (Swagger) Check() error {
 		}
 	}()
 
-	if err := generate(MainGo, dir); err != nil {
+	if err := generate(dir); err != nil {
 		return err
 	}
 
@@ -69,14 +70,15 @@ func (Swagger) Check() error {
 	return nil
 }
 
-func generate(main, output string) error {
+func generate(output string) error {
 	args := []string{
 		"init",
 		"--generalInfo",
-		main,
+		MainGo,
 		"--output",
 		output,
 	}
+	args = append(args, ExtraArgs...)
 	return sh.RunV(swagCmd, args...)
 }
 
