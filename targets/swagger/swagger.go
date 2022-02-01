@@ -19,7 +19,8 @@ var (
 	// APIDir is the final directory.
 	APIDir = "api"
 	// MainGo is the path to the application entrypoint.
-	MainGo    = ""
+	MainGo = ""
+	// ExtraArgs passed to the swag command.
 	ExtraArgs = []string{"--parseVendor"}
 )
 
