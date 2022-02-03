@@ -154,10 +154,6 @@ func (s *Session) ServiceNames() []string {
 
 // PersistToFile serializes a session and writes it to a file.
 func (s *Session) PersistToFile(fpath string) error {
-	if s.inDocker {
-		return nil
-	}
-
 	b, err := json.MarshalIndent(sessionDump{
 		ID:                         s.id,
 		NetworkID:                  s.networkID,
