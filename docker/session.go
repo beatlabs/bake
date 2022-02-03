@@ -201,10 +201,6 @@ func LoadSession() (*Session, error) {
 
 // LoadSessionFromFile attempts to load a session from a file.
 func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
-	if inDocker {
-		return nil, errors.New("not supported inside of docker")
-	}
-
 	data, err := ioutil.ReadFile(path.Clean(fpath))
 	if err != nil {
 		return nil, err
@@ -218,6 +214,7 @@ func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
 	return &Session{
 		id:                         d.ID,
 		networkID:                  d.NetworkID,
+		inDocker:                   inDocker,
 		serviceAddresses:           d.ServiceAddresses,
 		hostMappedServiceAddresses: d.HostMappedServiceAddresses,
 	}, nil
