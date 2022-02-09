@@ -168,7 +168,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 func Retry(op func() error) error {
 	bo := backoff.NewExponentialBackOff()
 	bo.MaxInterval = time.Second * 2
-	bo.MaxElapsedTime = time.Minute
+	bo.MaxElapsedTime = 5 * time.Minute
 	return backoff.Retry(op, bo)
 }
 
