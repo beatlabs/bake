@@ -154,10 +154,6 @@ func (s *Session) ServiceNames() []string {
 
 // PersistToFile serializes a session and writes it to a file.
 func (s *Session) PersistToFile(fpath string) error {
-	if s.inDocker {
-		return nil
-	}
-
 	b, err := json.MarshalIndent(sessionDump{
 		ID:                         s.id,
 		NetworkID:                  s.networkID,
@@ -205,10 +201,6 @@ func LoadSession() (*Session, error) {
 
 // LoadSessionFromFile attempts to load a session from a file.
 func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
-	if inDocker {
-		return nil, errors.New("not supported inside of docker")
-	}
-
 	data, err := ioutil.ReadFile(path.Clean(fpath))
 	if err != nil {
 		return nil, err
@@ -222,6 +214,7 @@ func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
 	return &Session{
 		id:                         d.ID,
 		networkID:                  d.NetworkID,
+		inDocker:                   inDocker,
 		serviceAddresses:           d.ServiceAddresses,
 		hostMappedServiceAddresses: d.HostMappedServiceAddresses,
 	}, nil
