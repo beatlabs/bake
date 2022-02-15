@@ -19,7 +19,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	container := docker.SimpleContainerConfig{
 		Name:       componentName,
 		Repository: "mockserver/mockserver",
-		Tag:        "latest",
+		Tag:        "mockserver-5.12.0",
 		Env: []string{
 			"LOG_LEVEL=DEBUG",
 		},
