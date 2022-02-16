@@ -65,7 +65,7 @@ func (Session) DumpEnv() error {
 
 // dumpToFile envs to a file
 func dumpToFile(envs map[string]string, filename string) error {
-	var lines []string
+	lines := make([]string, 0, len(envs))
 	for key, val := range envs {
 		lines = append(lines, fmt.Sprintf("%s=%s", key, val))
 	}
