@@ -29,11 +29,12 @@ func Test_DumpToFile(t *testing.T) {
 		},
 		"envs map": {
 			envs: map[string]string{
-				"TEST":    "test",
-				"SOME_OF": "other",
+				"TEST_PORT": "9090",
+				"SOME_OF":   "other",
+				"TEST_HOST": "test",
 			},
 			filename:  "/tmp/TestFileDumper_Dump.envs.txt",
-			expResult: "TEST=test\nSOME_OF=other\n",
+			expResult: "SOME_OF=other\nTEST_HOST=test\nTEST_PORT=9090",
 		},
 	}
 

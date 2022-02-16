@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/magefile/mage/mg"
 	"github.com/taxibeat/bake/docker"
@@ -63,10 +65,12 @@ func (Session) DumpEnv() error {
 
 // dumpToFile envs to a file
 func dumpToFile(envs map[string]string, filename string) error {
-	var content string
+	lines := make([]string, 0, len(envs))
 	for key, val := range envs {
-		content += fmt.Sprintf("%s=%s\n", key, val)
+		lines = append(lines, fmt.Sprintf("%s=%s", key, val))
 	}
+	sort.Strings(lines)
+	content := strings.Join(lines, "\n")
 
 	f, err := os.Create(filename)
 	if err != nil {
