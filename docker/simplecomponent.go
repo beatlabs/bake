@@ -164,11 +164,16 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 	return nil
 }
 
+// RetryMaxTimeout is the timeout for the default retry func.
+var RetryMaxTimeout = 5 * time.Minute
+
 // Retry is an exponential backoff retry helper.
+// All built-in components use this func to detect whether a container is alive and ready.
+// User supplied components may use this helper func or provide their own.
 func Retry(op func() error) error {
 	bo := backoff.NewExponentialBackOff()
 	bo.MaxInterval = time.Second * 2
-	bo.MaxElapsedTime = 5 * time.Minute
+	bo.MaxElapsedTime = RetryMaxTimeout
 	return backoff.Retry(op, bo)
 }
 
