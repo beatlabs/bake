@@ -2,6 +2,7 @@
 package golang
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -44,6 +45,12 @@ issues:
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
+
+// GoShowConfig outputs the golangci-lint linter config.
+func (l Lint) GoShowConfig() error {
+	fmt.Println(strings.TrimSpace(config))
+	return nil
+}
 
 // Go runs the golangci-lint linter.
 func (l Lint) Go() error {
