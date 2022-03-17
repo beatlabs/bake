@@ -7,48 +7,21 @@ import (
 	"os"
 	"strings"
 
+	_ "embed"
+
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
-const config = `
-run:
-  timeout: 5m
-  tests: true
-  modules-download-mode: vendor
-  build-tags:
-    - component
-    - integration
-
-linters:
-  disable-all: true
-  enable:
-    - govet
-    - revive
-    - gofumpt
-    - gosec
-    - unparam
-    - goconst
-    - prealloc
-    - stylecheck
-    - unconvert
-    - errcheck
-    - deadcode
-    - ineffassign
-    - structcheck
-    - tparallel
-    - whitespace
-
-issues:
-  exclude-use-default: false
-`
+//go:embed golangci.config.yml
+var config string
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
 // GoShowConfig outputs the golangci-lint linter config.
 func (l Lint) GoShowConfig() error {
-	fmt.Println(strings.TrimSpace(config))
+	_, _ = fmt.Print(config)
 	return nil
 }
 
