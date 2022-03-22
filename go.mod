@@ -6,7 +6,7 @@ require (
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/hashicorp/consul/api v1.12.0
-	github.com/magefile/mage v1.12.1
+	github.com/magefile/mage v1.13.0
 	github.com/ory/dockertest/v3 v3.8.1
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.8.4
