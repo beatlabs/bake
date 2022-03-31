@@ -2,7 +2,6 @@
 package golang
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,7 +9,6 @@ import (
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
-	"golang.org/x/mod/sumdb/dirhash"
 )
 
 // Go groups together go related tasks.
@@ -67,29 +65,19 @@ func (Go) FmtCheck() error {
 }
 
 // CheckVendor checks if vendor is in sync with go.mod.
+// The approach is:
+// - Delete vendor dir
+// - Run go mod vendor
+// - Run git add so that any changes resulting from go vendor will be in git staging area
+// - Run git diff to find changes
+// - If there are change we print them, unstage them and exit with 1
 func (Go) CheckVendor() error {
-	fmt.Print("code: running check vendor\n")
-
-	hash1, err := dirhash.HashDir("vendor/", "mod", dirhash.Hash1)
-	if err != nil {
-		return fmt.Errorf("failed to create vendor hash: %w", err)
-	}
-
-	err = sh.RunV(goCmd, "mod", "vendor")
-	if err != nil {
-		return err
-	}
-
-	hash2, err := dirhash.HashDir("vendor/", "mod", dirhash.Hash1)
-	if err != nil {
-		return fmt.Errorf("failed to create vendor hash: %w", err)
-	}
-
-	if hash1 != hash2 {
-		return errors.New("vendor folder is not in sync")
-	}
-
-	return nil
+	cmd := `
+rm -rf vendor && go mod vendor && \
+git add vendor && git diff --cached --quiet vendor \
+|| (git --no-pager diff --cached vendor && git reset vendor && exit 1)
+`
+	return sh.RunV("bash", "-c", cmd)
 }
 
 const goCmd = "go"
