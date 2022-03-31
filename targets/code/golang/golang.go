@@ -72,10 +72,9 @@ func (Go) FmtCheck() error {
 // - Run git diff to find changes
 // - If there are change we print them, unstage them and exit with 1
 func (Go) CheckVendor() error {
-	cmd := `
-rm -rf vendor && go mod vendor && \
-git add vendor && git diff --cached --quiet vendor \
-|| (git --no-pager diff --cached vendor && git reset vendor && exit 1)
+	cmd := `rm -rf vendor && go mod vendor && git add vendor && \
+	git diff --cached --quiet -- vendor || \
+	(git --no-pager diff --cached -- vendor && git reset vendor && exit 1)
 `
 	return sh.RunV("bash", "-c", cmd)
 }
