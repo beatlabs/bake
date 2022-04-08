@@ -164,7 +164,7 @@ func (s *Session) PersistToFile(fpath string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(path.Clean(fpath), b, 0600)
+	return ioutil.WriteFile(path.Clean(fpath), b, 0o600)
 }
 
 // Persist stores the session data in the default store.

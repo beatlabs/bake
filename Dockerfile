@@ -73,15 +73,15 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
 WORKDIR /go
 
 # Download and install mage file into bin path
-ARG MAGE_VERSION=1.11.0
+ARG MAGE_VERSION=1.13.0
 RUN wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
-ARG HADOLINT_VERSION=2.6.0
+ARG HADOLINT_VERSION=2.10.0
 RUN wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64 && chmod +x /usr/bin/hadolint
 
 # Download and install swag into bin path
-ARG SWAG_VERSION=1.6.6
+ARG SWAG_VERSION=1.8.1
 RUN wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_x86_64.tar.gz -O - | tar -xz -C /usr/bin swag
 
 # Download and install mark into bin path
@@ -93,7 +93,7 @@ ARG HELM_VERSION=3.6.2
 RUN wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin && rm -rf /tmp/linux-amd
 
 # Download and install golangci-lint into go bin path
-ARG GOLANGCILINT_VERSION=1.41.1
+ARG GOLANGCILINT_VERSION=1.45.2
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
 # Install diagrams dependency for diagram generation (py -> png)

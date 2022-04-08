@@ -72,7 +72,7 @@ func dumpToFile(envs map[string]string, filename string) error {
 	sort.Strings(lines)
 	content := strings.Join(lines, "\n")
 
-	f, err := os.Create(filename)
+	f, err := os.Create(filename) // nolint:gosec
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", filename, err)
 	}
