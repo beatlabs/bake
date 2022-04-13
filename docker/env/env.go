@@ -45,7 +45,8 @@ func GetServiceEnvs(session *docker.Session, serviceName string, extraRules Repl
 	}
 
 	env := inspectFormatEnv
-	args := append(inspectEnvArgs, containerName)
+	args := inspectEnvArgs
+	args = append(args, containerName)
 	cmdOut, err := run(env, args)
 	if err != nil {
 		return nil, err
@@ -56,7 +57,7 @@ func GetServiceEnvs(session *docker.Session, serviceName string, extraRules Repl
 	for _, envRaw := range envsRaw {
 		envData := strings.SplitN(envRaw, "=", 2)
 		if len(envData) == 2 {
-			if ok, _ := skipEnvSet[envData[0]]; !ok {
+			if ok := skipEnvSet[envData[0]]; !ok {
 				envs[envData[0]] = envData[1]
 			}
 		}
