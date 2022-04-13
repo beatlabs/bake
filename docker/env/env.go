@@ -45,8 +45,7 @@ func GetServiceEnvs(session *docker.Session, serviceName string, extraRules Repl
 	}
 
 	env := inspectFormatEnv
-	args := inspectEnvArgs
-	args = append(args, containerName)
+	args := append(inspectEnvArgs, containerName) // nolint:gocritic
 	cmdOut, err := run(env, args)
 	if err != nil {
 		return nil, err
