@@ -44,7 +44,5 @@ func readyFunc(session *docker.Session) error {
 		return err
 	}
 
-	return docker.Retry(func() error {
-		return consulClient.Live()
-	})
+	return docker.Retry(consulClient.Live)
 }

@@ -28,7 +28,7 @@ type Lint mg.Namespace
 func (l Lint) Docker() error {
 	for _, path := range DockerFiles {
 		fmt.Printf("lint: running docker lint for file: %s\n", path)
-		args := append(Args, path)
+		args := append(Args, path) // nolint:gocritic
 		if err := sh.RunV(cmd, args...); err != nil {
 			return err
 		}
