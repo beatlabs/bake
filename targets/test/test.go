@@ -51,7 +51,7 @@ type Test mg.Namespace
 
 // Unit runs unit tests.
 func (Test) Unit() error {
-	args := append(TestArgs, Pkgs)
+	args := append(TestArgs, Pkgs) // nolint:gocritic
 	return run(args)
 }
 
@@ -75,7 +75,7 @@ func (Test) All() error {
 
 // CoverUnit runs unit tests and produces a coverage report.
 func (Test) CoverUnit() error {
-	args := append(CoverArgs, Pkgs)
+	args := append(CoverArgs, Pkgs) // nolint:gocritic
 	if err := run(args); err != nil {
 		return err
 	}
@@ -84,7 +84,8 @@ func (Test) CoverUnit() error {
 
 // CoverAll runs all tests and produces a coverage report.
 func (Test) CoverAll() error {
-	args := append(CoverArgs, getBuildTagFlag(GoBuildTags), Pkgs)
+	args := CoverArgs
+	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
 	if err := run(args); err != nil {
 		return err
 	}

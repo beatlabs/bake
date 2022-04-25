@@ -124,10 +124,8 @@ func newReplacementRulesList(session *docker.Session, serviceName string) (Repla
 		switch svc {
 		case serviceName:
 			replacements[i] = NewFullReplacementRule("PATRON_HTTP_DEFAULT_PORT", strings.Split(localAddress, ":")[1])
-			break
 		case mongodb.ServiceName:
 			replacements[i] = newMongoURIReplacementRule(dockerAddress, localAddress)
-			break
 		default:
 			replacements[i] = NewSubstrReplacement(dockerAddress, localAddress)
 		}

@@ -24,6 +24,9 @@ linters:
     - structcheck
     - tparallel
     - whitespace
+    - staticcheck
+    - gosimple
+    - gocritic
 
 issues:
   exclude-use-default: false
