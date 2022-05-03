@@ -135,12 +135,20 @@ func TestMockServer(t *testing.T) {
 		mockserver.Expectation{
 			Request: mockserver.Request{Method: "GET", Path: "/"},
 			Response: mockserver.Response{
-				Status: 200,
-				Body:   struct{}{},
-				Delay:  &mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 100},
+				Status:  200,
+				Body:    struct{}{},
+				Delay:   &mockserver.Delay{TimeUnit: mockserver.Milliseconds, Value: 50},
+				Headers: map[string][]string{"X-TEST": {"test"}},
 			},
+			Times: mockserver.CallTimes{Unlimited: true},
 		})
 	assert.NoError(t, err)
+
+	res, err := http.Get("http://" + mockServerAddr)
+	assert.NoError(t, err)
+	assert.Equal(t, 200, res.StatusCode)
+	assert.Equal(t, "test", res.Header.Get("X-Test"))
+
 	err = mockServerClient.Reset()
 	assert.NoError(t, err)
 }

@@ -32,9 +32,10 @@ type Delay struct {
 
 // Response is an untyped response from mockserver expectation.
 type Response struct {
-	Status int         `json:"statusCode"`
-	Body   interface{} `json:"body"`
-	Delay  *Delay      `json:"delay,omitempty"`
+	Status  int                 `json:"statusCode"`
+	Body    interface{}         `json:"body"`
+	Delay   *Delay              `json:"delay,omitempty"`
+	Headers map[string][]string `json:"headers,omitempty"`
 }
 
 // CallTimes configures the call times for an expectation.
