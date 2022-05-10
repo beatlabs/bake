@@ -1,4 +1,4 @@
-FROM golang:1.17 as builder
+FROM golang:1.18 as builder
 
 ARG GH_TOKEN
 
@@ -7,10 +7,10 @@ ENV GOPRIVATE=github.com/taxibeat/**
 
 # Install Skim
 RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
-    go get github.com/taxibeat/skim/cmd/skim && rm -rf /go/src/github.com/taxibeat/ && \
+    go install github.com/taxibeat/skim/cmd/skim@latest && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM golang:1.17
+FROM golang:1.18
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
@@ -36,9 +36,9 @@ RUN npm install -g npm@${NPM_VERSION}
 RUN npm install -g yarn@${YARN_VERSION}
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \	
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \	
-    apt-get -y update && \	
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+    apt-get -y update && \
     apt-get install -y docker-ce \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
@@ -67,7 +67,6 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
     curl -sSLO https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTODOC_VERSION}/protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     tar xf protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     mv protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6/protoc-gen-doc . && \
-    go get -u google.golang.org/protobuf/cmd/protoc-gen-go && \
     GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
 WORKDIR /go
