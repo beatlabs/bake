@@ -9,7 +9,7 @@ require (
 	github.com/magefile/mage v1.13.0
 	github.com/ory/dockertest/v3 v3.8.1
 	github.com/stretchr/testify v1.7.1
-	go.mongodb.org/mongo-driver v1.9.0
+	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	gopkg.in/Shopify/sarama.v1 v1.20.1
 )
