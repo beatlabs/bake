@@ -27,10 +27,7 @@ func (l Lint) AlertRules() error {
 		return errors.New("prometheus.AlertFiles variable must be filled in mage file")
 	}
 
-	args := []string{
-		"check",
-		"rules",
-	}
+	args := []string{"check", "rules"}
 	for _, alertFile := range AlertFiles {
 		args = append(args, filepath.Join(alertingDir, alertFile))
 	}
