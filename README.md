@@ -12,8 +12,8 @@ Bake is a set of tools that aims to improve the developer experience for our Go 
 The repository provides 3 things:
 
 - [Mage](https://magefile.org/) powered make-like targets in the `targets` pkg.
-- [DockerTest](https://github.com/ory/dockertest) powered state managementfor our component tests under the `docker` pkg.
-- A [Docker image](https://github.com/taxibeat/bake/pkgs/container/bake) to guarantee a consistent experience locally or on a CI platform.
+- [DockerTest](https://github.com/ory/dockertest) powered state management for our component tests under the `docker` pkg.
+- A [Docker image](https://github.com/taxibeat/bake/pkgs/container/bake) to ensure parity between CI and local environments.
 
 ## Setup Targets
 
@@ -21,7 +21,7 @@ Bake provides several Mage targets for tests, linting, documentation generation,
 
 In your project you can import these and use them to build your own CI target alongside any custom targets that you may have.
 
-You can see a simple example in `magefile.go` in this repo.
+There is a simple example in `magefile.go` in this repo.
 
 ## Executing Targets
 
