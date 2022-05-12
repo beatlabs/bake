@@ -1,7 +1,9 @@
 // Package prometheus contains api to prometheus util called promtool
+// @see https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/
 package prometheus
 
 import (
+	"errors"
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
@@ -19,9 +21,12 @@ const (
 // AlertFiles list of alert files to be checked by promtool
 var AlertFiles []string
 
-// AlertRules check if the rule files are valid or not using promtool
-// @see https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/
+// AlertRules check if the prometheus alert rules are valid or not.
 func (l Lint) AlertRules() error {
+	if len(AlertFiles) == 0 {
+		return errors.New("prometheus.AlertFiles variable must be filled in mage file")
+	}
+
 	args := []string{
 		"check",
 		"rules",
