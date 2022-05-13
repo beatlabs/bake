@@ -8,7 +8,7 @@ import (
 	gocode "github.com/taxibeat/bake/targets/code/golang"
 	dockerlint "github.com/taxibeat/bake/targets/lint/docker"
 	golint "github.com/taxibeat/bake/targets/lint/golang"
-	"github.com/taxibeat/bake/targets/lint/prometheus"
+	"github.com/taxibeat/bake/targets/prometheus"
 	"github.com/taxibeat/bake/targets/proto"
 	"github.com/taxibeat/bake/targets/swagger"
 	"github.com/taxibeat/bake/targets/test"

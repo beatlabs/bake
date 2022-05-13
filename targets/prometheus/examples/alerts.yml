@@ -1,0 +1,12 @@
+groups:
+  - name: test-service.rules
+    rules:
+      - alert: Bake_No_Replicas
+        expr: kube_deployment_status_replicas_available{namespace="matching", deployment=~"test-service.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          domain: matching
+        annotations:
+          summary: "No replicas available"
+          description: "Alert when no test-service replicas during the last 2 minutes"
