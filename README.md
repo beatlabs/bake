@@ -7,59 +7,87 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/taxibeat/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/taxibeat/bake?branch=master)
 
-Bake contains build tools to help make us elevate the developer experience of our Go projects.
+Bake is a set of tools that aims to improve the developer experience for our Go projects.
 
-The repository provides two major components:
+The repository provides 3 things:
 
-- Mage targets and helpers, to support a more structured and common make-like experience.
-- A Bake Docker image containing pinned versions of Go and several CI tools (linters/code generators/etc), to guarantee a consistent experience.
-  ![Image of Yaktocat](doc/bake.png)
+- [Mage](https://magefile.org/) powered make-like targets in the `targets` pkg.
+- [DockerTest](https://github.com/ory/dockertest) powered state management for our component tests under the `docker` pkg.
+- A [Docker image](https://github.com/taxibeat/bake/pkgs/container/bake) to ensure parity between CI and local environments.
 
-## Working with Mage targets
+## Setup Targets
 
-Bake uses [Mage](https://magefile.org/) which is an alternative to make.
+Bake provides several Mage targets for tests, linting, documentation generation, etc.
 
-Mage targets are written in Go and can be found in `magefile.go` in the root directory of the repository.
+In your project you can import these and use them to build your own CI target alongside any custom targets that you may have.
 
-This repository provides several pre-built Mage targets for tests, linting, documentation generation, and others.
+There is a simple example in `magefile.go` in this repo.
 
-You can see the `magefile.go` in this repo for reference.
-
-## Executing targets directly
-
-In order to run Mage targets in your local environment, you should install `mage` as well as any dependencies the targets may need (e.g. `go`, `golangci-lint`).
+## Executing Targets
 
 For a complete list of available targets run `mage`.
 
-Some examples:
+```console
+$ mage
+Targets:
+  ci                    runs the Continuous Integration pipeline.
+  diagram:generate      creates diagrams from python files.
+  doc:confluenceSync    synchronized annotated docs to confluence.
+  go:checkVendor        checks if vendor is in sync with go.mod.
+  go:fmt                runs go fmt.
+  go:fmtCheck           checks if all files are formatted.
+  go:modSync            runs go module tidy and vendor.
+  lint:docker           lints the docker file.
+  lint:go               runs the golangci-lint linter.
+  lint:goShowConfig     outputs the golangci-lint linter config.
+  test:all              runs all tests.
+  test:cleanup          removes any local resources created by `mage test:all`.
+  test:component        runs unit and component tests.
+  test:coverAll         runs all tests and produces a coverage report.
+  test:coverUnit        runs unit tests and produces a coverage report.
+  test:integration      runs unit and integration tests.
+  test:unit             runs unit tests.
 
-Run unit tests (using local Go installation, test caching).
-
-```shell
-mage test:unit
 ```
 
-And all tests (unit+integration+component).
+Go linting (using local golanci-lint if available):
 
-```shell
-mage test:all
+```console
+$ mage lint:go
 ```
 
-Clear Docker resources used for integration/component tests.
+Go Unit tests (using local Go installation and test cache):
 
-```shell
-mage test:cleanup
+```console
+$ mage test:unit
 ```
 
-Take a look at the `magefile.go` of this project to see how it works.
+### Component tests
 
-## Executing targets with the Bake Docker image
+Go unit+integration+component tests:
 
-In order to run Mage targets in a controlled environment with no external dependencies we can use the Bake image.
+```console
+$ mage test:all
+```
 
-This is a fully isolated approach (requiring nothing but Docker to be installed) that behaves the same on any linux/mac execution environment. This has the aim of providing parity between CI and local environments.
+_This will create docker containers according to your component test setup (usually in `TestMain` under `/tests`)._
 
-The trade-off is that it's slower since we must spin up a Bake Docker container to execute the Mage targets and we don't make use of test caches or Mage caches.
+
+Tear down Docker resources used for integration/component tests:
+
+```console
+$ mage test:cleanup
+```
+
+## Docker based isolated environment
+
+This is a fully isolated approach to executing targets that provides parity between CI and local environments.
+
+The trade-off is that it's slower since we must spin up a Docker container to execute the Mage targets so we don't make use of test caches or Mage caches.
+
+The version of the Bake image and of the Bake Go module are kept in sync, and should be updated together in projects that use Bake.
+
+Unlike the local version, containers used for component tests are torn down automatically after every run.
 
 ### 1. Generate a github personal access token
 
@@ -69,36 +97,33 @@ A token can be generated at [here](https://github.com/settings/tokens) and must 
 
 Export it in your shell
 
-```bash
-export GITHUB_TOKEN=my-token
+```console
+$ export GITHUB_TOKEN=my-token
 ```
 
 Login to `ghcr.io`
 
-```bash
+```console
 $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 > Login Succeeded
 ```
 
-### 2. Create a `bake.sh` script
+### 2. Create a `bake.sh` script for your repo
 
 In order to generate an initial `bake.sh` you can run copy the one from this repo or from a project where bake has already been setup and modify to your needs, e.g. add any env vars that your targets may require.
 
-### 3. Executing targets
+### 3. Execute
 
 Instead of executing `mage` we now execute the script, e.g:
 
-```bash
-./bake.sh ci
+```console
+$ ./bake.sh ci
 ```
 
 This is the recommended way to run the CI target in Jenkins/Github Actions.
 
-## Tools included in the Bake image
+## Tools used by targets
 
-The bake Docker image contains the tools required to execute all Mage targets.
-
-- [mage](https://magefile.org/) a make file replacement with Go code
 - [hadolint](https://github.com/hadolint/hadolint) docker file linting
 - [swaggo](https://github.com/swaggo/swag) for generating swagger files from annotations
 - [mark](https://github.com/kovetskiy/mark) for syncing markdown documentation to Confluence
@@ -106,18 +131,6 @@ The bake Docker image contains the tools required to execute all Mage targets.
 - [helm](https://helm.sh/) a k8s package manager
 - [goveralls](https://github.com/mattn/goveralls) a Coveralls cli tool
 
-The image is built and uploaded to the repository's package storage on every new release.
-
-The version of the Bake image and of the Bake Go module are kept in sync, and should be updated together in projects that use Bake.
-
 ## Repos using Bake
 
-- https://github.com/taxibeat/direction
-- https://github.com/taxibeat/route
-- https://github.com/taxibeat/sonar
-- https://github.com/taxibeat/dispatch
-- https://github.com/taxibeat/eta
-
-## Recipes
-
-For a list of useful recipes please see [doc/recipes.md](doc/recipes.md).
+- [Github search](https://github.com/search?q=org%3Ataxibeat+filename%3A%2Fbake.sh&type=Code)
