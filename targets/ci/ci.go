@@ -21,6 +21,7 @@ func CI() error {
 	targets = append(targets,
 		gocode.Go{}.FmtCheck,
 		dockerlint.Lint{}.Docker,
+		prometheus.Prometheus{}.Lint,
 	)
 
 	if swagger.MainGo != "" {
@@ -31,8 +32,8 @@ func CI() error {
 		targets = append(targets, proto.Proto{}.SchemaValidateAll)
 	}
 
-	if len(prometheus.AlertFiles) > 0 {
-		targets = append(targets, prometheus.Lint{}.AlertRules)
+	if prometheus.TestsDir != "" {
+		targets = append(targets, prometheus.Prometheus{}.Test)
 	}
 
 	targets = append(targets,
