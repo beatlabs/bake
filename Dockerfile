@@ -99,6 +99,11 @@ RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/ins
 ARG DIAGRAMS_VERSION=0.20.0
 RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 
+# Download and install promtool
+# https://prometheus.io/download/
+ARG PROMTOOL_VERSION=2.35.0
+RUN wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-amd64/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-amd64
+
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
 

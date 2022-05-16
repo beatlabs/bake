@@ -8,6 +8,7 @@ import (
 	gocode "github.com/taxibeat/bake/targets/code/golang"
 	dockerlint "github.com/taxibeat/bake/targets/lint/docker"
 	golint "github.com/taxibeat/bake/targets/lint/golang"
+	"github.com/taxibeat/bake/targets/prometheus"
 	"github.com/taxibeat/bake/targets/proto"
 	"github.com/taxibeat/bake/targets/swagger"
 	"github.com/taxibeat/bake/targets/test"
@@ -20,6 +21,7 @@ func CI() error {
 	targets = append(targets,
 		gocode.Go{}.FmtCheck,
 		dockerlint.Lint{}.Docker,
+		prometheus.Prometheus{}.Lint,
 	)
 
 	if swagger.MainGo != "" {
@@ -28,6 +30,10 @@ func CI() error {
 
 	if _, err := os.Stat(proto.SchemasLocation); !os.IsNotExist(err) {
 		targets = append(targets, proto.Proto{}.SchemaValidateAll)
+	}
+
+	if prometheus.TestsDir != "" {
+		targets = append(targets, prometheus.Prometheus{}.Test)
 	}
 
 	targets = append(targets,
