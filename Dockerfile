@@ -92,7 +92,7 @@ ARG HELM_VERSION=3.6.2
 RUN wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin && rm -rf /tmp/linux-amd
 
 # Download and install golangci-lint into go bin path
-ARG GOLANGCILINT_VERSION=1.45.2
+ARG GOLANGCILINT_VERSION=1.46.1
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
 # Install diagrams dependency for diagram generation (py -> png)
