@@ -2,13 +2,16 @@ name: Bake docker image creation
 on:
   release:
     types: [published]
-
+  push:
+    tags:
+      - v0.28.*
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   publish:
+    if: github.event.base_ref == 'refs/heads/dis-4045-add-m1-support'
     name: Publish docker image to registry
     runs-on: ubuntu-latest
     permissions:
