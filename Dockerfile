@@ -1,7 +1,7 @@
-FROM --platform=$BUILDPLATFORM golang:1.18 as builder
+FROM golang:1.18 as builder
 
 ARG GH_TOKEN
-ARG BUILDARCH
+ARG TARGETARCH
 
 # Required to access private modules
 ENV GOPRIVATE=github.com/taxibeat/**
@@ -11,9 +11,9 @@ RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://g
     go install github.com/taxibeat/skim/cmd/skim@latest && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM --platform=$BUILDPLATFORM golang:1.18
-ARG BUILDARCH
-RUN echo Building bake image for $BUILDARCH architecture
+FROM golang:1.18
+ARG TARGETARCH
+RUN echo Building bake image for $TARGETARCH architecture
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
@@ -40,7 +40,7 @@ RUN npm install -g yarn@${YARN_VERSION}
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=${BUILDARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+    add-apt-repository "deb [arch=${TARGETARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
     apt-get -y update && \
     apt-get install -y docker-ce \
     --no-install-recommends \
@@ -76,7 +76,7 @@ WORKDIR /go
 
 # Download and install mage file into bin path
 ARG MAGE_VERSION=1.13.0
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  MAGE_ARCH=64bit  ;; \
          "arm64")  MAGE_ARCH=ARM64  ;; \
     esac && \
@@ -84,7 +84,7 @@ RUN case ${BUILDARCH} in \
 
 # Download and install hadolint into bin path
 ARG HADOLINT_VERSION=2.10.0
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  HADOLINT_ARCH=x86_64  ;; \
          "arm64")  HADOLINT_ARCH=arm64  ;; \
     esac && \
@@ -92,7 +92,7 @@ RUN case ${BUILDARCH} in \
 
 # Download and install swag into bin path
 ARG SWAG_VERSION=1.8.1
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  SWAG_ARCH=x86_64  ;; \
          "arm64")  SWAG_ARCH=aarch64  ;; \
     esac && \
@@ -100,7 +100,7 @@ RUN case ${BUILDARCH} in \
 
 # Download and install mark into bin path
 ARG MARK_VERSION=6.7
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  MARK_ARCH=x86_64  ;; \
          "arm64")  MARK_ARCH=arm64  ;; \
     esac && \
@@ -108,7 +108,7 @@ RUN case ${BUILDARCH} in \
 
 # Download and install helm 3 into bin path
 ARG HELM_VERSION=3.6.2
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  HELM_ARCH=amd64  ;; \
          "arm64")  HELM_ARCH=arm64  ;; \
     esac && \
@@ -125,7 +125,7 @@ RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 # Download and install promtool
 # https://prometheus.io/download/
 ARG PROMTOOL_VERSION=2.35.0
-RUN case ${BUILDARCH} in \
+RUN case ${TARGETARCH} in \
          "amd64")  PROMTOOL_ARCH=amd64  ;; \
          "arm64")  PROMTOOL_ARCH=arm64  ;; \
     esac && \
