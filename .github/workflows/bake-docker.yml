@@ -41,6 +41,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.RELEASE_VERSION }}"
+          tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_VERSION }}"
           build-args: GH_TOKEN=${{ secrets.MATCHING_BAKE }}
 
