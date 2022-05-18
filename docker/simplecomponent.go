@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"net"
@@ -20,6 +21,12 @@ type BuildOptions struct {
 	BuildArgs  []docker.BuildArg
 }
 
+// RunOptions contains docker container run options.
+type RunOptions struct {
+	Cmd     []string
+	ExecCmd string
+}
+
 // SimpleContainerConfig defines a Docker container with associated service ports.
 type SimpleContainerConfig struct {
 	Name               string
@@ -30,6 +37,7 @@ type SimpleContainerConfig struct {
 	ServicePorts       map[string]string
 	StaticServicePorts map[string]string
 	ReadyFunc          func(*Session) error
+	RunOpts            *RunOptions
 }
 
 // SimpleContainerOptionFunc allows for customization of SimpleContainerConfigs.
@@ -100,6 +108,10 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		ExposedPorts: []string{},
 	}
 
+	if conf.RunOpts != nil {
+		runOpts.Cmd = conf.RunOpts.Cmd
+	}
+
 	hostPorts := map[string]string{}
 	for serviceName, nativePort := range conf.ServicePorts {
 		runOpts.ExposedPorts = append(runOpts.ExposedPorts, nativePort+"/tcp")
@@ -131,7 +143,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 
 	publishPorts, _ := strconv.ParseBool(os.Getenv("BAKE_PUBLISH_PORTS"))
 	hcOpts := func(hc *docker.HostConfig) { hc.PublishAllPorts = publishPorts }
-	_, err = pool.RunWithOptions(runOpts, hcOpts)
+	resource, err := pool.RunWithOptions(runOpts, hcOpts)
 	if err != nil {
 		return fmt.Errorf("run %s: %w", fullContainerName, err)
 	}
@@ -159,6 +171,17 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		if err != nil {
 			return err
 		}
+	}
+
+	if conf.RunOpts != nil && conf.RunOpts.ExecCmd != "" {
+		return pool.Retry(func() error {
+			_, err := resource.Exec([]string{"bash", "-c", conf.RunOpts.ExecCmd},
+				dockertest.ExecOptions{
+					StdOut: bufio.NewWriter(os.Stdout),
+					StdErr: bufio.NewWriter(os.Stdout),
+				})
+			return err
+		})
 	}
 
 	return nil
