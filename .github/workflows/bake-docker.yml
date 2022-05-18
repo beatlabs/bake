@@ -7,7 +7,7 @@ on:
       - v0.28.*
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: bake
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   publish:
