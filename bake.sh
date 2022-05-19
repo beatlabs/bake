@@ -30,7 +30,7 @@ cleanup () {
   # docker image list --format '{{.Repository}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
   docker image list --format '{{.Repository}}:{{.Tag}}' | grep ":$BAKE_SESSION_ID\$" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
   docker network rm "$BAKE_NETWORK_ID" > /dev/null
-  rm -f test/.bakesession > /dev/null
+  rm -f docker/component/.bakesession > /dev/null
   echo "Bake cleanup complete"
 }
 
