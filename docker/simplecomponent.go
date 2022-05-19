@@ -23,8 +23,8 @@ type BuildOptions struct {
 
 // RunOptions contains docker container run options.
 type RunOptions struct {
-	Cmd     []string
-	ExecCmd string
+	Cmd         []string
+	InitExecCmd string
 }
 
 // SimpleContainerConfig defines a Docker container with associated service ports.
@@ -173,9 +173,9 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		}
 	}
 
-	if conf.RunOpts != nil && conf.RunOpts.ExecCmd != "" {
+	if conf.RunOpts != nil && conf.RunOpts.InitExecCmd != "" {
 		return pool.Retry(func() error {
-			_, err := resource.Exec([]string{"bash", "-c", conf.RunOpts.ExecCmd},
+			_, err := resource.Exec([]string{"bash", "-c", conf.RunOpts.InitExecCmd},
 				dockertest.ExecOptions{
 					StdOut: bufio.NewWriter(os.Stdout),
 					StdErr: bufio.NewWriter(os.Stdout),

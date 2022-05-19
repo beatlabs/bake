@@ -29,8 +29,8 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 		ReadyFunc: readyFunc,
 		Env:       []string{},
 		RunOpts: &docker.RunOptions{
-			Cmd:     []string{"--replSet", ReplicaSet},
-			ExecCmd: `mongo --eval "rs.initiate()"`,
+			Cmd:         []string{"--replSet", ReplicaSet},
+			InitExecCmd: `mongo --eval "rs.initiate()"`,
 		},
 	}
 
