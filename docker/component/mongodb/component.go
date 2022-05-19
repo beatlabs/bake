@@ -20,17 +20,17 @@ const (
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
 		Name:       componentName,
-		Repository: "bitnami/mongodb",
+		Repository: "mongo",
 		Tag:        "latest",
 		ServicePorts: map[string]string{
 			ServiceName: "27017",
 		},
+
 		ReadyFunc: readyFunc,
-		Env: []string{
-			"MONGODB_REPLICA_SET_MODE=primary",
-			"MONGODB_ROOT_PASSWORD=password",
-			"MONGODB_REPLICA_SET_NAME=" + ReplicaSet,
-			"MONGODB_REPLICA_SET_KEY=replicasetkey123",
+		Env:       []string{},
+		RunOpts: &docker.RunOptions{
+			Cmd:         []string{"--replSet", ReplicaSet},
+			InitExecCmd: `mongo --eval "rs.initiate()"`,
 		},
 	}
 

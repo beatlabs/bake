@@ -1,6 +1,7 @@
 FROM golang:1.18 as builder
 
 ARG GH_TOKEN
+ARG TARGETARCH
 
 # Required to access private modules
 ENV GOPRIVATE=github.com/taxibeat/**
@@ -11,6 +12,8 @@ RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://g
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
 FROM golang:1.18
+ARG TARGETARCH
+RUN echo Building bake image for $TARGETARCH architecture
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
@@ -37,7 +40,7 @@ RUN npm install -g yarn@${YARN_VERSION}
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+    add-apt-repository "deb [arch=${TARGETARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
     apt-get -y update && \
     apt-get install -y docker-ce \
     --no-install-recommends \
@@ -73,23 +76,43 @@ WORKDIR /go
 
 # Download and install mage file into bin path
 ARG MAGE_VERSION=1.13.0
-RUN wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-64bit.tar.gz -O - | tar -xz -C /usr/bin mage
+RUN case ${TARGETARCH} in \
+         "amd64")  MAGE_ARCH=64bit  ;; \
+         "arm64")  MAGE_ARCH=ARM64  ;; \
+    esac && \
+    wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
 ARG HADOLINT_VERSION=2.10.0
-RUN wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64 && chmod +x /usr/bin/hadolint
+RUN case ${TARGETARCH} in \
+         "amd64")  HADOLINT_ARCH=x86_64  ;; \
+         "arm64")  HADOLINT_ARCH=arm64  ;; \
+    esac && \
+    wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH} && chmod +x /usr/bin/hadolint
 
 # Download and install swag into bin path
 ARG SWAG_VERSION=1.8.1
-RUN wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_x86_64.tar.gz -O - | tar -xz -C /usr/bin swag
+RUN case ${TARGETARCH} in \
+         "amd64")  SWAG_ARCH=x86_64  ;; \
+         "arm64")  SWAG_ARCH=aarch64  ;; \
+    esac && \
+    wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz -O - | tar -xz -C /usr/bin swag
 
 # Download and install mark into bin path
 ARG MARK_VERSION=6.7
-RUN wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_x86_64.tar.gz -O - | tar -xz -C /usr/bin mark
+RUN case ${TARGETARCH} in \
+         "amd64")  MARK_ARCH=x86_64  ;; \
+         "arm64")  MARK_ARCH=arm64  ;; \
+    esac && \
+    wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
 ARG HELM_VERSION=3.6.2
-RUN wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-amd64/helm /usr/bin && rm -rf /tmp/linux-amd
+RUN case ${TARGETARCH} in \
+         "amd64")  HELM_ARCH=amd64  ;; \
+         "arm64")  HELM_ARCH=arm64  ;; \
+    esac && \
+    wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-${HELM_ARCH}/helm /usr/bin && rm -rf /tmp/linux-${HELM_ARCH}
 
 # Download and install golangci-lint into go bin path
 ARG GOLANGCILINT_VERSION=1.46.1
@@ -102,7 +125,11 @@ RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 # Download and install promtool
 # https://prometheus.io/download/
 ARG PROMTOOL_VERSION=2.35.0
-RUN wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-amd64.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-amd64/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-amd64
+RUN case ${TARGETARCH} in \
+         "amd64")  PROMTOOL_ARCH=amd64  ;; \
+         "arm64")  PROMTOOL_ARCH=arm64  ;; \
+    esac && \
+    wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}
 
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
