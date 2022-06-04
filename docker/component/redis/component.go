@@ -27,11 +27,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 			ServiceName: "6379",
 		},
 		ReadyFunc: readyFunc,
-		// Disable redis protected mode, in this mode connections are only accepted from the loopback interface
-		// https://hub.docker.com/r/bitnami/redis/
-		RunOpts: &docker.RunOptions{
-			Cmd: []string{"/opt/bitnami/scripts/redis/run.sh", "--protected-mode", "no"},
-		},
+		// Must disable redis protected mode, in this mode connections are only accepted from the loopback interface
 	}
 
 	for _, opt := range opts {

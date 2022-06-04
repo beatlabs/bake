@@ -57,7 +57,6 @@ func newSession() {
 	)
 	checkErr(err)
 
-	// test comment
 	redisAddr, err := session.DockerToDockerServiceAddress(redis.ServiceName)
 	checkErr(err)
 
