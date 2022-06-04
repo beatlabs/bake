@@ -59,6 +59,7 @@ func newSession() {
 
 	redisAddr, err := session.DockerToDockerServiceAddress(redis.ServiceName)
 	checkErr(err)
+	fmt.Printf("redis docker to docker addres %s", redisAddr)
 
 	mongoAddr, err := session.DockerToDockerServiceAddress(mongodb.ServiceName)
 	checkErr(err)
