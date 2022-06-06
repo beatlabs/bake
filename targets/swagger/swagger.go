@@ -15,13 +15,11 @@ import (
 var (
 	swagCmd = "swag"
 	// OutputDir is the output directory for the generated files.
-	OutputDir = "internal/infra/http/docs"
-	// APIDir is the final directory.
-	APIDir = "api"
+	OutputDir = "api"
 	// MainGo is the path to the application entrypoint.
 	MainGo = ""
 	// ExtraArgs passed to the swag command.
-	ExtraArgs = []string{"--parseVendor"}
+	ExtraArgs = []string{"--parseVendor", "--outputTypes", "json,yaml"}
 )
 
 // Swagger groups together Swagger related tasks.
@@ -29,19 +27,7 @@ type Swagger mg.Namespace
 
 // Create creates a swagger files from source code annotations.
 func (Swagger) Create() error {
-	if err := generate(OutputDir); err != nil {
-		return err
-	}
-
-	for _, file := range []string{"swagger.json", "swagger.yaml"} {
-		source := filepath.Join(OutputDir, file)
-		destination := filepath.Join(APIDir, file)
-		fmt.Printf("moving %s to directory %s\n", source, APIDir)
-		if err := os.Rename(source, destination); err != nil {
-			return err
-		}
-	}
-	return nil
+	return generate(OutputDir)
 }
 
 // Check ensures that the generated files are up to date.
@@ -62,7 +48,7 @@ func (Swagger) Check() error {
 
 	for _, file := range []string{"swagger.json", "swagger.yaml"} {
 		generated := filepath.Join(dir, file)
-		existing := filepath.Join(APIDir, file)
+		existing := filepath.Join(OutputDir, file)
 		fmt.Printf("comparing, generated: %s existing: %s\n", generated, existing)
 		if err := compareFiles(generated, existing); err != nil {
 			return err
