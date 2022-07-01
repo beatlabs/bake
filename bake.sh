@@ -3,9 +3,9 @@
 set -e
 
 BAKE_RUN_SCRIPT=run-bake.sh
-BAKE_LOCATIONS=( "." "./scripts" "./vendor/github.com/taxibeat/bake/scripts" )
+BAKE_SCRIPT_LOCATIONS=( "." "./scripts" "./vendor/github.com/taxibeat/bake/scripts" )
 
-for i in "${BAKE_LOCATIONS[@]}"; do
+for i in "${BAKE_SCRIPT_LOCATIONS[@]}"; do
   if [ ! -f "$i/$BAKE_RUN_SCRIPT" ]; then
     continue
   fi
@@ -19,10 +19,10 @@ for i in "${BAKE_LOCATIONS[@]}"; do
 
   SCRIPT_FOUND=1
   "$i/$BAKE_RUN_SCRIPT" "$@"
+  break
 done
 
 if [ -z $SCRIPT_FOUND ]; then
-  echo Bake run script does not exist in any of these locations "${BAKE_LOCATIONS[*]}"
+  echo Bake run script does not exist in any of these locations "${BAKE_SCRIPT_LOCATIONS[*]}"
   exit 1
 fi
-
