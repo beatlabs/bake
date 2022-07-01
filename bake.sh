@@ -3,7 +3,7 @@
 set -e
 
 BAKE_RUN_SCRIPT=run-bake.sh
-BAKE_SCRIPT_LOCATIONS=( "." "./scripts" "./vendor/github.com/taxibeat/bake/scripts" )
+BAKE_SCRIPT_LOCATIONS=( "./scripts" "./vendor/github.com/taxibeat/bake/scripts" )
 
 for i in "${BAKE_SCRIPT_LOCATIONS[@]}"; do
   if [ ! -f "$i/$BAKE_RUN_SCRIPT" ]; then
