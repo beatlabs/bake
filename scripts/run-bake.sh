@@ -11,7 +11,7 @@ if [ "$image_tag" == "module github.com/taxibeat/bake" ]; then
   image_tag="latest"
 fi
 
-if ! [[ `cat ${HOME}/.docker/config.json | grep ghcr.io` ]]; then
+if ! [[ `cat ${HOME}/.docker/config.json | grep ghcr.io` || `docker-credential-desktop list | grep ghcr.io` ]]; then
   echo "docker config not found for ghcr.io, please log in"
 fi
 
@@ -37,7 +37,6 @@ cleanup () {
   mkdir -p $logsdir
   docker ps --format '{{.Names}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} sh -c "docker logs {} > $logsdir/{}.log 2>&1"
   docker ps --format '{{.Names}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} docker rm -f {} > /dev/null
-  # docker image list --format '{{.Repository}}' | grep "^$BAKE_SESSION_ID-" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
   docker image list --format '{{.Repository}}:{{.Tag}}' | grep ":$BAKE_SESSION_ID\$" | awk '{print $1}' | xargs -I {} docker rmi -f {} > /dev/null
   docker network rm "$BAKE_NETWORK_ID" > /dev/null
   rm -f docker/component/.bakesession > /dev/null
