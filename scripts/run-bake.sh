@@ -2,21 +2,17 @@
 
 set -e
 
-# parse parameters in order to pipe custom environment variables to Bake container
+# parse parameters in order to pipe specific flags directly to docker
 DOCKER_ENV=""
-while getopts ":e:" option
-do
-  case "${option}" in
-    e)
-      DOCKER_ENV="${DOCKER_ENV} --env $OPTARG"
-      ;;
-    *)
-      echo "Usage: $(basename "$0") [-e envvar=value] target" >&2
-      exit 1
-      ;;
-  esac
+for param in "$@"; do
+  if [ "$param" == "--env" ]; then
+    shift
+    DOCKER_ENV="${DOCKER_ENV} $param $1"
+    shift
+  else
+    break
+  fi
 done
-shift $(( OPTIND-1 ))
 
 image_name="ghcr.io/taxibeat/bake"
 image_tag=`cat go.mod | grep github.com/taxibeat/bake | cut -f2 -d"v"`
