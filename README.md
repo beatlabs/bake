@@ -126,6 +126,12 @@ set -e
 bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh "$@"
 ```
 
+If you need to pass any custom environment variables to Bake, you can do it 
+by adding one or more `-e` flags to the run-bake script.
+```bash
+bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh -e SOME_ENV_VAR=some-value "$@"
+```
+
 ### 4. Execute
 
 Instead of executing `mage` we now execute the script, e.g:
