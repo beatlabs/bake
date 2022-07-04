@@ -108,11 +108,31 @@ $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 > Login Succeeded
 ```
 
-### 2. Create a `bake.sh` script for your repo
+### 2. Import scripts package
 
-In order to generate an initial `bake.sh` you can run copy the one from this repo or from a project where bake has already been setup and modify to your needs, e.g. add any env vars that your targets may require.
+Add this import in the `magefile.go` so `go mod vendor` will fetch the bake runner script. 
+```go
+// generic bake script
+import _ "github.com/taxibeat/bake/scripts"
+```
 
-### 3. Execute
+### 3. Create a `bake.sh` script for your repo
+
+It is a simple script that runs the bake runner script and can be copied from `go-matching-template`
+or created from scratch:
+```bash
+#!/bin/bash
+set -e
+bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh "$@"
+```
+
+If you need to pass any custom environment variables to Bake, you can do it 
+by adding one or more `-e` flags to the run-bake script.
+```bash
+bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh -e SOME_ENV_VAR=some-value "$@"
+```
+
+### 4. Execute
 
 Instead of executing `mage` we now execute the script, e.g:
 
