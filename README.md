@@ -127,9 +127,9 @@ bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh "$@"
 ```
 
 If you need to pass any custom environment variables to Bake, you can do it 
-by adding one or more `-e` flags to the run-bake script.
+by adding one or more `--env` flags to the run-bake script.
 ```bash
-bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh -e SOME_ENV_VAR=some-value "$@"
+bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh --env SOME_ENV_VAR=some-value "$@"
 ```
 
 ### 4. Execute
