@@ -4,10 +4,10 @@ set -e
 
 # parse parameters in order to pipe specific flags directly to docker
 DOCKER_ENV=""
-for param in "$@"; do
-  if [ "$param" == "--env" ]; then
+while test $# -gt 1; do
+  if [ "$1" == "--env" ]; then
+    DOCKER_ENV="${DOCKER_ENV} $1 $2"
     shift
-    DOCKER_ENV="${DOCKER_ENV} $param $1"
     shift
   else
     break
