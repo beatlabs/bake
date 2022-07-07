@@ -80,6 +80,8 @@ docker run \
   --env CONFLUENCE_PASSWORD="$CONFLUENCE_PASSWORD" \
   --env CONFLUENCE_BASEURL="$CONFLUENCE_BASEURL" \
   --env GITHUB_ACTIONS="$GITHUB_ACTIONS" \
+  --env BEAT_THEME_NPM_TOKEN="$BEAT_THEME_NPM_TOKEN" \
+  --env BAKE_HOST_PATH="${PWD}" \
   --env BAKE_PUBLISH_PORTS="true" \
   $DOCKER_ENV \
   $image_name:$image_tag \
