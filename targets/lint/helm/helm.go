@@ -20,9 +20,9 @@ var (
 	HelmChartPath = "infra/deploy/helm/replace_me/Chart.yaml"
 	// HelmRepos is a map of repos.
 	HelmRepos = map[string]string{
-		"beat":      "https://chartmuseum.private.k8s.management.thebeat.co/",
-		"stable":    "https://kubernetes-charts.storage.googleapis.com",
-		"incubator": "https://kubernetes-charts-incubator.storage.googleapis.com",
+		"beat":      "https://harbor.private.k8s.management.thebeat.co/chartrepo/beat-charts",
+		"stable":    "https://charts.helm.sh/stable",
+		"incubator": "https://charts.helm.sh/incubator",
 		"bitnami":   "https://charts.bitnami.com/bitnami",
 		"aws":       "https://aws.github.io/eks-charts",
 	}
