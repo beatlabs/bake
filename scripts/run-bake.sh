@@ -4,10 +4,10 @@ set -e
 
 # parse parameters in order to pipe specific flags directly to docker
 DOCKER_ENV=""
-for param in "$@"; do
-  if [ "$param" == "--env" ]; then
+while test $# -gt 1; do
+  if [ "$1" == "--env" ]; then
+    DOCKER_ENV="${DOCKER_ENV} $1 $2"
     shift
-    DOCKER_ENV="${DOCKER_ENV} $param $1"
     shift
   else
     break
@@ -80,6 +80,8 @@ docker run \
   --env CONFLUENCE_PASSWORD="$CONFLUENCE_PASSWORD" \
   --env CONFLUENCE_BASEURL="$CONFLUENCE_BASEURL" \
   --env GITHUB_ACTIONS="$GITHUB_ACTIONS" \
+  --env BEAT_THEME_NPM_TOKEN="$BEAT_THEME_NPM_TOKEN" \
+  --env BAKE_HOST_PATH="${PWD}" \
   --env BAKE_PUBLISH_PORTS="true" \
   $DOCKER_ENV \
   $image_name:$image_tag \
