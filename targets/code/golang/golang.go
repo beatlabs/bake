@@ -64,6 +64,37 @@ func (Go) FmtCheck() error {
 	return fmt.Errorf("go files are not formatted:\n%s", strings.Join(files, "\n"))
 }
 
+// ModUpgrade runs go module update for all dependencies.
+func (g Go) ModUpgrade() error {
+	fmt.Print("code: running go get -U all\n")
+
+	if err := sh.RunV(goCmd, "get", "-u", "all"); err != nil {
+		return err
+	}
+
+	if err := g.ModSync(); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "checkout", "-b", "go-deps-update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "commit", "-am", "Go dependencies update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "push", "--set-upstream", "origin", "go-deps-update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CheckVendor checks if vendor is in sync with go.mod.
 // The approach is:
 // - Delete vendor dir
