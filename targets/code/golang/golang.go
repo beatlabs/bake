@@ -64,6 +64,51 @@ func (Go) FmtCheck() error {
 	return fmt.Errorf("go files are not formatted:\n%s", strings.Join(files, "\n"))
 }
 
+// ModUpgrade upgrades all dependencies.
+func (Go) ModUpgrade() error {
+	fmt.Print("code: running go get -u all\n")
+
+	return sh.RunV(goCmd, "get", "-u", "all")
+}
+
+// ModUpgradePR upgrades all dependencies and creates a PR.
+func (g Go) ModUpgradePR() error {
+	// TODO: 1. check if local branch exists
+	// TODO: 2. check if remote branch exists
+
+	if err := g.ModUpgrade(); err != nil {
+		return err
+	}
+
+	// TODO: check if changes are made
+
+	if err := g.ModSync(); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "checkout", "-b", "go-deps-update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "add", "."); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "commit", "-m", "Go dependencies update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("git", "push", "--set-upstream", "origin", "go-deps-update"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CheckVendor checks if vendor is in sync with go.mod.
 // The approach is:
 // - Delete vendor dir
