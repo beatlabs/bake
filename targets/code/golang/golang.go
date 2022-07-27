@@ -77,7 +77,7 @@ func (Go) ModUpgrade() error {
 	return sh.RunV(goCmd, "get", "-u", "all")
 }
 
-// ModUpgradePR upgrades all dependencies, tidies up, vendors and creates a PR.
+// ModUpgradePR upgrade all dependencies, tidy them up, vendor them and create a PR.
 func (g Go) ModUpgradePR() error {
 	if err := g.ModUpgrade(); err != nil {
 		return err
