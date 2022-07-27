@@ -7,9 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	git "github.com/go-git/go-git/v5"
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
+)
+
+const (
+	upgradeBranchName = "go-deps-update"
+	gitCmd            = "git"
 )
 
 // Go groups together go related tasks.
@@ -78,12 +82,12 @@ func (g Go) ModFullUpgradePR() error {
 	// 	return err
 	// }
 
-	hasChanges, err := gitHasRepoChanges()
-	if err != nil {
-		return err
-	}
-	if !hasChanges {
+	// Check if changes exist, if not exit
+	err := sh.RunV(gitCmd, "diff", "--exit-code")
+	if err == nil || sh.ExitStatus(err) == 0 {
+
 		fmt.Println("no upgrades detected, exiting")
+		return nil
 	}
 	fmt.Println("upgrades detected, continue")
 
@@ -91,19 +95,19 @@ func (g Go) ModFullUpgradePR() error {
 	// 	return err
 	// }
 
-	// if err := sh.RunV("git", "checkout", "-b", "go-deps-update"); err != nil {
+	// if err := sh.RunV(gitCmd, "checkout", "-b", upgradeBranchName); err != nil {
 	// 	return err
 	// }
 
-	// if err := sh.RunV("git", "add", "."); err != nil {
+	// if err := sh.RunV(gitCmd, "add", "."); err != nil {
 	// 	return err
 	// }
 
-	// if err := sh.RunV("git", "commit", "-m", "Go dependencies update"); err != nil {
+	// if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update"); err != nil {
 	// 	return err
 	// }
 
-	// if err := sh.RunV("git", "push", "--set-upstream", "origin", "go-deps-update"); err != nil {
+	// if err := sh.RunV(gitCmd, "push", "--set-upstream", "origin", upgradeBranchName); err != nil {
 	// 	return err
 	// }
 
@@ -112,26 +116,6 @@ func (g Go) ModFullUpgradePR() error {
 	// }
 
 	return nil
-}
-
-func gitHasRepoChanges() (bool, error) {
-	rep, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
-	if err != nil {
-		return false, err
-	}
-	wt, err := rep.Worktree()
-	if err != nil {
-		return false, err
-	}
-
-	status, err := wt.Status()
-	if err != nil {
-		return false, err
-	}
-	if status.IsClean() {
-		return false, nil
-	}
-	return true, nil
 }
 
 // CheckVendor checks if vendor is in sync with go.mod.
