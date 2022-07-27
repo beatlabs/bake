@@ -14,6 +14,7 @@ import (
 const (
 	upgradeBranchName = "go-deps-update"
 	gitCmd            = "git"
+	gitRemoteName     = "origin"
 )
 
 // Go groups together go related tasks.
@@ -95,23 +96,28 @@ func (g Go) ModUpgradePR() error {
 		return err
 	}
 
+	// Checkout a new branch
 	if err := sh.RunV(gitCmd, "checkout", "-b", upgradeBranchName); err != nil {
 		return err
 	}
 
+	// Stage all changes
 	if err := sh.RunV(gitCmd, "add", "."); err != nil {
 		return err
 	}
 
+	// Commit to local branch
 	if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update"); err != nil {
 		return err
 	}
 
-	if err := sh.RunV(gitCmd, "push", "--set-upstream", "origin", upgradeBranchName); err != nil {
+	// Push local branch to remote
+	if err := sh.RunV(gitCmd, "push", "--set-upstream", gitRemoteName, upgradeBranchName); err != nil {
 		return err
 	}
 
-	if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+	// Create a PR in GitHub
+	if err := sh.RunV("gh", "pr", "create", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
 		return err
 	}
 
