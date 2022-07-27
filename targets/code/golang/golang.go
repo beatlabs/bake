@@ -76,11 +76,11 @@ func (Go) ModUpgrade() error {
 	return sh.RunV(goCmd, "get", "-u", "all")
 }
 
-// ModFullUpgradePR upgrades all dependencies, tidies up, vendors and creates a PR.
-func (g Go) ModFullUpgradePR() error {
-	// if err := g.ModUpgrade(); err != nil {
-	// 	return err
-	// }
+// ModUpgradePR upgrades all dependencies, tidies up, vendors and creates a PR.
+func (g Go) ModUpgradePR() error {
+	if err := g.ModUpgrade(); err != nil {
+		return err
+	}
 
 	// Check if changes exist, if not exit
 	err := sh.RunV(gitCmd, "diff", "--exit-code")
@@ -91,29 +91,29 @@ func (g Go) ModFullUpgradePR() error {
 	}
 	fmt.Println("upgrades detected, continue")
 
-	// if err := g.ModSync(); err != nil {
-	// 	return err
-	// }
+	if err := g.ModSync(); err != nil {
+		return err
+	}
 
-	// if err := sh.RunV(gitCmd, "checkout", "-b", upgradeBranchName); err != nil {
-	// 	return err
-	// }
+	if err := sh.RunV(gitCmd, "checkout", "-b", upgradeBranchName); err != nil {
+		return err
+	}
 
-	// if err := sh.RunV(gitCmd, "add", "."); err != nil {
-	// 	return err
-	// }
+	if err := sh.RunV(gitCmd, "add", "."); err != nil {
+		return err
+	}
 
-	// if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update"); err != nil {
-	// 	return err
-	// }
+	if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update"); err != nil {
+		return err
+	}
 
-	// if err := sh.RunV(gitCmd, "push", "--set-upstream", "origin", upgradeBranchName); err != nil {
-	// 	return err
-	// }
+	if err := sh.RunV(gitCmd, "push", "--set-upstream", "origin", upgradeBranchName); err != nil {
+		return err
+	}
 
-	// if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
-	// 	return err
-	// }
+	if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+		return err
+	}
 
 	return nil
 }
