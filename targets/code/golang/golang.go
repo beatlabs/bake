@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	git "github.com/go-git/go-git/v5"
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
@@ -71,42 +72,66 @@ func (Go) ModUpgrade() error {
 	return sh.RunV(goCmd, "get", "-u", "all")
 }
 
-// ModUpgradePR upgrades all dependencies and creates a PR.
-func (g Go) ModUpgradePR() error {
-	// TODO: 1. check if local branch exists
-	// TODO: 2. check if remote branch exists
+// ModFullUpgradePR upgrades all dependencies, tidies up, vendors and creates a PR.
+func (g Go) ModFullUpgradePR() error {
+	// if err := g.ModUpgrade(); err != nil {
+	// 	return err
+	// }
 
-	if err := g.ModUpgrade(); err != nil {
+	hasChanges, err := gitHasRepoChanges()
+	if err != nil {
 		return err
 	}
-
-	// TODO: check if changes are made
-
-	if err := g.ModSync(); err != nil {
-		return err
+	if !hasChanges {
+		fmt.Println("no upgrades detected, exiting")
 	}
+	fmt.Println("upgrades detected, continue")
 
-	if err := sh.RunV("git", "checkout", "-b", "go-deps-update"); err != nil {
-		return err
-	}
+	// if err := g.ModSync(); err != nil {
+	// 	return err
+	// }
 
-	if err := sh.RunV("git", "add", "."); err != nil {
-		return err
-	}
+	// if err := sh.RunV("git", "checkout", "-b", "go-deps-update"); err != nil {
+	// 	return err
+	// }
 
-	if err := sh.RunV("git", "commit", "-m", "Go dependencies update"); err != nil {
-		return err
-	}
+	// if err := sh.RunV("git", "add", "."); err != nil {
+	// 	return err
+	// }
 
-	if err := sh.RunV("git", "push", "--set-upstream", "origin", "go-deps-update"); err != nil {
-		return err
-	}
+	// if err := sh.RunV("git", "commit", "-m", "Go dependencies update"); err != nil {
+	// 	return err
+	// }
 
-	if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
-		return err
-	}
+	// if err := sh.RunV("git", "push", "--set-upstream", "origin", "go-deps-update"); err != nil {
+	// 	return err
+	// }
+
+	// if err := sh.RunV("gh", "pr", "create", "-d", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+	// 	return err
+	// }
 
 	return nil
+}
+
+func gitHasRepoChanges() (bool, error) {
+	rep, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
+	if err != nil {
+		return false, err
+	}
+	wt, err := rep.Worktree()
+	if err != nil {
+		return false, err
+	}
+
+	status, err := wt.Status()
+	if err != nil {
+		return false, err
+	}
+	if status.IsClean() {
+		return false, nil
+	}
+	return true, nil
 }
 
 // CheckVendor checks if vendor is in sync with go.mod.
