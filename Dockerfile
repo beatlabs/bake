@@ -17,6 +17,10 @@ RUN echo Building bake image for $TARGETARCH architecture
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
+# set up user name and email to allow for commits
+RUN git config --global user.email "matching.engineers@thebeat.co" && \
+    git config --global user.name "Matching Bot"
+
 RUN apt-get update && \
     apt-get install -y \
     --no-install-recommends \
@@ -43,8 +47,15 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     add-apt-repository "deb [arch=${TARGETARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
     apt-get -y update && \
     apt-get install -y docker-ce \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | apt-key add - && \
+    add-apt-repository "deb [arch=${TARGETARCH}] https://cli.github.com/packages stable main"  && \
+    apt-get update -y && \
+    apt-get install -y gh && \
+    rm -rf /var/lib/apt/lists/*
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
@@ -77,40 +88,40 @@ WORKDIR /go
 # Download and install mage file into bin path
 ARG MAGE_VERSION=1.13.0
 RUN case ${TARGETARCH} in \
-         "amd64")  MAGE_ARCH=64bit  ;; \
-         "arm64")  MAGE_ARCH=ARM64  ;; \
+    "amd64")  MAGE_ARCH=64bit  ;; \
+    "arm64")  MAGE_ARCH=ARM64  ;; \
     esac && \
     wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
 ARG HADOLINT_VERSION=2.10.0
 RUN case ${TARGETARCH} in \
-         "amd64")  HADOLINT_ARCH=x86_64  ;; \
-         "arm64")  HADOLINT_ARCH=arm64  ;; \
+    "amd64")  HADOLINT_ARCH=x86_64  ;; \
+    "arm64")  HADOLINT_ARCH=arm64  ;; \
     esac && \
     wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH} && chmod +x /usr/bin/hadolint
 
 # Download and install swag into bin path
 ARG SWAG_VERSION=1.8.1
 RUN case ${TARGETARCH} in \
-         "amd64")  SWAG_ARCH=x86_64  ;; \
-         "arm64")  SWAG_ARCH=aarch64  ;; \
+    "amd64")  SWAG_ARCH=x86_64  ;; \
+    "arm64")  SWAG_ARCH=aarch64  ;; \
     esac && \
     wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz -O - | tar -xz -C /usr/bin swag
 
 # Download and install mark into bin path
 ARG MARK_VERSION=6.7
 RUN case ${TARGETARCH} in \
-         "amd64")  MARK_ARCH=x86_64  ;; \
-         "arm64")  MARK_ARCH=arm64  ;; \
+    "amd64")  MARK_ARCH=x86_64  ;; \
+    "arm64")  MARK_ARCH=arm64  ;; \
     esac && \
     wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
 ARG HELM_VERSION=3.6.2
 RUN case ${TARGETARCH} in \
-         "amd64")  HELM_ARCH=amd64  ;; \
-         "arm64")  HELM_ARCH=arm64  ;; \
+    "amd64")  HELM_ARCH=amd64  ;; \
+    "arm64")  HELM_ARCH=arm64  ;; \
     esac && \
     wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-${HELM_ARCH}/helm /usr/bin && rm -rf /tmp/linux-${HELM_ARCH}
 
@@ -126,8 +137,8 @@ RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 # https://prometheus.io/download/
 ARG PROMTOOL_VERSION=2.35.0
 RUN case ${TARGETARCH} in \
-         "amd64")  PROMTOOL_ARCH=amd64  ;; \
-         "arm64")  PROMTOOL_ARCH=arm64  ;; \
+    "amd64")  PROMTOOL_ARCH=amd64  ;; \
+    "arm64")  PROMTOOL_ARCH=arm64  ;; \
     esac && \
     wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}
 
