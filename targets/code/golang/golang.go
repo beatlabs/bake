@@ -86,7 +86,6 @@ func (g Go) ModUpgradePR() error {
 	// Check if changes exist, if not exit
 	err := sh.RunV(gitCmd, "diff", "--exit-code")
 	if err == nil || sh.ExitStatus(err) == 0 {
-
 		fmt.Println("no upgrades detected, exiting")
 		return nil
 	}
