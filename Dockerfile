@@ -46,15 +46,14 @@ ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     add-apt-repository "deb [arch=${TARGETARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
     apt-get -y update && \
-    apt-get install -y docker-ce \
-    --no-install-recommends && \
+    apt-get install -y docker-ce --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | apt-key add - && \
     add-apt-repository "deb [arch=${TARGETARCH}] https://cli.github.com/packages stable main"  && \
     apt-get update -y && \
-    apt-get install -y gh && \
+    apt-get install -y gh --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
 # CGO is required by some modules like https://github.com/uber/h3-go
