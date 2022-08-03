@@ -1,6 +1,5 @@
 name: Go dependency upgrade
 on:
-  push:
   pull_request:
 jobs:
   build:
