@@ -22,6 +22,12 @@ jobs:
         run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
         shell: bash
 
+      - name: Setup git
+        run: |
+          git config --global user.email "matching.engineers@thebeat.co"
+          git config --global user.name "Matching Bot"
+        shell: bash
+
       - name: Bake mod upgrade and PR push
         run: ./bake.sh go:modUpgradePR
         env:
