@@ -14,6 +14,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
 
+      # remove docker build after release
       - name: Setup docker buildx as a default builder
         run: docker buildx install
         shell: bash
@@ -24,8 +25,8 @@ jobs:
 
       - name: Setup git
         run: |
-          git config --global user.email "matching.engineers@thebeat.co"
-          git config --global user.name "Matching Bot"
+          git config user.email "matching.engineers@thebeat.co"
+          git config user.name "Matching Bot"
         shell: bash
 
       - name: Bake mod upgrade and PR push
