@@ -1,0 +1,57 @@
+name: Go dependency upgrade
+on:
+  pull_request:
+jobs:
+  build:
+    name: Go dependency upgrade
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Docker login
+        run: echo $GITHUB_TOKEN | docker login ghcr.io -u beat-matching-bot --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
+      # remove docker build after release
+      - name: Setup docker buildx as a default builder
+        run: docker buildx install
+        shell: bash
+
+      - name: Build local image
+        run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
+        shell: bash
+
+      - name: Setup git
+        run: |
+          git config user.email "matching.engineers@thebeat.co"
+          git config user.name "Matching Bot"
+        shell: bash
+
+      - name: Bake mod upgrade and PR push
+        run: ./bake.sh go:modUpgradePR
+        env:
+          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_USERNAME: matching-ci-bot
+          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
+          SLACK_MESSAGE: 'Success :rocket:'
+          SLACK_TITLE: ${{ github.repository }} CI run
+          SLACK_COLOR: good
+          SLACK_FOOTER: Powered by the Matching Domain
+        uses: rtCamp/action-slack-notify@v2
+
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_USERNAME: matching-ci-bot
+          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
+          SLACK_MESSAGE: 'Failure :facepalm1:'
+          SLACK_TITLE: ${{ github.repository }} CI run
+          SLACK_COLOR: danger
+          SLACK_FOOTER: Powered by the Matching Domain
+        uses: rtCamp/action-slack-notify@v2
