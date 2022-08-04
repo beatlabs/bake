@@ -11,6 +11,13 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
+const (
+	upgradeBranchName = "go-deps-update"
+	gitCmd            = "git"
+	gitRemoteName     = "origin"
+	gitMasterBranch   = "master"
+)
+
 // Go groups together go related tasks.
 type Go mg.Namespace
 
@@ -62,6 +69,70 @@ func (Go) FmtCheck() error {
 	}
 
 	return fmt.Errorf("go files are not formatted:\n%s", strings.Join(files, "\n"))
+}
+
+// ModUpgrade upgrades all dependencies.
+func (Go) ModUpgrade() error {
+	fmt.Print("code: running go get -u all\n")
+
+	return sh.RunV(goCmd, "get", "-u", "all")
+}
+
+// ModUpgradePR upgrade all dependencies, tidy them up, vendor them and create a PR.
+func (g Go) ModUpgradePR() error {
+	// out, err := sh.Output(gitCmd, "branch", "--show-current")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to get current git branch: %w", err)
+	// }
+	// if out != gitMasterBranch {
+	// 	return fmt.Errorf("current branch is not %s, exiting", gitMasterBranch)
+	// }
+
+	if err := g.ModUpgrade(); err != nil {
+		return err
+	}
+
+	// Check if changes exist, if not exit
+	err := sh.RunV(gitCmd, "diff", "--exit-code")
+	if err == nil || sh.ExitStatus(err) == 0 {
+		fmt.Println("no upgrades detected, exiting")
+		return nil
+	}
+	fmt.Println("upgrades detected, continue")
+
+	if err := g.ModSync(); err != nil {
+		return err
+	}
+
+	// Checkout a new branch
+	if err := sh.RunV(gitCmd, "checkout", "-b", upgradeBranchName); err != nil {
+		return err
+	}
+
+	// Stage all changes
+	if err := sh.RunV(gitCmd, "add", "."); err != nil {
+		return err
+	}
+
+	// TODO: we need to sign the commit!!!
+
+	// Commit to local branch
+	if err := sh.RunV(gitCmd, "-c", "user.name='Matching Bot'", "-c", "user.email='matching.engineers@thebeat.co'",
+		"commit", "-s", "-m", "Go dependencies update"); err != nil {
+		return err
+	}
+
+	// Push local branch to remote
+	if err := sh.RunV(gitCmd, "push", "--set-upstream", gitRemoteName, upgradeBranchName); err != nil {
+		return err
+	}
+
+	// Create the PR
+	if err := sh.RunV("gh", "pr", "create", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // CheckVendor checks if vendor is in sync with go.mod.
