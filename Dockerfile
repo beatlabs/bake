@@ -17,10 +17,6 @@ RUN echo Building bake image for $TARGETARCH architecture
 
 COPY --from=builder /go/bin/skim /go/bin/skim
 
-# set up user name and email to allow for commits
-RUN git config --global user.email "matching.engineers@thebeat.co" && \
-    git config --global user.name "Matching Bot"
-
 RUN apt-get update && \
     apt-get install -y \
     --no-install-recommends \
