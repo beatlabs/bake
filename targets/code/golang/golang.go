@@ -15,6 +15,7 @@ const (
 	upgradeBranchName = "go-deps-update"
 	gitCmd            = "git"
 	gitRemoteName     = "origin"
+	gitMasterBranch   = "master"
 )
 
 // Go groups together go related tasks.
@@ -79,6 +80,14 @@ func (Go) ModUpgrade() error {
 
 // ModUpgradePR upgrade all dependencies, tidy them up, vendor them and create a PR.
 func (g Go) ModUpgradePR() error {
+	// out, err := sh.Output(gitCmd, "branch", "--show-current")
+	// if err != nil {
+	// 	return fmt.Errorf("failed to get current git branch: %w", err)
+	// }
+	// if out != gitMasterBranch {
+	// 	return fmt.Errorf("current branch is not %s, exiting", gitMasterBranch)
+	// }
+
 	if err := g.ModUpgrade(); err != nil {
 		return err
 	}
@@ -105,9 +114,11 @@ func (g Go) ModUpgradePR() error {
 		return err
 	}
 
+	// TODO: we need to sign the commit!!!
+
 	// Commit to local branch
 	if err := sh.RunV(gitCmd, "-c", "user.name='Matching Bot'", "-c", "user.email='matching.engineers@thebeat.co'",
-		"commit", "-m", "Go dependencies update"); err != nil {
+		"commit", "-s", "-m", "Go dependencies update"); err != nil {
 		return err
 	}
 
