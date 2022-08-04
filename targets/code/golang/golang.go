@@ -116,7 +116,7 @@ func (g Go) ModUpgradePR() error {
 		return err
 	}
 
-	// Create a PR in GitHub
+	// Create the PR
 	if err := sh.RunV("gh", "pr", "create", "-t", "Go dependencies", "--body", "Go dependencies"); err != nil {
 		return err
 	}
