@@ -15,7 +15,6 @@ const (
 	upgradeBranchName = "go-deps-update"
 	gitCmd            = "git"
 	gitRemoteName     = "origin"
-	gitCommitAuthor   = "Matching Bot <matching.engineers@thebeat.co>"
 )
 
 // Go groups together go related tasks.
@@ -107,7 +106,8 @@ func (g Go) ModUpgradePR() error {
 	}
 
 	// Commit to local branch
-	if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update", fmt.Sprintf("--author=%s", gitCommitAuthor)); err != nil {
+	if err := sh.RunV(gitCmd, "-c", "user.name='Matching Bot'", "-c", "user.email='matching.engineers@thebeat.co'",
+		"commit", "-m", "Go dependencies update"); err != nil {
 		return err
 	}
 
