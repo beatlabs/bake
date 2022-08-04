@@ -107,7 +107,7 @@ func (g Go) ModUpgradePR() error {
 	}
 
 	// Commit to local branch
-	if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update", "--author=", gitCommitAuthor); err != nil {
+	if err := sh.RunV(gitCmd, "commit", "-m", "Go dependencies update", fmt.Sprintf("--author=%s", gitCommitAuthor)); err != nil {
 		return err
 	}
 
