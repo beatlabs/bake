@@ -48,10 +48,14 @@ jobs:
           go get -u all
           go mod tidy
           go mod vendor
+
+      - name: Create PR
+        if: success()
+        run: |
           git checkout -b go-deps-update
           git add .
           git -c user.name='Matching Bot' -c user.email='matching.engineers@thebeat.co' commit -m 'Go dependencies update'
-          git push --set-upstream remote go-deps-update
+          git push --set-upstream origin go-deps-update
           gh pr create -t "Go dependencies", "--body", "Go dependencies"
         env:
           GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
