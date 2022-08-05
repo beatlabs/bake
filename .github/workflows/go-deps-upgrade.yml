@@ -54,7 +54,7 @@ jobs:
         run: |
           git checkout -b go-deps-update
           git add .
-          git -c user.name='Matching Bot' -c user.email='matching.engineers@thebeat.co' commit -m 'Go dependencies update'
+          git -c user.name="Matching Bot" -c user.email="matching.engineers@thebeat.co" commit -m "Go dependencies update"
           git push --set-upstream origin go-deps-update
           gh pr create -t "Go dependencies" --body "Go dependencies"
         env:
