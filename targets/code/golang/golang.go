@@ -118,7 +118,7 @@ func (g Go) ModUpgradePR() error {
 
 	// Commit to local branch
 	if err := sh.RunV(gitCmd, "-c", "user.name='Matching Bot'", "-c", "user.email='matching.engineers@thebeat.co'",
-		"commit", "-s", "-m", "Go dependencies update"); err != nil {
+		"commit", "-S", "-m", "Go dependencies update"); err != nil {
 		return err
 	}
 

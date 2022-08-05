@@ -11,24 +11,46 @@ jobs:
       - name: Check out
         uses: actions/checkout@v3
 
-      - name: Docker login
-        run: echo $GITHUB_TOKEN | docker login ghcr.io -u beat-matching-bot --password-stdin
+      # - name: Docker login
+      #   run: echo $GITHUB_TOKEN | docker login ghcr.io -u beat-matching-bot --password-stdin
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
+      # - name: Setup docker buildx as a default builder
+      #   run: docker buildx install
+      #   shell: bash
+
+      # - name: Build local image
+      #   run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
+      #   shell: bash
+
+      # - name: Bake mod upgrade and PR push
+      #   run: ./bake.sh go:modUpgradePR
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+
+      # - name: Import GPG key
+      #   uses: crazy-max/ghaction-import-gpg@v5
+      #   with:
+      #     gpg_private_key: ${{ secrets.MATCHING_BOT_GPG_PRIVATE_KEY }}
+      #     passphrase: ${{ secrets.MATCHING_BOT_GPG_PASSPHRASE }}
+      #     git_user_signingkey: true
+      #     git_commit_gpgsign: true
+
+      - name: Upgrade Go dependencies
+        if: success()
+        run: |
+          go get -u all
+          go mod tidy
+          go mod vendor
+          git checkout -b go-deps-update
+          git add .
+          git -c user.name='Matching Bot' -c user.email='matching.engineers@thebeat.co' commit -S -m 'Go dependencies update'
+          git push --set-upstream remote go-deps-update
+          gh pr create -t "Go dependencies", "--body", "Go dependencies"
         env:
           GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
-
-      - name: Setup docker buildx as a default builder
-        run: docker buildx install
-        shell: bash
-
-      - name: Build local image
-        run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
-        shell: bash
-
-      - name: Bake mod upgrade and PR push
-        run: ./bake.sh go:modUpgradePR
-        env:
-          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
-
+      
       - name: Notify slack success
         if: success()
         env:
