@@ -11,13 +11,6 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-const (
-	upgradeBranchName = "go-deps-update"
-	gitCmd            = "git"
-	gitRemoteName     = "origin"
-	gitMasterBranch   = "master"
-)
-
 // Go groups together go related tasks.
 type Go mg.Namespace
 
