@@ -42,13 +42,13 @@ jobs:
           go mod tidy
           go mod vendor
 
-      # - name: Import GPG key
-      #   uses: crazy-max/ghaction-import-gpg@v5
-      #   with:
-      #     gpg_private_key: ${{ secrets.MATCHING_BOT_GPG_PRIVATE_KEY }}
-      #     passphrase: ${{ secrets.MATCHING_BOT_GPG_PASSPHRASE }}
-      #     git_user_signingkey: true
-      #     git_commit_gpgsign: true
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.MATCHING_BOT_GPG_SECRET }}
+          passphrase: ${{ secrets.MATCHING_BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       # - name: Create PR
       #   if: success()
