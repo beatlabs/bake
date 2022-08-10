@@ -38,8 +38,8 @@ jobs:
       - name: Upgrade Go dependencies
         if: success()
         run: |
-          go get1 -u all
-          go mod tidy
+          go get -u all
+          go mod1 tidy
           go mod vendor
 
       - name: Import GPG key
