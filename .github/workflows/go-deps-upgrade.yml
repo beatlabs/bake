@@ -38,7 +38,7 @@ jobs:
       - name: Upgrade Go dependencies
         if: success()
         run: |
-          go get -u all
+          go get1 -u all
           go mod tidy
           go mod vendor
 
