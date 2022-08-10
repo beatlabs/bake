@@ -14,26 +14,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v3
         with:          
-          # go-version: '1.18'
           go-version-file: 'go.mod'      
-      
-      # - name: Docker login
-      #   run: echo $GITHUB_TOKEN | docker login ghcr.io -u beat-matching-bot --password-stdin
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
-
-      # - name: Setup docker buildx as a default builder
-      #   run: docker buildx install
-      #   shell: bash
-
-      # - name: Build local image
-      #   run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
-      #   shell: bash
-
-      # - name: Bake mod upgrade and PR push
-      #   run: ./bake.sh go:modUpgradePR
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
 
       - name: Upgrade Go dependencies
         if: success()
