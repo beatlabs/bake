@@ -70,7 +70,7 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
     curl -sSLO https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTODOC_VERSION}/protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     tar xf protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6.tar.gz && \
     mv protoc-gen-doc-${PROTODOC_VERSION}.linux-amd64.go1.12.6/protoc-gen-doc . && \
-    GOBIN=/ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
 WORKDIR /go
 
