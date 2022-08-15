@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/hashicorp/consul/api v1.13.1
+	github.com/hashicorp/consul/api v1.14.0
 	github.com/magefile/mage v1.13.0
 	github.com/ory/dockertest/v3 v3.9.1
 	github.com/stretchr/testify v1.8.0
