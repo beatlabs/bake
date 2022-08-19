@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -164,7 +163,7 @@ func (s *Session) PersistToFile(fpath string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(path.Clean(fpath), b, 0o600)
+	return os.WriteFile(path.Clean(fpath), b, 0o600)
 }
 
 // Persist stores the session data in the default store.
@@ -201,7 +200,7 @@ func LoadSession() (*Session, error) {
 
 // LoadSessionFromFile attempts to load a session from a file.
 func LoadSessionFromFile(inDocker bool, fpath string) (*Session, error) {
-	data, err := ioutil.ReadFile(path.Clean(fpath))
+	data, err := os.ReadFile(path.Clean(fpath))
 	if err != nil {
 		return nil, err
 	}
