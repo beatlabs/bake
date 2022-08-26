@@ -2,18 +2,18 @@
 package test
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 	"github.com/taxibeat/bake/docker"
+	"github.com/taxibeat/bake/internal/shfmt"
 )
 
 const (
 	goCmd              = "go"
 	componentTestTag   = "component"
 	integrationTestTag = "integration"
+	namespace          = "test"
 )
 
 var (
@@ -51,30 +51,40 @@ type Test mg.Namespace
 
 // Unit runs unit tests.
 func (Test) Unit() error {
+	shfmt.PrintStartTarget(namespace, "unit")
+
 	args := append(TestArgs, Pkgs) // nolint:gocritic
 	return run(args)
 }
 
 // Integration runs unit and integration tests.
 func (Test) Integration() error {
+	shfmt.PrintStartTarget(namespace, "integration")
+
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{integrationTestTag}), Pkgs)
 	return run(args)
 }
 
 // Component runs unit and component tests.
 func (Test) Component() error {
+	shfmt.PrintStartTarget(namespace, "component")
+
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{componentTestTag}), Pkgs)
 	return run(args)
 }
 
 // All runs all tests.
 func (Test) All() error {
+	shfmt.PrintStartTarget(namespace, "all")
+
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag(GoBuildTags), Pkgs)
 	return run(args)
 }
 
 // CoverUnit runs unit tests and produces a coverage report.
 func (Test) CoverUnit() error {
+	shfmt.PrintStartTarget(namespace, "coverUnit")
+
 	args := append(CoverArgs, Pkgs) // nolint:gocritic
 	if err := run(args); err != nil {
 		return err
@@ -84,6 +94,8 @@ func (Test) CoverUnit() error {
 
 // CoverAll runs all tests and produces a coverage report.
 func (Test) CoverAll() error {
+	shfmt.PrintStartTarget(namespace, "coverAll")
+
 	args := CoverArgs
 	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
 	if err := run(args); err != nil {
@@ -94,13 +106,13 @@ func (Test) CoverAll() error {
 
 // Cleanup removes any local resources created by `mage test:all`.
 func (Test) Cleanup() error {
+	shfmt.PrintStartTarget(namespace, "cleanup")
+
 	return docker.CleanupResources()
 }
 
 func run(args []string) error {
-	fmt.Printf("test: running tests with args: %v\n", args)
-	fmt.Printf("Executing cmd: %s %s\n", goCmd, strings.Join(args, " "))
-	return sh.RunV(goCmd, args...)
+	return shfmt.RunV(goCmd, args...)
 }
 
 func getBuildTagFlag(buildTags []string) string {

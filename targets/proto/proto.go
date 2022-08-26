@@ -9,12 +9,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/taxibeat/bake/internal/shfmt"
+
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
 
 const (
-	skimCMD = "skim"
+	skimCMD   = "skim"
+	namespace = "proto"
 )
 
 var (
@@ -35,6 +38,8 @@ type Proto mg.Namespace
 
 // SchemaGenerate generates a single proto schema.
 func (Proto) SchemaGenerate(schema, version string) error {
+	shfmt.PrintStartTarget(namespace, fmt.Sprintf("schema generate"))
+
 	if schema == "" {
 		return errors.New("schema is mandatory")
 	}
@@ -43,7 +48,6 @@ func (Proto) SchemaGenerate(schema, version string) error {
 	}
 
 	pathToSchema := fmt.Sprintf("%s/%s/%s.proto", schema, version, schema)
-	fmt.Printf("proto schema: generate schema %s\n", pathToSchema)
 
 	tmpDir, err := ioutil.TempDir(".", "")
 	if err != nil {
@@ -67,7 +71,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 	)
 
 	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
-	err = sh.RunV(skimCMD, args...)
+	err = shfmt.RunV(skimCMD, args...)
 	if err != nil {
 		return err
 	}
@@ -103,7 +107,7 @@ func (Proto) SchemaGenerateAll() error {
 	)
 
 	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
-	err = sh.RunV(skimCMD, args...)
+	err = shfmt.RunV(skimCMD, args...)
 	if err != nil {
 		return err
 	}

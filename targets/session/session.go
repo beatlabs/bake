@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/taxibeat/bake/internal/shfmt"
+
 	"github.com/magefile/mage/mg"
 	"github.com/taxibeat/bake/docker"
 	"github.com/taxibeat/bake/docker/env"
@@ -28,11 +30,15 @@ var (
 // Session groups together interactions with bake session services
 type Session mg.Namespace
 
+const namespace = "session"
+
 // DumpEnv outputs envs variables from the service.
 // It Replaces docker hosts with corresponding localhost endpoints
 // substituting docker-to-docker addresses to host-to-docker ones.
 // Extra replacement rules can be added.
 func (Session) DumpEnv() error {
+	shfmt.PrintStartTarget(namespace, "dump env")
+
 	if ServiceName == "" {
 		return errors.New("please set session.ServiceName in your magefile")
 	}

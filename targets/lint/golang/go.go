@@ -10,7 +10,7 @@ import (
 	_ "embed"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/shfmt"
 )
 
 //go:embed golangci.config.yml
@@ -19,14 +19,20 @@ var config string
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
+const namespace = "lint"
+
 // GoShowConfig outputs the golangci-lint linter config.
 func (l Lint) GoShowConfig() error {
+	shfmt.PrintStartTarget(namespace, "goShowConfig")
+
 	_, _ = fmt.Print(config)
 	return nil
 }
 
 // Go runs the golangci-lint linter.
 func (l Lint) Go() error {
+	shfmt.PrintStartTarget(namespace, "go")
+
 	args := "run "
 
 	if os.Getenv("GITHUB_ACTIONS") == "true" {
@@ -44,7 +50,7 @@ func (l Lint) Go() error {
 	defer func() { _ = os.Remove(path) }()
 	args += "--config " + path
 
-	return sh.Run("golangci-lint", strings.Split(args, " ")...)
+	return shfmt.RunV("golangci-lint", strings.Split(args, " ")...)
 }
 
 func persistDefaultFile() (string, error) {

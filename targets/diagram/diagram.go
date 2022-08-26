@@ -11,11 +11,12 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/shfmt"
 )
 
 const (
 	python3CMD = "python3"
+	namespace  = "diagram"
 )
 
 // InputDiagramPath is a list of files or directories where to search for
@@ -35,6 +36,8 @@ type Diagram mg.Namespace
 // '*.py'.
 // The output will be located in the same folder of the corresponding input.
 func (Diagram) Generate() error {
+	shfmt.PrintStartTarget(namespace, "generate")
+
 	relativePaths := existingInputPythonFiles()
 
 	tmpDir, err := ioutil.TempDir(".", "")
@@ -64,7 +67,7 @@ func (Diagram) Generate() error {
 	}
 
 	for _, f := range absolutePaths {
-		err := sh.RunV(python3CMD, f)
+		err := shfmt.RunV(python3CMD, f)
 		if err != nil {
 			return fmt.Errorf("abort generation of remaining diagrams, failed generating diagram for file [%s]: %v", f, err)
 		}

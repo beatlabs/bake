@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/taxibeat/bake/internal/shfmt"
+
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
-const cmd = "yarn"
+const (
+	cmd       = "yarn"
+	namespace = "yarn"
+)
 
 var (
 	// NpmToken to be added to npm config in order to access private packages. Optional.
@@ -27,21 +31,27 @@ type Yarn mg.Namespace
 
 // Install runs the yarn install subcommand.
 func (y Yarn) Install() error {
-	return sh.RunV(cmd, y.prepScript()...)
+	shfmt.PrintStartTarget(namespace, "install")
+
+	return shfmt.RunV(cmd, y.prepScript()...)
 }
 
 // Test runs the yarn test subcommand.
 func (y Yarn) Test() error {
+	shfmt.PrintStartTarget(namespace, "test")
+
 	args := append(y.prepScript(), strings.Split(TestCmd, " ")...)
 	mg.SerialDeps(y.Install)
-	return sh.RunV(cmd, args...)
+	return shfmt.RunV(cmd, args...)
 }
 
 // Lint runs the yarn lint subcommand.
 func (y Yarn) Lint() error {
+	shfmt.PrintStartTarget(namespace, "lint")
+
 	args := append(y.prepScript(), strings.Split(LintCmd, " ")...)
 	mg.SerialDeps(y.Install)
-	return sh.RunV(cmd, args...)
+	return shfmt.RunV(cmd, args...)
 }
 
 func (y Yarn) prepScript() []string {
@@ -58,5 +68,5 @@ func (y Yarn) prepScript() []string {
 }
 
 func (y Yarn) setToken() error {
-	return sh.RunV("npm", strings.Split(fmt.Sprintf("config set //registry.npmjs.org/:_authToken=%s", NpmToken), " ")...)
+	return shfmt.RunV("npm", strings.Split(fmt.Sprintf("config set //registry.npmjs.org/:_authToken=%s", NpmToken), " ")...)
 }
