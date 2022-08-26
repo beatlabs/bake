@@ -38,7 +38,7 @@ type Proto mg.Namespace
 
 // SchemaGenerate generates a single proto schema.
 func (Proto) SchemaGenerate(schema, version string) error {
-	shfmt.PrintStartTarget(namespace, fmt.Sprintf("schema generate"))
+	shfmt.PrintStartTarget(namespace, "schemaGenerate")
 
 	if schema == "" {
 		return errors.New("schema is mandatory")
