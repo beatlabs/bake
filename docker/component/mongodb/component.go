@@ -21,7 +21,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 	container := docker.SimpleContainerConfig{
 		Name:       componentName,
 		Repository: "mongo",
-		Tag:        "latest",
+		Tag:        "4.4.16",
 		ServicePorts: map[string]string{
 			ServiceName: "27017",
 		},
