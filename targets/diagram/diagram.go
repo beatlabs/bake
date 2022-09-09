@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (
@@ -36,7 +36,7 @@ type Diagram mg.Namespace
 // '*.py'.
 // The output will be located in the same folder of the corresponding input.
 func (Diagram) Generate() error {
-	shfmt.PrintStartTarget(namespace, "generate")
+	sh.PrintStartTarget(namespace, "generate")
 
 	relativePaths := existingInputPythonFiles()
 
@@ -67,7 +67,7 @@ func (Diagram) Generate() error {
 	}
 
 	for _, f := range absolutePaths {
-		err := shfmt.RunV(python3CMD, f)
+		err := sh.RunV(python3CMD, f)
 		if err != nil {
 			return fmt.Errorf("abort generation of remaining diagrams, failed generating diagram for file [%s]: %v", f, err)
 		}

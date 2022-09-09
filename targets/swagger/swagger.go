@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
 )
@@ -30,13 +30,13 @@ const namespace = "swagger"
 
 // Create creates a swagger files from source code annotations.
 func (Swagger) Create() error {
-	shfmt.PrintStartTarget(namespace, "create")
+	sh.PrintStartTarget(namespace, "create")
 	return generate(OutputDir)
 }
 
 // Check ensures that the generated files are up to date.
 func (Swagger) Check() error {
-	shfmt.PrintStartTarget(namespace, "check")
+	sh.PrintStartTarget(namespace, "check")
 
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
@@ -72,7 +72,7 @@ func generate(output string) error {
 		output,
 	}
 	args = append(args, ExtraArgs...)
-	return shfmt.RunV(swagCmd, args...)
+	return sh.RunV(swagCmd, args...)
 }
 
 func compareFiles(file1, file2 string) error {

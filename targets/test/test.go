@@ -6,7 +6,7 @@ import (
 
 	"github.com/magefile/mage/mg"
 	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (
@@ -51,7 +51,7 @@ type Test mg.Namespace
 
 // Unit runs unit tests.
 func (Test) Unit() error {
-	shfmt.PrintStartTarget(namespace, "unit")
+	sh.PrintStartTarget(namespace, "unit")
 
 	args := append(TestArgs, Pkgs) // nolint:gocritic
 	return run(args)
@@ -59,7 +59,7 @@ func (Test) Unit() error {
 
 // Integration runs unit and integration tests.
 func (Test) Integration() error {
-	shfmt.PrintStartTarget(namespace, "integration")
+	sh.PrintStartTarget(namespace, "integration")
 
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{integrationTestTag}), Pkgs)
 	return run(args)
@@ -67,7 +67,7 @@ func (Test) Integration() error {
 
 // Component runs unit and component tests.
 func (Test) Component() error {
-	shfmt.PrintStartTarget(namespace, "component")
+	sh.PrintStartTarget(namespace, "component")
 
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag([]string{componentTestTag}), Pkgs)
 	return run(args)
@@ -75,7 +75,7 @@ func (Test) Component() error {
 
 // All runs all tests.
 func (Test) All() error {
-	shfmt.PrintStartTarget(namespace, "all")
+	sh.PrintStartTarget(namespace, "all")
 
 	args := append(appendCacheBustingArg(TestArgs), getBuildTagFlag(GoBuildTags), Pkgs)
 	return run(args)
@@ -83,7 +83,7 @@ func (Test) All() error {
 
 // CoverUnit runs unit tests and produces a coverage report.
 func (Test) CoverUnit() error {
-	shfmt.PrintStartTarget(namespace, "coverUnit")
+	sh.PrintStartTarget(namespace, "coverUnit")
 
 	args := append(CoverArgs, Pkgs) // nolint:gocritic
 	if err := run(args); err != nil {
@@ -94,7 +94,7 @@ func (Test) CoverUnit() error {
 
 // CoverAll runs all tests and produces a coverage report.
 func (Test) CoverAll() error {
-	shfmt.PrintStartTarget(namespace, "coverAll")
+	sh.PrintStartTarget(namespace, "coverAll")
 
 	args := CoverArgs
 	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
@@ -106,13 +106,13 @@ func (Test) CoverAll() error {
 
 // Cleanup removes any local resources created by `mage test:all`.
 func (Test) Cleanup() error {
-	shfmt.PrintStartTarget(namespace, "cleanup")
+	sh.PrintStartTarget(namespace, "cleanup")
 
 	return docker.CleanupResources()
 }
 
 func run(args []string) error {
-	return shfmt.RunV(goCmd, args...)
+	return sh.RunV(goCmd, args...)
 }
 
 func getBuildTagFlag(buildTags []string) string {

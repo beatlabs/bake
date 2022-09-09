@@ -9,10 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
 const (
@@ -38,7 +37,7 @@ type Proto mg.Namespace
 
 // SchemaGenerate generates a single proto schema.
 func (Proto) SchemaGenerate(schema, version string) error {
-	shfmt.PrintStartTarget(namespace, "schemaGenerate")
+	sh.PrintStartTarget(namespace, "schemaGenerate")
 
 	if schema == "" {
 		return errors.New("schema is mandatory")
@@ -70,8 +69,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 		pathToSchema,
 	)
 
-	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
-	err = shfmt.RunV(skimCMD, args...)
+	err = sh.RunV(skimCMD, args...)
 	if err != nil {
 		return err
 	}
@@ -85,7 +83,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 
 // SchemaGenerateAll generates all the schemas found.
 func (Proto) SchemaGenerateAll() error {
-	fmt.Printf("proto schema: generate all schemas for service: %q\n", Service)
+	sh.PrintStartTarget(namespace, fmt.Sprintf("schemaGenerateAll: %q", Service))
 
 	tmpDir, err := ioutil.TempDir(".", "")
 	if err != nil {
@@ -106,8 +104,7 @@ func (Proto) SchemaGenerateAll() error {
 		tmpDir,
 	)
 
-	fmt.Printf("Executing cmd: %s %s\n", skimCMD, strings.Join(args, " "))
-	err = shfmt.RunV(skimCMD, args...)
+	err = sh.RunV(skimCMD, args...)
 	if err != nil {
 		return err
 	}
@@ -121,7 +118,7 @@ func (Proto) SchemaGenerateAll() error {
 
 // SchemaValidateAll lints the schemas in the repository against the GitHub schemas.
 func (p Proto) SchemaValidateAll() error {
-	fmt.Printf("proto schema: validate all schemas for service: %q\n", Service)
+	sh.PrintStartTarget(namespace, fmt.Sprintf("schemaValidateAll: %q", Service))
 
 	args := append(
 		getDefaultSkimArgs(Service),

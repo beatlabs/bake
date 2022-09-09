@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 type confluenceConfig struct {
@@ -31,7 +31,7 @@ const namespace = "doc"
 
 // ConfluenceSync synchronized annotated docs to confluence.
 func (Doc) ConfluenceSync() error {
-	shfmt.PrintStartTarget(namespace, "confluence sync")
+	sh.PrintStartTarget(namespace, "confluence sync")
 
 	var ok bool
 	var cfg confluenceConfig
@@ -130,5 +130,5 @@ func confluenceSync(currentPath string, cfg confluenceConfig, doc confluenceDoc)
 
 	args := []string{"-u", cfg.username, "-p", cfg.password, "-b", cfg.baseURL, "-f", doc.File}
 
-	return shfmt.RunV("mark", args...)
+	return sh.RunV("mark", args...)
 }

@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
 	"github.com/taxibeat/bake/docker"
@@ -37,7 +37,7 @@ const namespace = "session"
 // substituting docker-to-docker addresses to host-to-docker ones.
 // Extra replacement rules can be added.
 func (Session) DumpEnv() error {
-	shfmt.PrintStartTarget(namespace, "dump env")
+	sh.PrintStartTarget(namespace, "dump env")
 
 	if ServiceName == "" {
 		return errors.New("please set session.ServiceName in your magefile")

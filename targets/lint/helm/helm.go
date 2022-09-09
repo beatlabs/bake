@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 // Lint groups together lint related tasks.
@@ -33,15 +33,14 @@ var (
 
 // Helm linting of a specific chart path.
 func (l Lint) Helm() error {
-	shfmt.PrintStartTarget(namespace, "helm")
+	sh.PrintStartTarget(namespace, "helm")
 
 	err := helmAddRepos(HelmRepos)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("lint: running helm dependency build for chart path: %s\n", HelmChartPath)
-	err = shfmt.RunV(cmd, "dependency", "build", HelmChartPath)
+	err = sh.RunV(cmd, "dependency", "build", HelmChartPath)
 	if err != nil {
 		return err
 	}
@@ -51,14 +50,12 @@ func (l Lint) Helm() error {
 		return err
 	}
 
-	fmt.Printf("lint: running helm lint for chart path: %s\n", HelmChartPath)
-	return shfmt.RunV(cmd, "lint", "--strict", HelmChartPath)
+	return sh.RunV(cmd, "lint", "--strict", HelmChartPath)
 }
 
 func helmAddRepos(repos map[string]string) error {
 	for key, value := range repos {
-		fmt.Printf("lint: running helm add repo %s for registry: %s\n", key, value)
-		err := shfmt.RunV(cmd, "repo", "add", key, value)
+		err := sh.RunV(cmd, "repo", "add", key, value)
 		if err != nil {
 			return fmt.Errorf("failed to add helm repo %s %s: %w", key, value, err)
 		}

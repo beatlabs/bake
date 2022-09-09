@@ -2,7 +2,7 @@
 package docker
 
 import (
-	"github.com/taxibeat/bake/internal/shfmt"
+	"github.com/taxibeat/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
 )
@@ -28,10 +28,10 @@ type Lint mg.Namespace
 
 // Docker lints the docker file.
 func (l Lint) Docker() error {
-	shfmt.PrintStartTarget(namespace, "docker")
+	sh.PrintStartTarget(namespace, "docker")
 	for _, path := range DockerFiles {
 		args := append(Args, path) // nolint:gocritic
-		if err := shfmt.RunV(cmd, args...); err != nil {
+		if err := sh.RunV(cmd, args...); err != nil {
 			return err
 		}
 	}
