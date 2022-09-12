@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/mg"
-	magesh "github.com/magefile/mage/sh"
-	"github.com/taxibeat/bake/internal/sh"
+	"github.com/magefile/mage/sh"
+	bakesh "github.com/taxibeat/bake/internal/sh"
 )
 
 // Go groups together go related tasks.
@@ -19,24 +19,24 @@ const namespace = "code"
 
 // ModSync runs go module tidy and vendor.
 func (Go) ModSync() error {
-	sh.PrintStartTarget(namespace, "go mod sync")
+	bakesh.PrintStartTarget(namespace, "go mod sync")
 
-	if err := sh.RunV(goCmd, "mod", "tidy"); err != nil {
+	if err := bakesh.RunV(goCmd, "mod", "tidy"); err != nil {
 		return err
 	}
-	return sh.RunV(goCmd, "mod", "vendor")
+	return bakesh.RunV(goCmd, "mod", "vendor")
 }
 
 // Fmt runs go fmt.
 func (Go) Fmt() error {
-	sh.PrintStartTarget(namespace, "go fmt")
+	bakesh.PrintStartTarget(namespace, "go fmt")
 
-	return sh.RunV(goCmd, "fmt", "./...")
+	return bakesh.RunV(goCmd, "fmt", "./...")
 }
 
 // FmtCheck checks if all files are formatted.
 func (Go) FmtCheck() error {
-	sh.PrintStartTarget(namespace, "go fmt check")
+	bakesh.PrintStartTarget(namespace, "go fmt check")
 
 	goFiles, err := getAllGoFiles(".")
 	if err != nil {
@@ -50,7 +50,7 @@ func (Go) FmtCheck() error {
 	files := make([]string, 0, len(goFiles))
 
 	for _, f := range goFiles {
-		msg, err := magesh.Output("gofmt", "-l", f)
+		msg, err := sh.Output("gofmt", "-l", f)
 		if err != nil {
 			return err
 		}
@@ -75,13 +75,13 @@ func (Go) FmtCheck() error {
 // - Run git diff to find changes
 // - If there are change we print them, unstage them and exit with 1
 func (Go) CheckVendor() error {
-	sh.PrintStartTarget(namespace, "checkVendor")
+	bakesh.PrintStartTarget(namespace, "checkVendor")
 
 	cmd := `rm -rf vendor && go mod vendor && git add vendor && \
 git diff --cached --quiet -- vendor || \
 (git --no-pager diff --cached -- vendor && git reset vendor && exit 1)`
 
-	return sh.RunV("bash", "-c", cmd)
+	return bakesh.RunV("bash", "-c", cmd)
 }
 
 const goCmd = "go"
