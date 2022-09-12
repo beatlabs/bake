@@ -3,10 +3,11 @@ package golang
 
 import (
 	"fmt"
-	"github.com/magefile/mage/mg"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/magefile/mage/mg"
 
 	"github.com/taxibeat/bake/internal/sh"
 )
