@@ -52,6 +52,11 @@ func Exec(env map[string]string, stdout, stderr io.Writer, cmd string, args ...s
 	return sh.Exec(env, stdout, stderr, cmd, args...)
 }
 
+// Run is a wrapper of mage's `sh.Run` and exists in this package for grouping purposes
+func Run(cmd string, args ...string) error {
+	return sh.Run(cmd, args...)
+}
+
 func quote(args []string) []string {
 	quoted := []string{}
 	for i := range args {
