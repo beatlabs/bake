@@ -4,6 +4,7 @@ package sh
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/magefile/mage/sh"
@@ -39,6 +40,16 @@ func RunWithV(env map[string]string, cmd string, args ...string) error {
 		fmt.Printf("Command finished successfully.\n\n")
 	}
 	return err
+}
+
+// Output is a wrapper of mage's `sh.Output` and exists in this package for grouping purposes
+func Output(cmd string, args ...string) (string, error) {
+	return sh.Output(cmd, args...)
+}
+
+// Exec is a wrapper of mage's `sh.Exec` and exists in this package for grouping purposes
+func Exec(env map[string]string, stdout, stderr io.Writer, cmd string, args ...string) (ran bool, err error) {
+	return sh.Exec(env, stdout, stderr, cmd, args...)
 }
 
 func quote(args []string) []string {

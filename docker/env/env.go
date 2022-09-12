@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/magefile/mage/sh"
 	"github.com/taxibeat/bake/docker"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (

@@ -3,13 +3,12 @@ package golang
 
 import (
 	"fmt"
+	"github.com/magefile/mage/mg"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
-	bakesh "github.com/taxibeat/bake/internal/sh"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 // Go groups together go related tasks.
@@ -19,24 +18,24 @@ const namespace = "code"
 
 // ModSync runs go module tidy and vendor.
 func (Go) ModSync() error {
-	bakesh.PrintStartTarget(namespace, "go mod sync")
+	sh.PrintStartTarget(namespace, "go mod sync")
 
-	if err := bakesh.RunV(goCmd, "mod", "tidy"); err != nil {
+	if err := sh.RunV(goCmd, "mod", "tidy"); err != nil {
 		return err
 	}
-	return bakesh.RunV(goCmd, "mod", "vendor")
+	return sh.RunV(goCmd, "mod", "vendor")
 }
 
 // Fmt runs go fmt.
 func (Go) Fmt() error {
-	bakesh.PrintStartTarget(namespace, "go fmt")
+	sh.PrintStartTarget(namespace, "go fmt")
 
-	return bakesh.RunV(goCmd, "fmt", "./...")
+	return sh.RunV(goCmd, "fmt", "./...")
 }
 
 // FmtCheck checks if all files are formatted.
 func (Go) FmtCheck() error {
-	bakesh.PrintStartTarget(namespace, "go fmt check")
+	sh.PrintStartTarget(namespace, "go fmt check")
 
 	goFiles, err := getAllGoFiles(".")
 	if err != nil {
@@ -75,13 +74,13 @@ func (Go) FmtCheck() error {
 // - Run git diff to find changes
 // - If there are change we print them, unstage them and exit with 1
 func (Go) CheckVendor() error {
-	bakesh.PrintStartTarget(namespace, "checkVendor")
+	sh.PrintStartTarget(namespace, "checkVendor")
 
 	cmd := `rm -rf vendor && go mod vendor && git add vendor && \
 git diff --cached --quiet -- vendor || \
 (git --no-pager diff --cached -- vendor && git reset vendor && exit 1)`
 
-	return bakesh.RunV("bash", "-c", cmd)
+	return sh.RunV("bash", "-c", cmd)
 }
 
 const goCmd = "go"
