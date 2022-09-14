@@ -5,7 +5,6 @@ package diagram
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -37,7 +36,7 @@ type Diagram mg.Namespace
 func (Diagram) Generate() error {
 	relativePaths := existingInputPythonFiles()
 
-	tmpDir, err := ioutil.TempDir(".", "")
+	tmpDir, err := os.MkdirTemp(".", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp wd: %s", err)
 	}
