@@ -4,7 +4,6 @@ package proto
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,7 +44,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 	pathToSchema := fmt.Sprintf("%s/%s/%s.proto", schema, version, schema)
 	fmt.Printf("proto schema: generate schema %s\n", pathToSchema)
 
-	tmpDir, err := ioutil.TempDir(".", "")
+	tmpDir, err := os.MkdirTemp(".", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
@@ -83,7 +82,7 @@ func (Proto) SchemaGenerate(schema, version string) error {
 func (Proto) SchemaGenerateAll() error {
 	fmt.Printf("proto schema: generate all schemas for service: %q\n", Service)
 
-	tmpDir, err := ioutil.TempDir(".", "")
+	tmpDir, err := os.MkdirTemp(".", "")
 	if err != nil {
 		return fmt.Errorf("failed to create tmp dir: %s", err)
 	}
