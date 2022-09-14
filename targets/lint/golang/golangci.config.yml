@@ -30,3 +30,4 @@ linters:
 
 issues:
   exclude-use-default: false
+  max-same-issues: 0
