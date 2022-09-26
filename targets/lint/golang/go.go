@@ -39,10 +39,6 @@ func (l Lint) Go() error {
 		args += "--out-format=github-actions "
 	}
 
-	if mg.Verbose() {
-		args += "-v "
-	}
-
 	path, err := persistDefaultFile()
 	if err != nil {
 		return err
