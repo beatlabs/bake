@@ -4,7 +4,6 @@ package doc
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -91,7 +90,7 @@ func getDocs(root string) ([]confluenceDoc, error) {
 			return nil
 		}
 
-		content, err := ioutil.ReadFile(filepath.Clean(path))
+		content, err := os.ReadFile(filepath.Clean(path))
 		if err != nil {
 			return err
 		}

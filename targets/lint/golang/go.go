@@ -3,7 +3,6 @@ package golang
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -50,7 +49,7 @@ func (l Lint) Go() error {
 }
 
 func persistDefaultFile() (string, error) {
-	file, err := ioutil.TempFile(os.TempDir(), "bake-*.yml")
+	file, err := os.CreateTemp(os.TempDir(), "bake-*.yml")
 	if err != nil {
 		return "", err
 	}

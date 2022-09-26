@@ -4,7 +4,6 @@ package swagger
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -38,7 +37,7 @@ func (Swagger) Create() error {
 func (Swagger) Check() error {
 	sh.PrintStartTarget(namespace, "check")
 
-	dir, err := ioutil.TempDir("", "")
+	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err
 	}
@@ -76,11 +75,11 @@ func generate(output string) error {
 }
 
 func compareFiles(file1, file2 string) error {
-	f1, err := ioutil.ReadFile(filepath.Clean(file1))
+	f1, err := os.ReadFile(filepath.Clean(file1))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file1, err)
 	}
-	f2, err := ioutil.ReadFile(filepath.Clean(file2))
+	f2, err := os.ReadFile(filepath.Clean(file2))
 	if err != nil {
 		return fmt.Errorf("failed to open read %s,: %v", file2, err)
 	}

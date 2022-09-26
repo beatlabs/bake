@@ -1,6 +1,6 @@
 module github.com/taxibeat/bake
 
-go 1.18
+go 1.19
 
 require (
 	github.com/cenkalti/backoff/v3 v3.2.2
@@ -9,8 +9,8 @@ require (
 	github.com/magefile/mage v1.13.0
 	github.com/ory/dockertest/v3 v3.9.1
 	github.com/stretchr/testify v1.8.0
-	go.mongodb.org/mongo-driver v1.10.1
-	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde
+	go.mongodb.org/mongo-driver v1.10.2
+	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 	gopkg.in/Shopify/sarama.v1 v1.20.1
 )
 
@@ -20,14 +20,14 @@ require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/Shopify/toxiproxy v2.1.4+incompatible // indirect
-	github.com/armon/go-metrics v0.4.0 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/continuity v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/docker/cli v20.10.17+incompatible // indirect
-	github.com/docker/docker v20.10.17+incompatible // indirect
+	github.com/docker/cli v20.10.18+incompatible // indirect
+	github.com/docker/docker v20.10.18+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/eapache/go-resiliency v1.3.0 // indirect
@@ -67,8 +67,8 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
-	golang.org/x/sys v0.0.0-20220829200755-d48e67d00261 // indirect
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
+	golang.org/x/sys v0.0.0-20220913175220-63ea55921009 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

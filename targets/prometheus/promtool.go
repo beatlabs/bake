@@ -5,7 +5,7 @@ package prometheus
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
@@ -60,7 +60,7 @@ func (p Prometheus) Test() error {
 }
 
 func loadFiles(dir string) ([]string, error) {
-	items, err := ioutil.ReadDir(dir)
+	items, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

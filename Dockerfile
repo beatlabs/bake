@@ -1,4 +1,4 @@
-FROM golang:1.18 as builder
+FROM golang:1.19 as builder
 
 ARG GH_TOKEN
 ARG TARGETARCH
@@ -11,7 +11,7 @@ RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://g
     go install github.com/taxibeat/skim/cmd/skim@latest && rm -rf /go/src/github.com/taxibeat/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM golang:1.18
+FROM golang:1.19
 ARG TARGETARCH
 RUN echo Building bake image for $TARGETARCH architecture
 
@@ -27,7 +27,8 @@ RUN apt-get update && \
     gnupg-agent \
     software-properties-common \
     python3-pip `# dependency: diagrams`\
-    graphviz `# dependency: diagrams`\
+    graphviz `# dependency: diagrams,plantuml`\
+    default-jre `# dependency: plantuml`\
     && rm -rf /var/lib/apt/lists/*
 
 ARG NODE_VERSION=16
@@ -107,7 +108,7 @@ RUN case ${TARGETARCH} in \
     wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
-ARG HELM_VERSION=3.6.2
+ARG HELM_VERSION=3.9.3
 RUN case ${TARGETARCH} in \
     "amd64")  HELM_ARCH=amd64  ;; \
     "arm64")  HELM_ARCH=arm64  ;; \
@@ -115,21 +116,27 @@ RUN case ${TARGETARCH} in \
     wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-${HELM_ARCH}/helm /usr/bin && rm -rf /tmp/linux-${HELM_ARCH}
 
 # Download and install golangci-lint into go bin path
-ARG GOLANGCILINT_VERSION=1.46.1
+ARG GOLANGCILINT_VERSION=1.48.0
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
 # Install diagrams dependency for diagram generation (py -> png)
-ARG DIAGRAMS_VERSION=0.20.0
+ARG DIAGRAMS_VERSION=0.21.1
 RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 
 # Download and install promtool
 # https://prometheus.io/download/
-ARG PROMTOOL_VERSION=2.35.0
+ARG PROMTOOL_VERSION=2.38.0
 RUN case ${TARGETARCH} in \
     "amd64")  PROMTOOL_ARCH=amd64  ;; \
     "arm64")  PROMTOOL_ARCH=arm64  ;; \
     esac && \
     wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}
+
+# Download plantuml
+# https://github.com/plantuml/plantuml
+# Download to /usr/bin and run with java -jar /usr/bin/plantuml.jar
+ARG PLANTUML_VERSION=1.2022.7
+RUN wget -O /usr/bin/plantuml.jar -qc https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
 
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go

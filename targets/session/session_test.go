@@ -1,7 +1,6 @@
 package session
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -47,7 +46,7 @@ func Test_DumpToFile(t *testing.T) {
 				assert.EqualError(t, err, tt.expErr)
 			} else {
 				require.NoError(t, err)
-				data, err := ioutil.ReadFile(tt.filename)
+				data, err := os.ReadFile(tt.filename)
 				require.NoError(t, err)
 				assert.Equal(t, tt.expResult, string(data))
 				err = os.Remove(tt.filename)

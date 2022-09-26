@@ -17,6 +17,8 @@ import (
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/diagram"
 	// mage:import
+	_ "github.com/taxibeat/bake/targets/plantuml"
+	// mage:import
 	_ "github.com/taxibeat/bake/targets/lint/docker"
 	// mage:import
 	_ "github.com/taxibeat/bake/targets/lint/golang"
