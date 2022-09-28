@@ -7,8 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/taxibeat/bake/internal/sh"
+
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
 var (
@@ -24,13 +25,18 @@ var (
 // Swagger groups together Swagger related tasks.
 type Swagger mg.Namespace
 
+const namespace = "swagger"
+
 // Create creates a swagger files from source code annotations.
 func (Swagger) Create() error {
+	sh.PrintStartTarget(namespace, "create")
 	return generate(OutputDir)
 }
 
 // Check ensures that the generated files are up to date.
 func (Swagger) Check() error {
+	sh.PrintStartTarget(namespace, "check")
+
 	dir, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err

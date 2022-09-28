@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/taxibeat/bake/internal/sh"
+
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
-const cmd = "yarn"
+const (
+	cmd       = "yarn"
+	namespace = "yarn"
+)
 
 var (
 	// NpmToken to be added to npm config in order to access private packages. Optional.
@@ -27,11 +31,15 @@ type Yarn mg.Namespace
 
 // Install runs the yarn install subcommand.
 func (y Yarn) Install() error {
+	sh.PrintStartTarget(namespace, "install")
+
 	return sh.RunV(cmd, y.prepScript()...)
 }
 
 // Test runs the yarn test subcommand.
 func (y Yarn) Test() error {
+	sh.PrintStartTarget(namespace, "test")
+
 	args := append(y.prepScript(), strings.Split(TestCmd, " ")...)
 	mg.SerialDeps(y.Install)
 	return sh.RunV(cmd, args...)
@@ -39,6 +47,8 @@ func (y Yarn) Test() error {
 
 // Lint runs the yarn lint subcommand.
 func (y Yarn) Lint() error {
+	sh.PrintStartTarget(namespace, "lint")
+
 	args := append(y.prepScript(), strings.Split(LintCmd, " ")...)
 	mg.SerialDeps(y.Install)
 	return sh.RunV(cmd, args...)

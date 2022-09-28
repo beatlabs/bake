@@ -9,14 +9,15 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 // Prometheus groups together lint related tasks.
 type Prometheus mg.Namespace
 
 const (
-	cmd = "promtool"
+	namespace = "prometheus"
+	cmd       = "promtool"
 )
 
 var (
@@ -28,6 +29,8 @@ var (
 
 // Lint checks if the prometheus alert rules are valid or not.
 func (p Prometheus) Lint() error {
+	sh.PrintStartTarget(namespace, "lint")
+
 	alertFiles, err := loadFiles(AlertsDir)
 	if err != nil {
 		return err
@@ -40,6 +43,8 @@ func (p Prometheus) Lint() error {
 
 // Test run tests on prometheus alerts.
 func (p Prometheus) Test() error {
+	sh.PrintStartTarget(namespace, "test")
+
 	if TestsDir == "" {
 		return errors.New("please provide prometheus.TestsDir variable")
 	}

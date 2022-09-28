@@ -13,8 +13,8 @@ fi
 
 if [ -f $PWD/magebin ]; then
     echo "Using prebuilt bake-build binary"
-    exec $PWD/magebin -v $@
+    exec $PWD/magebin $@
 else
-    exec mage -v $@
+    exec mage $@
 fi
 

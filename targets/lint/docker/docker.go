@@ -2,10 +2,9 @@
 package docker
 
 import (
-	"fmt"
+	"github.com/taxibeat/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 )
 
 // DockerFiles to lint.
@@ -19,15 +18,18 @@ var Args = []string{
 	"--ignore", "DL3059", // Multiple consecutive `RUN` instructions. Consider consolidation.
 }
 
-const cmd = "hadolint"
+const (
+	cmd       = "hadolint"
+	namespace = "lint"
+)
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
 // Docker lints the docker file.
 func (l Lint) Docker() error {
+	sh.PrintStartTarget(namespace, "docker")
 	for _, path := range DockerFiles {
-		fmt.Printf("lint: running docker lint for file: %s\n", path)
 		args := append(Args, path) // nolint:gocritic
 		if err := sh.RunV(cmd, args...); err != nil {
 			return err

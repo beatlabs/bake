@@ -10,11 +10,12 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (
 	python3CMD = "python3"
+	namespace  = "diagram"
 )
 
 // InputDiagramPath is a list of files or directories where to search for
@@ -34,6 +35,8 @@ type Diagram mg.Namespace
 // '*.py'.
 // The output will be located in the same folder of the corresponding input.
 func (Diagram) Generate() error {
+	sh.PrintStartTarget(namespace, "generate")
+
 	relativePaths := existingInputPythonFiles()
 
 	tmpDir, err := os.MkdirTemp(".", "")

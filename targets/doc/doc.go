@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 type confluenceConfig struct {
@@ -26,9 +26,11 @@ type confluenceDoc struct {
 // Doc groups together doc related tasks.
 type Doc mg.Namespace
 
+const namespace = "doc"
+
 // ConfluenceSync synchronized annotated docs to confluence.
 func (Doc) ConfluenceSync() error {
-	fmt.Print("doc: syncing docs with confluence\n")
+	sh.PrintStartTarget(namespace, "confluence sync")
 
 	var ok bool
 	var cfg confluenceConfig

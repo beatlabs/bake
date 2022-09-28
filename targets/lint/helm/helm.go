@@ -7,13 +7,16 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	"github.com/taxibeat/bake/internal/sh"
 )
 
 // Lint groups together lint related tasks.
 type Lint mg.Namespace
 
-const cmd = "helm"
+const (
+	namespace = "lint"
+	cmd       = "helm"
+)
 
 var (
 	// HelmChartPath is the path to the helm chart to lint.
@@ -30,12 +33,13 @@ var (
 
 // Helm linting of a specific chart path.
 func (l Lint) Helm() error {
+	sh.PrintStartTarget(namespace, "helm")
+
 	err := helmAddRepos(HelmRepos)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("lint: running helm dependency build for chart path: %s\n", HelmChartPath)
 	err = sh.RunV(cmd, "dependency", "build", HelmChartPath)
 	if err != nil {
 		return err
@@ -46,13 +50,11 @@ func (l Lint) Helm() error {
 		return err
 	}
 
-	fmt.Printf("lint: running helm lint for chart path: %s\n", HelmChartPath)
 	return sh.RunV(cmd, "lint", "--strict", HelmChartPath)
 }
 
 func helmAddRepos(repos map[string]string) error {
 	for key, value := range repos {
-		fmt.Printf("lint: running helm add repo %s for registry: %s\n", key, value)
 		err := sh.RunV(cmd, "repo", "add", key, value)
 		if err != nil {
 			return fmt.Errorf("failed to add helm repo %s %s: %w", key, value, err)
