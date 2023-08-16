@@ -65,7 +65,7 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
 WORKDIR /go
 
 # Download and install mage file into bin path
-ARG MAGE_VERSION=1.13.0
+ARG MAGE_VERSION=1.14.0
 RUN case ${TARGETARCH} in \
     "amd64")  MAGE_ARCH=64bit  ;; \
     "arm64")  MAGE_ARCH=ARM64  ;; \
@@ -73,7 +73,7 @@ RUN case ${TARGETARCH} in \
     wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
-ARG HADOLINT_VERSION=2.10.0
+ARG HADOLINT_VERSION=2.12.0
 RUN case ${TARGETARCH} in \
     "amd64")  HADOLINT_ARCH=x86_64  ;; \
     "arm64")  HADOLINT_ARCH=arm64  ;; \
@@ -107,10 +107,6 @@ RUN case ${TARGETARCH} in \
 # Download and install golangci-lint into go bin path
 ARG GOLANGCILINT_VERSION=1.48.0
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
-
-# Install diagrams dependency for diagram generation (py -> png)
-ARG DIAGRAMS_VERSION=0.21.1
-RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
 
 # Download and install promtool
 # https://prometheus.io/download/
