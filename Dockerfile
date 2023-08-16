@@ -6,8 +6,6 @@ FROM golang:1.19
 ARG TARGETARCH
 RUN echo Building bake image for $TARGETARCH architecture
 
-COPY --from=builder /go/bin/skim /go/bin/skim
-
 RUN apt-get update && \
     apt-get install -y \
     --no-install-recommends \
@@ -41,7 +39,7 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
 
-# Skim dependencies
+# PROTO dependencies
 ARG BUF_VERSION=0.24.0
 ARG PROTOC_VERSION=3.17.3
 ARG PROTODOC_VERSION=1.3.2
