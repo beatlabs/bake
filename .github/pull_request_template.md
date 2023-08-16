@@ -1,10 +1,20 @@
-#### Ticket: [DIS-1234](https://jira.taxibeat.com/browse/DIS-1234)
+<!--
+Thanks for taking precious time for making a PR.
 
-#### Product Description
-  - <!-- Required for product features: 1 sentence describing how the task fits the overarching epic -->
+Before creating a pull request, please make sure:
+- Your PR solves one problem for which an issue exist and a solution has been discussed
+- You have read the guide for contributing
+  - See https://github.com/beatlabs/patron/blob/master/README.md#how-to-contribute
+- You signed all your commits (otherwise we won't be able to merge the PR)
+  - See https://github.com/beatlabs/patron/blob/master/SIGNYOURWORK.md
+- You added unit tests for the new functionality
+- You mention in the PR description which issue it is addressing, e.g. "Resolves #123"
+-->
 
-#### Definition of Done
-  -  <!-- Required for product features: DoD copied from ticket description -->
+## Which problem is this PR solving?
 
-#### Implementation Notes
-  -  <!-- Optional -->
+<!-- REQUIRED -->
+
+## Short description of the changes
+
+<!-- REQUIRED -->
