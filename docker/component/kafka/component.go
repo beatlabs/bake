@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/taxibeat/bake/docker"
+	"github.com/beatlabs/bake/docker"
 	"gopkg.in/Shopify/sarama.v1"
 )
 

@@ -28,7 +28,7 @@ jobs:
           go mod tidy
           go mod vendor
         env:
-          GOPRIVATE: "github.com/taxibeat/*"
+          GOPRIVATE: "github.com/beatlabs/*"
         
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6

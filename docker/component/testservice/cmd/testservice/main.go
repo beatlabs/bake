@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/taxibeat/bake/docker/component/redis"
+	"github.com/beatlabs/bake/docker/component/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/Shopify/sarama.v1"

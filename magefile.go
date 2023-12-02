@@ -4,28 +4,28 @@
 package main
 
 import (
-	"github.com/taxibeat/bake/targets/lint/docker"
-	"github.com/taxibeat/bake/targets/prometheus"
-	"github.com/taxibeat/bake/targets/test"
+	"github.com/beatlabs/bake/targets/lint/docker"
+	"github.com/beatlabs/bake/targets/prometheus"
+	"github.com/beatlabs/bake/targets/test"
 
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/code/golang"
+	_ "github.com/beatlabs/bake/targets/code/golang"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/test"
+	_ "github.com/beatlabs/bake/targets/test"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/doc"
+	_ "github.com/beatlabs/bake/targets/doc"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/diagram"
+	_ "github.com/beatlabs/bake/targets/diagram"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/plantuml"
+	_ "github.com/beatlabs/bake/targets/plantuml"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/lint/docker"
+	_ "github.com/beatlabs/bake/targets/lint/docker"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/lint/golang"
+	_ "github.com/beatlabs/bake/targets/lint/golang"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/prometheus"
+	_ "github.com/beatlabs/bake/targets/prometheus"
 	// mage:import
-	_ "github.com/taxibeat/bake/targets/ci"
+	_ "github.com/beatlabs/bake/targets/ci"
 )
 
 func init() {

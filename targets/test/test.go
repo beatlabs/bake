@@ -4,9 +4,9 @@ package test
 import (
 	"strings"
 
+	"github.com/beatlabs/bake/docker"
+	"github.com/beatlabs/bake/internal/sh"
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (

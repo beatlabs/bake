@@ -1,4 +1,4 @@
-module github.com/taxibeat/bake
+module github.com/beatlabs/bake
 
 go 1.21
 

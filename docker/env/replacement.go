@@ -5,8 +5,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/docker/component/mongodb"
+	"github.com/beatlabs/bake/docker"
+	"github.com/beatlabs/bake/docker/component/mongodb"
 )
 
 // ReplacementRule replaces in string to out string

@@ -14,11 +14,11 @@ while test $# -gt 1; do
   fi
 done
 
-image_name="ghcr.io/taxibeat/bake"
-image_tag=`cat go.mod | grep github.com/taxibeat/bake | cut -f2 -d"v"`
+image_name="ghcr.io/beatlabs/bake"
+image_tag=`cat go.mod | grep github.com/beatlabs/bake | cut -f2 -d"v"`
 
 # "module" value means that this script is used in the Bake repository itself
-if [ "$image_tag" == "module github.com/taxibeat/bake" ]; then
+if [ "$image_tag" == "module github.com/beatlabs/bake" ]; then
   echo "Setting bake image tag to latest"
   image_tag="latest"
 fi

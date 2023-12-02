@@ -8,15 +8,15 @@
 
 ## Debugging component tests
 
-These instructions use [Route service](https://github.com/taxibeat/route) as an example with [Delve](https://github.com/go-delve/delve) as the debugger.
+These instructions use [Route service](https://github.com/beatlabs/route) as an example with [Delve](https://github.com/go-delve/delve) as the debugger.
 
 Start by running component tests locally in one of the usual ways.
 
 ```shell
-$ mage test:all
-$ go test -mod=vendor -tags=component./...
-$ go test -mod=vendor -tags=component -failfast -run=TestGetRoute ./... 
-$ dlv test ./test --build-flags '--tags=component' -- -test.run TestGetRoute
+mage test:all
+go test -mod=vendor -tags=component./...
+go test -mod=vendor -tags=component -failfast -run=TestGetRoute ./... 
+dlv test ./test --build-flags '--tags=component' -- -test.run TestGetRoute
 ```
 
 This will start several Docker containers, one for the service itself and a two for dependent services consul and mockserver.
@@ -31,13 +31,13 @@ $ docker ps --format {{.Names}}
 We can kill the service container:
 
 ```shell
-$ docker rm -f 000-route-comptest-route
+docker rm -f 000-route-comptest-route
 ```
 
 Inspect the published ports in `test/.bakesession`
 
 ```shell
-$ cat test/.bakesession
+cat test/.bakesession
 ```
 
 ```json
@@ -81,16 +81,16 @@ c
 Now in a different terminal we can execute component tests in one of the usual ways.
 
 ```shell
-$ mage test:all
-$ go test -mod=vendor -tags=component./...
-$ go test -mod=vendor -tags=component -failfast -run=TestGetRoute ./... 
-$ dlv test ./test --build-flags '--tags=component' -- -test.run TestGetRoute
+mage test:all
+go test -mod=vendor -tags=component./...
+go test -mod=vendor -tags=component -failfast -run=TestGetRoute ./... 
+dlv test ./test --build-flags '--tags=component' -- -test.run TestGetRoute
 ```
 
 To remove containers.
 
 ```shell
-$ mage test:cleanup
+mage test:cleanup
 ```
 
 ## Speed up local Bake executions
@@ -100,7 +100,7 @@ One of the most time consuming steps when running a mage target via the Bake ima
 This can be circumvented by manually creating that binary, which saves a few seconds. The downside is that if the `magefile.go` changes then this manually created binary will be out of date, and must be manually updated/deleted.
 
 ```shell
-$ docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) taxibeat/bake:<version> --gen-bin
+docker run --rm -it -v $PWD:/src -w /src -e GITHUB_TOKEN=$GITHUB_TOKEN -u $(id -u):$(id -g) beatlabs/bake:<version> --gen-bin
 ```
 
 And add `bake-build` to your `.gitignore`.

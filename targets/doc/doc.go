@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/beatlabs/bake/internal/sh"
 	"github.com/magefile/mage/mg"
-	"github.com/taxibeat/bake/internal/sh"
 )
 
 type confluenceConfig struct {
