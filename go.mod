@@ -6,8 +6,8 @@ require (
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/hashicorp/consul/api v1.15.2
-	github.com/magefile/mage v1.14.0
-	github.com/ory/dockertest/v3 v3.9.1
+	github.com/magefile/mage v1.15.0
+	github.com/ory/dockertest/v3 v3.10.0
 	github.com/stretchr/testify v1.8.0
 	go.mongodb.org/mongo-driver v1.10.2
 	golang.org/x/sync v0.1.0
@@ -67,11 +67,11 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	golang.org/x/crypto v0.14.0 // indirect
-	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/tools v0.6.0 // indirect
+	golang.org/x/tools v0.7.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
