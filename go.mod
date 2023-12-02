@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/consul/api v1.15.2
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.10.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.10.2
 	golang.org/x/sync v0.1.0
 	gopkg.in/Shopify/sarama.v1 v1.20.1
