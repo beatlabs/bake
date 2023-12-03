@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/IBM/sarama"
 	"github.com/beatlabs/bake/docker"
 	"github.com/beatlabs/bake/docker/component/consul"
 	"github.com/beatlabs/bake/docker/component/jaeger"
@@ -22,7 +23,6 @@ import (
 	"github.com/beatlabs/bake/docker/component/testservice"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/Shopify/sarama.v1"
 )
 
 var session *docker.Session

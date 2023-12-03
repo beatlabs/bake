@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/IBM/sarama"
 	"github.com/beatlabs/bake/docker"
-	"gopkg.in/Shopify/sarama.v1"
 )
 
 const (

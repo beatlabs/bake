@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/IBM/sarama"
 	"github.com/beatlabs/bake/docker/component/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"gopkg.in/Shopify/sarama.v1"
 )
 
 func main() {
