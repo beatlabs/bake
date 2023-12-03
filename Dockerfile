@@ -119,10 +119,6 @@ RUN case ${TARGETARCH} in \
 ARG GOLANGCILINT_VERSION=1.48.0
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
-# Install diagrams dependency for diagram generation (py -> png)
-ARG DIAGRAMS_VERSION=0.21.1
-RUN pip install --no-cache-dir diagrams==${DIAGRAMS_VERSION}
-
 # Download and install promtool
 # https://prometheus.io/download/
 ARG PROMTOOL_VERSION=2.38.0
