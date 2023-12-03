@@ -6,10 +6,10 @@ ARG TARGETARCH
 # Required to access private modules
 ENV GOPRIVATE=github.com/beatlabs/**
 
-# Install Skim
-RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
-    go install github.com/beatlabs/skim/cmd/skim@latest && rm -rf /go/src/github.com/beatlabs/ && \
-    git config --global --remove-section url."https://$GH_TOKEN@github.com/"
+# # Install Skim
+# RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
+#     go install github.com/beatlabs/skim/cmd/skim@latest && rm -rf /go/src/github.com/beatlabs/ && \
+#     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
 FROM golang:1.21
 ARG TARGETARCH
