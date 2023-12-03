@@ -112,17 +112,19 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 		runOpts.Cmd = conf.RunOpts.Cmd
 	}
 
+	const tcpSuffix = "/tcp"
+
 	hostPorts := map[string]string{}
 	for serviceName, nativePort := range conf.ServicePorts {
-		runOpts.ExposedPorts = append(runOpts.ExposedPorts, nativePort+"/tcp")
+		runOpts.ExposedPorts = append(runOpts.ExposedPorts, nativePort+tcpSuffix)
 
 		if !session.inDocker {
 			// staticPort means that we should map this port 1 to 1 on the host,
 			// trusting that the component has obtained a random one.
 			staticPort, ok := conf.StaticServicePorts[serviceName]
 			if ok {
-				runOpts.ExposedPorts = append(runOpts.ExposedPorts, staticPort+"/tcp")
-				runOpts.PortBindings[docker.Port(staticPort+"/tcp")] = []docker.PortBinding{
+				runOpts.ExposedPorts = append(runOpts.ExposedPorts, staticPort+tcpSuffix)
+				runOpts.PortBindings[docker.Port(staticPort+tcpSuffix)] = []docker.PortBinding{
 					{HostIP: "0.0.0.0", HostPort: staticPort},
 				}
 				hostPorts[serviceName] = staticPort
@@ -134,7 +136,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 			if err != nil {
 				return fmt.Errorf("can not obtain random free port: %w", err)
 			}
-			runOpts.PortBindings[docker.Port(nativePort+"/tcp")] = []docker.PortBinding{
+			runOpts.PortBindings[docker.Port(nativePort+tcpSuffix)] = []docker.PortBinding{
 				{HostIP: "0.0.0.0", HostPort: mappedPort},
 			}
 			hostPorts[serviceName] = mappedPort

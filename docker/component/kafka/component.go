@@ -70,7 +70,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 	}
 }
 
-func zookeeperReadyFunc(session *docker.Session) error {
+func zookeeperReadyFunc(_ *docker.Session) error {
 	return nil
 }
 

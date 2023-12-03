@@ -1,3 +1,4 @@
+// Package main of the test service.
 package main
 
 import (
@@ -51,12 +52,18 @@ func main() {
 	http.HandleFunc("/", Health)
 	port := os.Getenv("PORT")
 	fmt.Println("Running on port:", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+
+	server := &http.Server{
+		Addr:              ":" + port,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 // Health is a simple health endpoint.
-func Health(w http.ResponseWriter, r *http.Request) {
+func Health(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintf(w, "OK")
 }
