@@ -76,7 +76,7 @@ RUN curl -sSLO https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}
 WORKDIR /go
 
 # Download and install mage file into bin path
-ARG MAGE_VERSION=1.13.0
+ARG MAGE_VERSION=1.15.0
 RUN case ${TARGETARCH} in \
     "amd64")  MAGE_ARCH=64bit  ;; \
     "arm64")  MAGE_ARCH=ARM64  ;; \
@@ -84,7 +84,7 @@ RUN case ${TARGETARCH} in \
     wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
-ARG HADOLINT_VERSION=2.10.0
+ARG HADOLINT_VERSION=2.12.0
 RUN case ${TARGETARCH} in \
     "amd64")  HADOLINT_ARCH=x86_64  ;; \
     "arm64")  HADOLINT_ARCH=arm64  ;; \
@@ -108,7 +108,7 @@ RUN case ${TARGETARCH} in \
     wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
-ARG HELM_VERSION=3.9.3
+ARG HELM_VERSION=3.13.2
 RUN case ${TARGETARCH} in \
     "amd64")  HELM_ARCH=amd64  ;; \
     "arm64")  HELM_ARCH=arm64  ;; \
@@ -121,7 +121,7 @@ RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/ins
 
 # Download and install promtool
 # https://prometheus.io/download/
-ARG PROMTOOL_VERSION=2.38.0
+ARG PROMTOOL_VERSION=2.48.0
 RUN case ${TARGETARCH} in \
     "amd64")  PROMTOOL_ARCH=amd64  ;; \
     "arm64")  PROMTOOL_ARCH=arm64  ;; \
@@ -131,7 +131,7 @@ RUN case ${TARGETARCH} in \
 # Download plantuml
 # https://github.com/plantuml/plantuml
 # Download to /usr/bin and run with java -jar /usr/bin/plantuml.jar
-ARG PLANTUML_VERSION=1.2022.7
+ARG PLANTUML_VERSION=1.2023.12
 RUN wget -O /usr/bin/plantuml.jar -qc https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
 
 # Restore permissions as per https://hub.docker.com/_/golang
