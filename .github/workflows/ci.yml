@@ -34,7 +34,7 @@ jobs:
         uses: coverallsapp/github-action@master
         continue-on-error: true
         with:
-          github-token: ${{ secrets.BAKE_GH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage.lcov
 
       - name: Upload container logs
