@@ -17,13 +17,13 @@ jobs:
         shell: bash
 
       - name: Build local image
-        run: docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest . --build-arg GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        run: docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest . --build-arg GH_TOKEN=${{ secrets.BAKE_GH_TOKEN }}
         shell: bash
 
       - name: Bake CI
         run: ./bake.sh ci
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BAKE_GH_TOKEN }}
 
       - name: Convert coverage file to lcov
         run: |
