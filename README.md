@@ -1,8 +1,3 @@
-<!-- Space: DT -->
-<!-- Title: Bake -->
-<!-- Parent: Engineering -->
-<!-- Parent: Dev Tools -->
-
 # Bake
 
 [![Coverage Status](https://coveralls.io/repos/github/beatlabs/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/beatlabs/bake?branch=master)
