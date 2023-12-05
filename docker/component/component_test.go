@@ -1,5 +1,4 @@
 //go:build component
-// +build component
 
 package component
 
@@ -11,18 +10,18 @@ import (
 	"testing"
 	"time"
 
+	"github.com/IBM/sarama"
+	"github.com/beatlabs/bake/docker"
+	"github.com/beatlabs/bake/docker/component/consul"
+	"github.com/beatlabs/bake/docker/component/jaeger"
+	"github.com/beatlabs/bake/docker/component/kafka"
+	"github.com/beatlabs/bake/docker/component/localstack"
+	"github.com/beatlabs/bake/docker/component/mockserver"
+	"github.com/beatlabs/bake/docker/component/mongodb"
+	"github.com/beatlabs/bake/docker/component/redis"
+	"github.com/beatlabs/bake/docker/component/testservice"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/docker/component/consul"
-	"github.com/taxibeat/bake/docker/component/jaeger"
-	"github.com/taxibeat/bake/docker/component/kafka"
-	"github.com/taxibeat/bake/docker/component/localstack"
-	"github.com/taxibeat/bake/docker/component/mockserver"
-	"github.com/taxibeat/bake/docker/component/mongodb"
-	"github.com/taxibeat/bake/docker/component/redis"
-	"github.com/taxibeat/bake/docker/component/testservice"
-	"gopkg.in/Shopify/sarama.v1"
 )
 
 var session *docker.Session

@@ -17,13 +17,13 @@ jobs:
         shell: bash
 
       - name: Build local image
-        run: docker build -f Dockerfile -t ghcr.io/taxibeat/bake:latest . --build-arg GH_TOKEN=${{ secrets.MATCHING_BAKE }}
+        run: docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest . --build-arg GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         shell: bash
 
       - name: Bake CI
         run: ./bake.sh ci
         env:
-          GITHUB_TOKEN: ${{ secrets.MATCHING_BAKE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Convert coverage file to lcov
         run: |
@@ -44,25 +44,3 @@ jobs:
           name: docker-logs
           retention-days: 2
           path: .bake-container-logs
-
-      - name: Notify slack success
-        if: success()
-        env:
-          SLACK_USERNAME: matching-ci-bot
-          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
-          SLACK_MESSAGE: 'Success :rocket:'
-          SLACK_TITLE: ${{ github.repository }} CI run
-          SLACK_COLOR: good
-          SLACK_FOOTER: Powered by the Matching Domain
-        uses: rtCamp/action-slack-notify@v2
-
-      - name: Notify slack fail
-        if: failure()
-        env:
-          SLACK_USERNAME: matching-ci-bot
-          SLACK_WEBHOOK: ${{ secrets.MATCHING_CI_SLACK_WEBHOOK }}
-          SLACK_MESSAGE: 'Failure :facepalm1:'
-          SLACK_TITLE: ${{ github.repository }} CI run
-          SLACK_COLOR: danger
-          SLACK_FOOTER: Powered by the Matching Domain
-        uses: rtCamp/action-slack-notify@v2

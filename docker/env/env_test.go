@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/beatlabs/bake/docker"
+	"github.com/beatlabs/bake/docker/component/mockserver"
+	"github.com/beatlabs/bake/docker/component/mongodb"
+	"github.com/beatlabs/bake/internal/sh"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/taxibeat/bake/docker"
-	"github.com/taxibeat/bake/docker/component/mockserver"
-	"github.com/taxibeat/bake/docker/component/mongodb"
-	"github.com/taxibeat/bake/internal/sh"
 )
 
 const (

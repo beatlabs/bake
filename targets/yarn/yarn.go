@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/taxibeat/bake/internal/sh"
+	"github.com/beatlabs/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
 )

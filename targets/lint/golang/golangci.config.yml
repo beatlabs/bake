@@ -19,7 +19,6 @@ linters:
     - stylecheck
     - unconvert
     - errcheck
-    - deadcode
     - ineffassign
     - unused
     - tparallel

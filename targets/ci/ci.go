@@ -4,14 +4,14 @@ package ci
 import (
 	"os"
 
+	gocode "github.com/beatlabs/bake/targets/code/golang"
+	dockerlint "github.com/beatlabs/bake/targets/lint/docker"
+	golint "github.com/beatlabs/bake/targets/lint/golang"
+	"github.com/beatlabs/bake/targets/prometheus"
+	"github.com/beatlabs/bake/targets/proto"
+	"github.com/beatlabs/bake/targets/swagger"
+	"github.com/beatlabs/bake/targets/test"
 	"github.com/magefile/mage/mg"
-	gocode "github.com/taxibeat/bake/targets/code/golang"
-	dockerlint "github.com/taxibeat/bake/targets/lint/docker"
-	golint "github.com/taxibeat/bake/targets/lint/golang"
-	"github.com/taxibeat/bake/targets/prometheus"
-	"github.com/taxibeat/bake/targets/proto"
-	"github.com/taxibeat/bake/targets/swagger"
-	"github.com/taxibeat/bake/targets/test"
 )
 
 // CI runs the Continuous Integration pipeline.

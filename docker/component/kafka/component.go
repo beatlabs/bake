@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/taxibeat/bake/docker"
-	"gopkg.in/Shopify/sarama.v1"
+	"github.com/IBM/sarama"
+	"github.com/beatlabs/bake/docker"
 )
 
 const (
@@ -70,7 +70,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 	}
 }
 
-func zookeeperReadyFunc(session *docker.Session) error {
+func zookeeperReadyFunc(_ *docker.Session) error {
 	return nil
 }
 

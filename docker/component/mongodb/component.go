@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/taxibeat/bake/docker"
+	"github.com/beatlabs/bake/docker"
 )
 
 const (

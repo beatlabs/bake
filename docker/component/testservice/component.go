@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/taxibeat/bake/docker"
+	"github.com/beatlabs/bake/docker"
 )
 
 const (

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/taxibeat/bake/internal/sh"
+	"github.com/beatlabs/bake/internal/sh"
 
 	"github.com/magefile/mage/mg"
 )
@@ -20,7 +20,7 @@ const (
 
 var (
 	// Owner is the schema owner.
-	Owner = "taxibeat"
+	Owner = "beatlabs"
 	// Registry is the schema registry.
 	Registry = "proto-schemas"
 	// SchemasLocation is the path to the schemas.

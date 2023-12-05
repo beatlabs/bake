@@ -4,8 +4,8 @@ package redis
 import (
 	"context"
 
+	"github.com/beatlabs/bake/docker"
 	"github.com/go-redis/redis/v8"
-	"github.com/taxibeat/bake/docker"
 )
 
 const (

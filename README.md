@@ -1,11 +1,6 @@
-<!-- Space: DT -->
-<!-- Title: Bake -->
-<!-- Parent: Engineering -->
-<!-- Parent: Dev Tools -->
-
 # Bake
 
-[![Coverage Status](https://coveralls.io/repos/github/taxibeat/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/taxibeat/bake?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/beatlabs/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/beatlabs/bake?branch=master)
 
 Bake is a set of tools that aims to improve the developer experience for our Go projects.
 
@@ -13,7 +8,7 @@ The repository provides 3 things:
 
 - [Mage](https://magefile.org/) powered make-like targets in the `targets` pkg.
 - [DockerTest](https://github.com/ory/dockertest) powered state management for our component tests under the `docker` pkg.
-- A [Docker image](https://github.com/taxibeat/bake/pkgs/container/bake) to ensure parity between CI and local environments.
+- A [Docker image](https://github.com/beatlabs/bake/pkgs/container/bake) to ensure parity between CI and local environments.
 
 ## Setup Targets
 
@@ -53,13 +48,13 @@ Targets:
 Go linting (using local golanci-lint if available):
 
 ```console
-$ mage lint:go
+mage lint:go
 ```
 
 Go Unit tests (using local Go installation and test cache):
 
 ```console
-$ mage test:unit
+mage test:unit
 ```
 
 ### Component tests
@@ -67,16 +62,15 @@ $ mage test:unit
 Go unit+integration+component tests:
 
 ```console
-$ mage test:all
+mage test:all
 ```
 
 _This will create docker containers according to your component test setup (usually in `TestMain` under `/tests`)._
 
-
 Tear down Docker resources used for integration/component tests:
 
 ```console
-$ mage test:cleanup
+mage test:cleanup
 ```
 
 ## Docker based isolated environment
@@ -98,7 +92,7 @@ A token can be generated at [here](https://github.com/settings/tokens) and must 
 Export it in your shell
 
 ```console
-$ export GITHUB_TOKEN=my-token
+export GITHUB_TOKEN=my-token
 ```
 
 Login to `ghcr.io`
@@ -110,26 +104,29 @@ $ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR-USERNAME --password-stdin
 
 ### 2. Import scripts package
 
-Add this import in the `magefile.go` so `go mod vendor` will fetch the bake runner script. 
+Add this import in the `magefile.go` so `go mod vendor` will fetch the bake runner script.
+
 ```go
 // generic bake script
-import _ "github.com/taxibeat/bake/scripts"
+import _ "github.com/beatlabs/bake/scripts"
 ```
 
 ### 3. Create a `bake.sh` script for your repo
 
 It is a simple script that runs the bake runner script and can be copied from `go-matching-template`
 or created from scratch:
+
 ```bash
 #!/bin/bash
 set -e
-bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh "$@"
+bash ./vendor/github.com/beatlabs/bake/scripts/run-bake.sh "$@"
 ```
 
-If you need to pass any custom environment variables to Bake, you can do it 
+If you need to pass any custom environment variables to Bake, you can do it
 by adding one or more `--env` flags to the run-bake script.
+
 ```bash
-bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh --env SOME_ENV_VAR=some-value "$@"
+bash ./vendor/github.com/beatlabs/bake/scripts/run-bake.sh --env SOME_ENV_VAR=some-value "$@"
 ```
 
 ### 4. Execute
@@ -137,7 +134,7 @@ bash ./vendor/github.com/taxibeat/bake/scripts/run-bake.sh --env SOME_ENV_VAR=so
 Instead of executing `mage` we now execute the script, e.g:
 
 ```console
-$ ./bake.sh ci
+./bake.sh ci
 ```
 
 This is the recommended way to run the CI target in Jenkins/Github Actions.
@@ -153,4 +150,4 @@ This is the recommended way to run the CI target in Jenkins/Github Actions.
 
 ## Repos using Bake
 
-- [Github search](https://github.com/search?q=org%3Ataxibeat+filename%3A%2Fbake.sh&type=Code)
+- [Github search](https://github.com/search?q=org%3Abeatlabs+filename%3A%2Fbake.sh&type=Code)

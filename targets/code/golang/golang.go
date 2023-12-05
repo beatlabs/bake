@@ -9,7 +9,7 @@ import (
 
 	"github.com/magefile/mage/mg"
 
-	"github.com/taxibeat/bake/internal/sh"
+	"github.com/beatlabs/bake/internal/sh"
 )
 
 // Go groups together go related tasks.
