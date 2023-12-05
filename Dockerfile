@@ -77,43 +77,43 @@ WORKDIR /go
 
 # Download and install mage file into bin path
 ARG MAGE_VERSION=1.15.0
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  MAGE_ARCH=64bit  ;; \
     "arm64")  MAGE_ARCH=ARM64  ;; \
     esac && \
-    wget -qc https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mage
+    wget -qc "https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-${MAGE_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin mage
 
 # Download and install hadolint into bin path
 ARG HADOLINT_VERSION=2.12.0
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  HADOLINT_ARCH=x86_64  ;; \
     "arm64")  HADOLINT_ARCH=arm64  ;; \
     esac && \
-    wget -qO /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH} && chmod +x /usr/bin/hadolint
+    wget -qO /usr/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH}" && chmod +x /usr/bin/hadolint
 
 # Download and install swag into bin path
 ARG SWAG_VERSION=1.8.4
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  SWAG_ARCH=x86_64  ;; \
     "arm64")  SWAG_ARCH=aarch64  ;; \
     esac && \
-    wget -qc https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz -O - | tar -xz -C /usr/bin swag
+    wget -qc "https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin swag
 
 # Download and install mark into bin path
 ARG MARK_VERSION=6.7
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  MARK_ARCH=x86_64  ;; \
     "arm64")  MARK_ARCH=arm64  ;; \
     esac && \
-    wget -qc https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz -O - | tar -xz -C /usr/bin mark
+    wget -qc "https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin mark
 
 # Download and install helm 3 into bin path
 ARG HELM_VERSION=3.13.2
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  HELM_ARCH=amd64  ;; \
     "arm64")  HELM_ARCH=arm64  ;; \
     esac && \
-    wget -qc https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/linux-${HELM_ARCH}/helm /usr/bin && rm -rf /tmp/linux-${HELM_ARCH}
+    wget -qc "https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/linux-${HELM_ARCH}/helm" /usr/bin && rm -rf "/tmp/linux-${HELM_ARCH}"
 
 # Download and install golangci-lint into go bin path
 ARG GOLANGCILINT_VERSION=1.55.2
@@ -122,11 +122,11 @@ RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/ins
 # Download and install promtool
 # https://prometheus.io/download/
 ARG PROMTOOL_VERSION=2.48.0
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
     "amd64")  PROMTOOL_ARCH=amd64  ;; \
     "arm64")  PROMTOOL_ARCH=arm64  ;; \
     esac && \
-    wget -qc https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz -O - | tar -xz -C /tmp && mv /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool /usr/bin && rm -rf /tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}
+    wget -qc "https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool" /usr/bin && rm -rf "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}"
 
 # Download plantuml
 # https://github.com/plantuml/plantuml
