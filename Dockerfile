@@ -1,4 +1,4 @@
-FROM golang:1.21 as builder
+FROM golang:1.22 as builder
 
 ARG GH_TOKEN
 ARG TARGETARCH
@@ -11,7 +11,7 @@ RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://g
     go install github.com/beatlabs/skim/cmd/skim@latest && rm -rf /go/src/github.com/beatlabs/ && \
     git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
-FROM golang:1.21
+FROM golang:1.22
 ARG TARGETARCH
 RUN echo Building bake image for $TARGETARCH architecture
 
