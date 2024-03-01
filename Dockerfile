@@ -7,15 +7,15 @@ ARG TARGETARCH
 ENV GOPRIVATE=github.com/beatlabs/**
 
 # Install Skim
-#RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
-#    go install github.com/beatlabs/skim/cmd/skim@latest && rm -rf /go/src/github.com/beatlabs/ && \
-#    git config --global --remove-section url."https://$GH_TOKEN@github.com/"
+RUN git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/" && \
+  go install github.com/beatlabs/skim/cmd/skim@latest && rm -rf /go/src/github.com/beatlabs/ && \
+  git config --global --remove-section url."https://$GH_TOKEN@github.com/"
 
 FROM golang:1.22
 ARG TARGETARCH
 RUN echo Building bake image for $TARGETARCH architecture
 
-#COPY --from=builder /go/bin/skim /go/bin/skim
+COPY --from=builder /go/bin/skim /go/bin/skim
 
 RUN apt-get update && \
   apt-get install -y \
