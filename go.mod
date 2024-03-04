@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/consul/api v1.26.1
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.10.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	go.mongodb.org/mongo-driver v1.13.1
 	golang.org/x/sync v0.5.0
 )
