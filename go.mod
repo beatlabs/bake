@@ -6,7 +6,7 @@ require (
 	github.com/IBM/sarama v1.43.0
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/hashicorp/consul/api v1.26.1
+	github.com/hashicorp/consul/api v1.28.2
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/stretchr/testify v1.9.0
