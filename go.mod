@@ -6,7 +6,7 @@ require (
 	github.com/IBM/sarama v1.43.2
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/hashicorp/consul/api v1.28.3
+	github.com/hashicorp/consul/api v1.29.1
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/stretchr/testify v1.9.0
@@ -35,7 +35,6 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/hashicorp/consul/proto-public v0.6.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect
@@ -52,6 +51,7 @@ require (
 	github.com/jcmturner/gokrb5/v8 v8.4.4 // indirect
 	github.com/jcmturner/rpc/v2 v2.0.3 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
