@@ -9,9 +9,12 @@ testint: fmtcheck
 fmtcheck:
 	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
 
+build-docker:
+	docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest . --build-arg GH_TOKEN=${GITHUB_TOKEN}
+
 # disallow any parallelism (-j) for Make. This is necessary since some
 # commands during the build process create temporary files that collide
 # under parallel conditions.
 .NOTPARALLEL:
 
-.PHONY: default test testint fmtcheck
+.PHONY: default test testint fmtcheck build-docker
