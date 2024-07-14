@@ -33,6 +33,7 @@ func TestGetServiceEnvs(t *testing.T) {
 		"--env=TEST_SERVICE_KAFKA_BROKERS=000-kafka:9092",
 		"--env=TEST_SERVICE_API_ENDPOINT=http://000-mockserver:1080",
 		"--env=TEST_VALUE=docker-new",
+		"--env=container=podman",
 		"alpine",
 		"pwd",
 	}
@@ -54,6 +55,7 @@ func TestGetServiceEnvs(t *testing.T) {
 		"TEST_SERVICE_KAFKA_BROKERS": "localhost:64949",
 		"TEST_SERVICE_API_ENDPOINT":  "http://localhost:64953",
 		"TEST_VALUE":                 "localhost-new",
+		"container":                  "podman",
 	}, envs)
 
 	runDockerCmd(t, []string{"rm", testContainerName})
