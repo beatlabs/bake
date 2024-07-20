@@ -1,4 +1,4 @@
-FROM golang:1.22 as builder
+FROM golang:1.22 AS builder
 
 ARG GH_TOKEN
 ARG TARGETARCH
@@ -139,7 +139,7 @@ RUN chmod 777 -R /go
 
 # Very permissive because we don't know what user the container will run as
 RUN mkdir /home/beat && chmod 777 /home/beat
-ENV HOME /home/beat
+ENV HOME=/home/beat
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
