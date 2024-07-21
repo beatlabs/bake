@@ -17,7 +17,7 @@ jobs:
         shell: bash
 
       - name: Build local image
-        run: docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest . --build-arg GH_TOKEN=${{ secrets.BAKE_GH_TOKEN }}
+        run: docker build -f Dockerfile -t ghcr.io/beatlabs/bake:latest .
         shell: bash
 
       - name: Bake CI

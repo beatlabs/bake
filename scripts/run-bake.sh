@@ -63,6 +63,8 @@ fi
 # Detect TTY
 [[ -t 1 ]] && tty='--tty'
 
+echo "GITHUB_TOKEN=${GITHUB_TOKEN}"
+
 docker run \
   --name "$BAKE_SESSION_ID-bake" \
   --network $BAKE_NETWORK_ID \
@@ -75,7 +77,7 @@ docker run \
   --workdir /src \
   --env BAKE_NETWORK_ID="$BAKE_NETWORK_ID" \
   --env BAKE_SESSION_ID="${BAKE_SESSION_ID}" \
-  --env GITHUB_TOKEN="$GITHUB_TOKEN" \
+  --env GITHUB_TOKEN="${GITHUB_TOKEN}" \
   --env CONFLUENCE_USERNAME="$CONFLUENCE_USERNAME" \
   --env CONFLUENCE_PASSWORD="$CONFLUENCE_PASSWORD" \
   --env CONFLUENCE_BASEURL="$CONFLUENCE_BASEURL" \
