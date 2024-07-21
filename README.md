@@ -1,6 +1,6 @@
 # Bake
 
-[![Coverage Status](https://coveralls.io/repos/github/beatlabs/bake/badge.svg?branch=master&t=yYHNCW)](https://coveralls.io/github/beatlabs/bake?branch=master)
+[![codecov](https://codecov.io/gh/beatlabs/bake/graph/badge.svg?token=pQFZOyqNSD)](https://codecov.io/gh/beatlabs/bake)
 
 Bake is a set of tools that aims to improve the developer experience for our Go projects.
 
