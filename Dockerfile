@@ -9,9 +9,7 @@ RUN apt-get update && \
   unzip \
   ca-certificates \
   gnupg-agent \
-  software-properties-common \
-  python3-pip `# dependency: diagrams`\
-  graphviz `# dependency: diagrams,plantuml`\
+  software-properties-common \  
   && rm -rf /var/lib/apt/lists/*
 
 ARG NODE_VERSION=16

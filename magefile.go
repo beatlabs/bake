@@ -12,8 +12,6 @@ import (
 	// mage:import
 	_ "github.com/beatlabs/bake/targets/test"
 	// mage:import
-	_ "github.com/beatlabs/bake/targets/diagram"
-	// mage:import
 	_ "github.com/beatlabs/bake/targets/lint/docker"
 	// mage:import
 	_ "github.com/beatlabs/bake/targets/lint/golang"

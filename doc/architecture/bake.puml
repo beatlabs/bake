@@ -8,21 +8,15 @@
 !includeurl ICONURL/devicons2/google.puml
 
 rectangle "<$go>\nMage" as mage
-rectangle "<$python>\nDiagrams" as diagrams
 rectangle "<$haskell>\nHadolint" as hadolint
 rectangle "<$go>\nSwagger" as swag
 rectangle "<$go>\nHelm" as helm
 rectangle "<$go>\nMark" as mark
 rectangle "<$go>\nGolangci-lint" as gocilint
-rectangle "<$go>\nSkim" as skim
-rectangle "<$java>\nPlantUML" as plantuml
 
-mage --> diagrams: convert
 mage --> hadolint: docker lint
 mage --> swag: generate
 mage --> mark: sync
 mage --> helm: lint
 mage --> gocilint: lint
-mage --> skim: generate
-mage --> plantuml: convert
 @enduml
