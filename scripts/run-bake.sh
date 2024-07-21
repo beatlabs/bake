@@ -63,8 +63,6 @@ fi
 # Detect TTY
 [[ -t 1 ]] && tty='--tty'
 
-echo "GITHUB_TOKEN=${GITHUB_TOKEN}"
-
 docker run \
   --name "$BAKE_SESSION_ID-bake" \
   --network $BAKE_NETWORK_ID \
