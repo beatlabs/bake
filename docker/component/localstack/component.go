@@ -55,7 +55,8 @@ func readyFunc(session *docker.Session) error {
 	}
 
 	return docker.Retry(func() error {
-		req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, fmt.Sprintf("http://%s/health", addr), nil)
+		url := fmt.Sprintf("http://%s/_localstack/health", addr)
+		req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 		if err != nil {
 			return fmt.Errorf("failed to create health request: %w", err)
 		}
@@ -67,7 +68,7 @@ func readyFunc(session *docker.Session) error {
 		defer func() { _ = resp.Body.Close() }()
 
 		if resp.StatusCode != http.StatusOK {
-			return fmt.Errorf("got status code: %d", resp.StatusCode)
+			return fmt.Errorf("got status code: %d from %s", resp.StatusCode, url)
 		}
 		return nil
 	})
