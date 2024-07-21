@@ -32,11 +32,7 @@ func (l Lint) GoShowConfig() error {
 func (l Lint) Go() error {
 	sh.PrintStartTarget(namespace, "go")
 
-	args := "run "
-
-	if os.Getenv("GITHUB_ACTIONS") == "true" {
-		args += "--out-format=github-actions "
-	}
+	args := "run --out-format=colored-line-number "
 
 	path, err := persistDefaultFile()
 	if err != nil {
