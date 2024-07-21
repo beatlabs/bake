@@ -48,15 +48,6 @@ RUN case "${TARGETARCH}" in \
 ARG GOLANGCILINT_VERSION=1.59.1
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
-# Download and install promtool
-# https://prometheus.io/download/
-ARG PROMTOOL_VERSION=2.53.1
-RUN case "${TARGETARCH}" in \
-  "amd64")  PROMTOOL_ARCH=amd64  ;; \
-  "arm64")  PROMTOOL_ARCH=arm64  ;; \
-  esac && \
-  wget -qc "https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool" /usr/bin && rm -rf "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}"
-
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
 
