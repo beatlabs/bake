@@ -8,7 +8,8 @@ RUN apt-get update && \
   unzip \
   ca-certificates \
   gnupg-agent \
-  software-properties-common
+  software-properties-common \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://get.docker.com | sh
 
