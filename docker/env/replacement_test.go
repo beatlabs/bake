@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReplacement_SubstrRule(t *testing.T) {
@@ -142,7 +143,7 @@ func TestReplacement_MongoUriRule(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			rule := mongoURIReplacementRule{
-				SubstrReplacementRule{old: tt.source, new: tt.target},
+				SubstrReplacementRule{old: tt.source, change: tt.target},
 			}
 			var res string
 			if rule.Supports(tt.envName, tt.input) {
@@ -166,12 +167,12 @@ func TestNewReplacementList(t *testing.T) {
 		"ok": {
 			sessionFile: "./testdata/ok.json",
 			expList: ReplacementRuleList{
-				&SubstrReplacementRule{old: "000-kafka:9092", new: "localhost:64949"},
-				&SubstrReplacementRule{old: "000-localstack:4566", new: "localhost:64950"},
-				&SubstrReplacementRule{old: "000-mockserver:1080", new: "localhost:64953"},
-				&mongoURIReplacementRule{SubstrReplacementRule{old: "000-mongo:27017", new: "localhost:64952"}},
+				&SubstrReplacementRule{old: "000-kafka:9092", change: "localhost:64949"},
+				&SubstrReplacementRule{old: "000-localstack:4566", change: "localhost:64950"},
+				&SubstrReplacementRule{old: "000-mockserver:1080", change: "localhost:64953"},
+				&mongoURIReplacementRule{SubstrReplacementRule{old: "000-mongo:27017", change: "localhost:64952"}},
 				&FullReplacementRule{envName: "PATRON_HTTP_DEFAULT_PORT", new: "65071"},
-				&SubstrReplacementRule{old: "000-zookeeper:2181", new: "localhost:64951"},
+				&SubstrReplacementRule{old: "000-zookeeper:2181", change: "localhost:64951"},
 			},
 		},
 		"empty": {
@@ -194,7 +195,7 @@ func TestNewReplacementList(t *testing.T) {
 				assert.Empty(t, replacementList)
 				assert.EqualError(t, err, tt.expErr)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.expList, replacementList)
 			}
 		})

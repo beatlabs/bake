@@ -32,11 +32,7 @@ func (l Lint) GoShowConfig() error {
 func (l Lint) Go() error {
 	sh.PrintStartTarget(namespace, "go")
 
-	args := "run "
-
-	if os.Getenv("GITHUB_ACTIONS") == "true" {
-		args += "--out-format=github-actions "
-	}
+	args := "run --out-format=colored-line-number "
 
 	path, err := persistDefaultFile()
 	if err != nil {
@@ -45,7 +41,11 @@ func (l Lint) Go() error {
 	defer func() { _ = os.Remove(path) }()
 	args += "--config " + path
 
-	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
+	envs := map[string]string{
+		"GOFLAGS": "-buildvcs=false",
+	}
+
+	return sh.RunWithV(envs, "golangci-lint", strings.Split(args, " ")...)
 }
 
 func persistDefaultFile() (string, error) {

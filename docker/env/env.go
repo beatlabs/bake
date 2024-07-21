@@ -29,7 +29,7 @@ var (
 		inspectEnvFormat,
 	}
 
-	// inspectFormatEnv in order to make format pass correctly without replacing $ variables
+	// inspectFormatEnv in order to make format pass correctly without replacing $ variables.
 	inspectFormatEnv = map[string]string{
 		"new":   "$new",
 		"index": "$index",
@@ -74,8 +74,8 @@ func GetServiceEnvs(session *docker.Session, serviceName string, extraRules Repl
 	return envs, nil
 }
 
-// BuildContainerName from session id and service name.
-// fails if service is not registered in bake session
+// BuildContainerName from session id and service name
+// fails if service is not registered in bake session.
 func BuildContainerName(session *docker.Session, serviceName string) (string, error) {
 	_, err := session.AutoServiceAddress(serviceName)
 	if err != nil {

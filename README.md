@@ -26,8 +26,6 @@ For a complete list of available targets run `mage`.
 $ mage
 Targets:
   ci                    runs the Continuous Integration pipeline.
-  diagram:generate      creates diagrams from python files.
-  doc:confluenceSync    synchronized annotated docs to confluence.
   go:checkVendor        checks if vendor is in sync with go.mod.
   go:fmt                runs go fmt.
   go:fmtCheck           checks if all files are formatted.
@@ -143,7 +141,6 @@ This is the recommended way to run the CI target in Jenkins/Github Actions.
 
 - [hadolint](https://github.com/hadolint/hadolint) docker file linting
 - [swaggo](https://github.com/swaggo/swag) for generating swagger files from annotations
-- [mark](https://github.com/kovetskiy/mark) for syncing markdown documentation to Confluence
 - [golangci-lint](https://github.com/golangci/golangci-lint) a multi-linter for Go
 - [helm](https://helm.sh/) a k8s package manager
 - [goveralls](https://github.com/mattn/goveralls) a Coveralls cli tool

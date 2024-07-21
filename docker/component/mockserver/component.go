@@ -55,6 +55,7 @@ func readyFunc(session *docker.Session) error {
 		if err != nil {
 			return fmt.Errorf("could not connect to mockserver: %w", err)
 		}
+		defer func() { _ = resp.Body.Close() }()
 
 		if resp.StatusCode != http.StatusOK {
 			return fmt.Errorf("got status code: %d", resp.StatusCode)

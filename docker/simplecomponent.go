@@ -154,7 +154,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 	for serviceName, port := range conf.ServicePorts {
 		err := session.RegisterInternalDockerService(serviceName, runOpts.Name+":"+port)
 		if err != nil {
-			return nil
+			return fmt.Errorf("register service %s: %w", serviceName, err)
 		}
 		if !session.inDocker {
 			hport, ok := hostPorts[serviceName]
@@ -163,7 +163,7 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 			}
 			err := session.RegisterHostMappedDockerService(serviceName, "localhost:"+hport)
 			if err != nil {
-				return nil
+				return fmt.Errorf("register host service %s: %w", serviceName, err)
 			}
 		}
 	}

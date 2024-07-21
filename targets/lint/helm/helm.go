@@ -67,7 +67,7 @@ func helmCreateTemplateIfNotExists(path string) error {
 	templatePath := filepath.Join(path, "templates")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		fmt.Printf("lint: creating helm chart template path: %s\n", templatePath)
-		err = os.Mkdir(templatePath, os.ModePerm)
+		err = os.Mkdir(templatePath, os.ModePerm) // nolint: gosec
 		if err != nil {
 			return fmt.Errorf("failed to create helm chart template path %s: %w", templatePath, err)
 		}

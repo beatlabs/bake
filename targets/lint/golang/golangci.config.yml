@@ -1,6 +1,7 @@
 run:
   timeout: 5m
-  tests: true
+  tests: true  
+  issues-exit-code: 1
   modules-download-mode: vendor
   build-tags:
     - component
@@ -9,24 +10,63 @@ run:
 linters:
   disable-all: true
   enable:
-    - govet
-    - revive
-    - gofumpt
-    - gosec
+    - gofmt
+    - gosimple
     - unparam
     - goconst
     - prealloc
     - stylecheck
     - unconvert
-    - errcheck
-    - ineffassign
     - unused
+    - staticcheck
+    - ineffassign
+    - gosec
     - tparallel
     - whitespace
-    - staticcheck
-    - gosimple
+    - revive
+    - godot
+    - errorlint
     - gocritic
+    - errname
+    - govet
+    - predeclared
+    - nestif
+    - exhaustive
+    - tenv
+    - gofumpt
+    - forcetypeassert
+    - nilerr
+    - errcheck
+    - bodyclose
+    - goimports
+    - durationcheck
+    - errchkjson
+    - sloglint
+    - dupword
+    - noctx
+    - makezero
+    - nilnil
+    - reassign
+    - sloglint
+    - spancheck
+    - testifylint
+    - wastedassign
+    - rowserrcheck
+    - sqlclosecheck
+    - goprintffuncname
+    - tagalign
+    - testableexamples
+    - wastedassign
+    - nonamedreturns
+    - perfsprint
+    - dogsled
+    - protogetter
+    - usestdlibvars
+    - testableexamples
 
 issues:
   exclude-use-default: false
   max-same-issues: 0
+  exclude-dirs:
+    - vendor
+

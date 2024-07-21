@@ -16,18 +16,17 @@ import (
 )
 
 var (
-	// BakeSessionLocation where current bake session file is located
+	// BakeSessionLocation where current bake session file is located.
 	BakeSessionLocation = "test/.bakesession"
-	// ServiceName name of service under test
-	// use name as it appears in the .bakesession file
+	// ServiceName name of service under test use name as it appears in the .bakesession file.
 	ServiceName = ""
-	// ExtraRules allows to add extra replacement rules
+	// ExtraRules allows to add extra replacement rules.
 	ExtraRules = env.ReplacementRuleList{}
-	// OutputFileLocation where to dump output envs
+	// OutputFileLocation where to dump output envs.
 	OutputFileLocation = ".env.localhost"
 )
 
-// Session groups together interactions with bake session services
+// Session groups together interactions with bake session services.
 type Session mg.Namespace
 
 const namespace = "session"
@@ -69,7 +68,6 @@ func (Session) DumpEnv() error {
 	return nil
 }
 
-// dumpToFile envs to a file
 func dumpToFile(envs map[string]string, filename string) error {
 	lines := make([]string, 0, len(envs))
 	for key, val := range envs {

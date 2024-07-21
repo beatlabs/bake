@@ -40,8 +40,8 @@ var (
 	}
 	// Pkgs is the pkg pattern to target.
 	Pkgs = "./..."
-	// CoverExcludePatterns is a list of pkg patterns to prune from coverage.txt
-	CoverExcludePatterns = []string{"proto/generated"}
+	// CoverExcludePatterns is a list of pkg patterns to prune from coverage.txt.
+	CoverExcludePatterns = []string{}
 	// CoverExcludeFile is the coverage file to prune.
 	CoverExcludeFile = "coverage.txt"
 )

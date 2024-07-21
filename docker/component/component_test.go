@@ -82,16 +82,16 @@ func TestConsul(t *testing.T) {
 	require.NoError(t, err)
 
 	consulClient, err := consul.NewClient(consulAddr)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = consulClient.DeleteTree("services/")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = consulClient.Put("services/foo/bar", "23")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = consulClient.Delete("services/foo/bar")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestRedis(t *testing.T) {
@@ -101,7 +101,7 @@ func TestRedis(t *testing.T) {
 	redisClient := redis.NewClient(redisAddr)
 
 	_, err = redisClient.Set(context.Background(), "foo", "bar", time.Second).Result()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestMongo(t *testing.T) {
@@ -109,26 +109,26 @@ func TestMongo(t *testing.T) {
 	require.NoError(t, err)
 
 	mongoClient, err := mongodb.NewClient(context.Background(), mongoAddr)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	err = mongoClient.Ping(context.Background(), nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestKafka(t *testing.T) {
 	kafkaAddr, err := session.AutoServiceAddress(kafka.KafkaServiceName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	kafkaClient, err := sarama.NewClient([]string{kafkaAddr}, nil)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	topics, err := kafkaClient.Topics()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Contains(t, topics, "foo")
 }
 
 func TestMockServer(t *testing.T) {
 	mockServerAddr, err := session.AutoServiceAddress(mockserver.ServiceName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	mockServerClient := mockserver.NewClient(mockServerAddr)
 	err = mockServerClient.CreateExpectation(
 		mockserver.Expectation{
@@ -141,24 +141,30 @@ func TestMockServer(t *testing.T) {
 			},
 			Times: mockserver.CallTimes{Unlimited: true},
 		})
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	res, err := http.Get("http://" + mockServerAddr)
-	assert.NoError(t, err)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "http://"+mockServerAddr, nil)
+	require.NoError(t, err)
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err)
+	require.NoError(t, res.Body.Close())
 	assert.Equal(t, 200, res.StatusCode)
 	assert.Equal(t, "test", res.Header.Get("X-Test"))
 
 	err = mockServerClient.Reset()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestExampleService(t *testing.T) {
 	testServiceAddr, err := session.AutoServiceAddress(testservice.ServiceName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	resp, err := http.Get("http://" + testServiceAddr)
-	assert.NoError(t, err)
-	assert.Equal(t, 200, resp.StatusCode)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "http://"+testServiceAddr, nil)
+	require.NoError(t, err)
+	rsp, err := http.DefaultClient.Do(req)
+	require.NoError(t, err)
+	require.NoError(t, rsp.Body.Close())
+	assert.Equal(t, 200, rsp.StatusCode)
 }
 
 func checkErr(err error) {

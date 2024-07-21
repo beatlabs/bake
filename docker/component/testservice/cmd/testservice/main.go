@@ -65,5 +65,5 @@ func main() {
 
 // Health is a simple health endpoint.
 func Health(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintf(w, "OK")
+	_, _ = fmt.Fprintf(w, "OK")
 }

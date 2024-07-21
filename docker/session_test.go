@@ -11,9 +11,9 @@ import (
 func TestHostMapping(t *testing.T) {
 	sess := Session{hostMappedServiceAddresses: map[string]string{}}
 	err := sess.RegisterHostMappedDockerService("redis", "8080")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	assert.Equal(t, sess.hostMappedServiceAddresses["redis"], "8080")
+	assert.Equal(t, "8080", sess.hostMappedServiceAddresses["redis"])
 }
 
 func TestHostMappingError(t *testing.T) {
@@ -25,7 +25,7 @@ func TestHostMappingError(t *testing.T) {
 func TestDockerToDocker(t *testing.T) {
 	sess := Session{hostMappedServiceAddresses: map[string]string{"redis": "8080"}}
 	_, err := sess.HostToDockerServiceAddress("redis")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestDockerToDockerError(t *testing.T) {
@@ -41,7 +41,7 @@ func TestPersistAndLoadingSession(t *testing.T) {
 		inDocker:  false,
 	}
 	err := sess.PersistToFile(DefaultSessionFile)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	loadedSession, err := LoadSessionFromFile(false, DefaultSessionFile)
 	require.NoError(t, err)
