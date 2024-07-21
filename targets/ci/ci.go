@@ -2,13 +2,10 @@
 package ci
 
 import (
-	"os"
-
 	gocode "github.com/beatlabs/bake/targets/code/golang"
 	dockerlint "github.com/beatlabs/bake/targets/lint/docker"
 	golint "github.com/beatlabs/bake/targets/lint/golang"
 	"github.com/beatlabs/bake/targets/prometheus"
-	"github.com/beatlabs/bake/targets/proto"
 	"github.com/beatlabs/bake/targets/swagger"
 	"github.com/beatlabs/bake/targets/test"
 	"github.com/magefile/mage/mg"
@@ -26,10 +23,6 @@ func CI() error {
 
 	if swagger.MainGo != "" {
 		targets = append(targets, swagger.Swagger{}.Check)
-	}
-
-	if _, err := os.Stat(proto.SchemasLocation); !os.IsNotExist(err) {
-		targets = append(targets, proto.Proto{}.SchemaValidateAll)
 	}
 
 	if prometheus.TestsDir != "" {

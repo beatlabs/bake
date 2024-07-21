@@ -10,7 +10,6 @@
 rectangle "<$go>\nMage" as mage
 rectangle "<$python>\nDiagrams" as diagrams
 rectangle "<$haskell>\nHadolint" as hadolint
-rectangle "<$google>\nProtobuf" as protobuf
 rectangle "<$go>\nSwagger" as swag
 rectangle "<$go>\nHelm" as helm
 rectangle "<$go>\nMark" as mark
@@ -20,7 +19,6 @@ rectangle "<$java>\nPlantUML" as plantuml
 
 mage --> diagrams: convert
 mage --> hadolint: docker lint
-mage --> protobuf: generate
 mage --> swag: generate
 mage --> mark: sync
 mage --> helm: lint
