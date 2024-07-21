@@ -5,11 +5,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestPruneFileNoLines(t *testing.T) {
 	err := pruneCoverageFile("", []string{})
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPruneLines(t *testing.T) {
@@ -28,6 +29,6 @@ test
 	}
 
 	got, err := pruneCoverageLines(input, patterns)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, exp, got)
 }

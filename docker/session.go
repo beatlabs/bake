@@ -142,7 +142,7 @@ func (s *Session) AutoServiceAddress(serviceName string) (string, error) {
 	return s.HostToDockerServiceAddress(serviceName)
 }
 
-// ServiceNames list of registered service names
+// ServiceNames list of registered service names.
 func (s *Session) ServiceNames() []string {
 	serviceNames := make([]string, 0, len(s.serviceAddresses))
 	for serviceName := range s.serviceAddresses {
@@ -172,18 +172,19 @@ func (s *Session) Persist() error {
 }
 
 // GetEnv retrieves bake related env vars, with defaults.
-func GetEnv() (sessionID, networkID string, err error) {
-	sessionID = os.Getenv("BAKE_SESSION_ID")
+func GetEnv() (string, string, error) {
+	sessionID := os.Getenv("BAKE_SESSION_ID")
 	if sessionID == "" {
 		sessionID = "000"
 	}
 
-	networkID = os.Getenv("BAKE_NETWORK_ID")
+	var err error
+	networkID := os.Getenv("BAKE_NETWORK_ID")
 	if networkID == "" {
 		networkID, err = createNetwork(sessionID)
 	}
 
-	return
+	return sessionID, networkID, err
 }
 
 type sessionDump struct {

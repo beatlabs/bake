@@ -98,7 +98,7 @@ func TestBuildContainerName(t *testing.T) {
 				assert.Empty(t, containerName)
 				assert.EqualError(t, err, tt.expErr)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, tt.expContainerName, containerName)
 			}
 		})

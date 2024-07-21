@@ -4,6 +4,7 @@
 package diagram
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -21,8 +22,7 @@ const (
 // InputDiagramPath is a list of files or directories where to search for
 // diagrams source (*.py) files to be compiled into diagrams (*.png) files
 // e.g.:
-// InputDiagramPath = []string{"doc/architecture/arch.py", "doc/topology/servers.py"}
-// Default:
+// InputDiagramPath = []string{"doc/architecture/arch.py", "doc/topology/servers.py"}.
 var InputDiagramPath = []string{"doc/architecture"}
 
 // Diagram groups together test related diagram tasks.
@@ -41,7 +41,7 @@ func (Diagram) Generate() error {
 
 	tmpDir, err := os.MkdirTemp(".", "")
 	if err != nil {
-		return fmt.Errorf("failed to create tmp wd: %s", err)
+		return fmt.Errorf("failed to create tmp wd: %w", err)
 	}
 	defer func() {
 		if err := os.RemoveAll(tmpDir); err != nil {
@@ -51,7 +51,7 @@ func (Diagram) Generate() error {
 
 	wd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("failed to get current working directory: %s", err)
+		return fmt.Errorf("failed to get current working directory: %w", err)
 	}
 	defer func() {
 		if err := os.Chdir(wd); err != nil {
@@ -68,11 +68,11 @@ func (Diagram) Generate() error {
 	for _, f := range absolutePaths {
 		err := sh.RunV(python3CMD, f)
 		if err != nil {
-			return fmt.Errorf("abort generation of remaining diagrams, failed generating diagram for file [%s]: %v", f, err)
+			return fmt.Errorf("abort generation of remaining diagrams, failed generating diagram for file [%s]: %w", f, err)
 		}
 		err = moveAllFilesInDirTo(path.Dir(f))
 		if err != nil {
-			return fmt.Errorf("abort generation of remaining diagrams, failed to move files: %v", err)
+			return fmt.Errorf("abort generation of remaining diagrams, failed to move files: %w", err)
 		}
 	}
 
@@ -82,17 +82,17 @@ func (Diagram) Generate() error {
 func moveAllFilesInDirTo(destination string) error {
 	matches, err := filepath.Glob("*")
 	if err != nil {
-		return fmt.Errorf("error while searching matches in current tmp folder: %v", err)
+		return fmt.Errorf("error while searching matches in current tmp folder: %w", err)
 	}
 	if len(matches) < 1 {
-		return fmt.Errorf("failed to find matches in current tmp folder")
+		return errors.New("failed to find matches in current tmp folder")
 	}
 
 	for _, match := range matches {
 		fname := path.Base(match)
 		err = os.Rename(match, path.Join(destination, fname))
 		if err != nil {
-			return fmt.Errorf("failed to move generated file from [%s] to [%s]: %v", match, path.Join(destination, fname), err)
+			return fmt.Errorf("failed to move generated file from [%s] to [%s]: %w", match, path.Join(destination, fname), err)
 		}
 	}
 

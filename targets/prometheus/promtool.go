@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	// AlertsDir directory where to find alert files to be checked by promtool
+	// AlertsDir directory where to find alert files to be checked by promtool.
 	AlertsDir = "./infra/observe/alerting"
 	// TestsDir directory where alerts tests are located if any, leave empty if no tests.
 	TestsDir = ""

@@ -10,7 +10,7 @@ import (
 // DockerFiles to lint.
 var DockerFiles = []string{"./infra/deploy/local/Dockerfile"}
 
-// Args are are the cli args passsed to Hadolint.
+// Args are the cli args passsed to Hadolint.
 var Args = []string{
 	"--ignore", "DL3008", // Pin versions in apt get install
 	"--ignore", "DL4001", // Either use Wget or Curl but not both

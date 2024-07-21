@@ -73,22 +73,58 @@ func (Go) FmtCheck() error {
 // - Run go mod vendor
 // - Run git add so that any changes resulting from go vendor will be in git staging area
 // - Run git diff to find changes
-// - If there are change we print them, unstage them and exit with 1
+// - If there are change we print them, unstage them and exit with 1.
 func (Go) CheckVendor() error {
 	sh.PrintStartTarget(namespace, "checkVendor")
 
-	cmd := `rm -rf vendor && go mod vendor && git add vendor && \
-git diff --cached --quiet -- vendor || \
-(git --no-pager diff --cached -- vendor && git reset vendor && exit 1)`
+	tmpFile, err := os.CreateTemp("", "verify-vendor-*.sh")
+	if err != nil {
+		return err
+	}
+	defer func() { _ = os.Remove(tmpFile.Name()) }()
 
-	return sh.RunV("bash", "-c", cmd)
+	cmd := `
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+tmp="$(mktemp -d)"
+go mod vendor -o "$tmp"
+if ! _out="$(diff -Naupr vendor $tmp)"; then
+  echo "Verify vendor failed" >&2
+  echo "If you're seeing this locally, run the below command to fix your go.mod:" >&2
+  echo "go mod vendor" >&2
+  exit 1
+fi
+`
+
+	content := []byte(cmd)
+	if _, err := tmpFile.Write(content); err != nil {
+		return err
+	}
+
+	if err := tmpFile.Chmod(0o700); err != nil {
+		return err
+	}
+
+	if err := tmpFile.Close(); err != nil {
+		return err
+	}
+
+	// 	cmd := `rm -rf vendor && go mod vendor && git add vendor && \
+	// git diff --cached --quiet -- vendor || \
+	// (git --no-pager diff --cached -- vendor && git reset vendor && exit 1)`
+
+	return sh.RunV("bash", "-c", tmpFile.Name())
 }
 
 const goCmd = "go"
 
 func getAllGoFiles(path string) ([]string, error) {
 	var files []string
-	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(path, func(path string, _ os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}

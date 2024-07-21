@@ -77,11 +77,11 @@ func generate(output string) error {
 func compareFiles(file1, file2 string) error {
 	f1, err := os.ReadFile(filepath.Clean(file1))
 	if err != nil {
-		return fmt.Errorf("failed to open read %s,: %v", file1, err)
+		return fmt.Errorf("failed to open read %s,: %w", file1, err)
 	}
 	f2, err := os.ReadFile(filepath.Clean(file2))
 	if err != nil {
-		return fmt.Errorf("failed to open read %s,: %v", file2, err)
+		return fmt.Errorf("failed to open read %s,: %w", file2, err)
 	}
 
 	if bytes.Equal(f1, f2) {

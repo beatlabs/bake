@@ -2,6 +2,7 @@ package mockserver
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -24,7 +25,7 @@ type QueryParameter struct {
 	Values []string `json:"values"`
 }
 
-// Delay representes the amount of that that mockserver delays the response by.
+// Delay representes the amount of that mockserver delays the response by.
 type Delay struct {
 	TimeUnit TimeUnit `json:"timeUnit"`
 	Value    int      `json:"value"`
@@ -112,7 +113,7 @@ func (c *Client) CreateExpectation(expectation Expectation) error {
 		return err
 	}
 
-	req, err := http.NewRequest(http.MethodPut, c.host+"/expectation", bytes.NewReader(reqBody))
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPut, c.host+"/expectation", bytes.NewReader(reqBody))
 	if err != nil {
 		return err
 	}
@@ -121,6 +122,7 @@ func (c *Client) CreateExpectation(expectation Expectation) error {
 	if err != nil {
 		return err
 	}
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusCreated {
 		return fmt.Errorf("201 status expected but %d received", resp.StatusCode)
@@ -131,7 +133,7 @@ func (c *Client) CreateExpectation(expectation Expectation) error {
 
 // Reset deletes all expectations and recorded requests in mockserver.
 func (c *Client) Reset() error {
-	req, err := http.NewRequest(http.MethodPut, c.host+"/reset", nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPut, c.host+"/reset", nil)
 	if err != nil {
 		return err
 	}
@@ -140,6 +142,7 @@ func (c *Client) Reset() error {
 	if err != nil {
 		return err
 	}
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("200 status expected but %d received", resp.StatusCode)

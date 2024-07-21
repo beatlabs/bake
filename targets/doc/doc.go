@@ -50,7 +50,7 @@ func (Doc) ConfluenceSync() error {
 
 	current, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("failed to get current working directory")
+		return errors.New("failed to get current working directory")
 	}
 
 	docs, err := getDocs(".")

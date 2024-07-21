@@ -2,7 +2,6 @@
 package yarn
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/beatlabs/bake/internal/sh"
@@ -68,5 +67,5 @@ func (y Yarn) prepScript() []string {
 }
 
 func (y Yarn) setToken() error {
-	return sh.RunV("npm", strings.Split(fmt.Sprintf("config set //registry.npmjs.org/:_authToken=%s", NpmToken), " ")...)
+	return sh.RunV("npm", "config", "set", "//registry.npmjs.org/:_authToken="+NpmToken)
 }

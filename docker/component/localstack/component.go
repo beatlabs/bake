@@ -2,6 +2,7 @@
 package localstack
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -54,10 +55,16 @@ func readyFunc(session *docker.Session) error {
 	}
 
 	return docker.Retry(func() error {
-		resp, err := http.Get(fmt.Sprintf("http://%s/health", addr))
+		req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, fmt.Sprintf("http://%s/health", addr), nil)
+		if err != nil {
+			return fmt.Errorf("failed to create health request: %w", err)
+		}
+
+		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			return err
 		}
+		defer func() { _ = resp.Body.Close() }()
 
 		if resp.StatusCode != http.StatusOK {
 			return fmt.Errorf("got status code: %d", resp.StatusCode)

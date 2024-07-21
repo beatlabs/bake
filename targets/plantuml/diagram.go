@@ -1,5 +1,5 @@
 // Package plantuml contains support for compiling your
-// [PlantUML](https://plantuml.com/) text text files to the
+// [PlantUML](https://plantuml.com/) text files to the
 // associated png image
 package plantuml
 
