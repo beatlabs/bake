@@ -45,7 +45,11 @@ func (l Lint) Go() error {
 	defer func() { _ = os.Remove(path) }()
 	args += "--config " + path
 
-	return sh.RunV("golangci-lint", strings.Split(args, " ")...)
+	envs := map[string]string{
+		"GOFLAGS": "-buildvcs=false",
+	}
+
+	return sh.RunWithV(envs, "golangci-lint", strings.Split(args, " ")...)
 }
 
 func persistDefaultFile() (string, error) {
