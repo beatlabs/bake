@@ -1,12 +1,6 @@
-FROM golang:1.22 AS builder
-
-ARG TARGETARCH
-
 FROM golang:1.22
 ARG TARGETARCH
 RUN echo Building bake image for $TARGETARCH architecture
-
-# COPY --from=builder /go/bin/skim /go/bin/skim
 
 RUN apt-get update && \
   apt-get install -y \
