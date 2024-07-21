@@ -12,7 +12,6 @@ RUN apt-get update && \
   software-properties-common \
   python3-pip `# dependency: diagrams`\
   graphviz `# dependency: diagrams,plantuml`\
-  default-jre `# dependency: plantuml`\
   && rm -rf /var/lib/apt/lists/*
 
 ARG NODE_VERSION=16
@@ -88,12 +87,6 @@ RUN case "${TARGETARCH}" in \
   "arm64")  PROMTOOL_ARCH=arm64  ;; \
   esac && \
   wget -qc "https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}/promtool" /usr/bin && rm -rf "/tmp/prometheus-${PROMTOOL_VERSION}.linux-${PROMTOOL_ARCH}"
-
-# Download plantuml
-# https://github.com/plantuml/plantuml
-# Download to /usr/bin and run with java -jar /usr/bin/plantuml.jar
-ARG PLANTUML_VERSION=1.2023.12
-RUN wget -O /usr/bin/plantuml.jar -qc https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
 
 # Restore permissions as per https://hub.docker.com/_/golang
 RUN chmod 777 -R /go
