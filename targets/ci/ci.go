@@ -6,7 +6,6 @@ import (
 	dockerlint "github.com/beatlabs/bake/targets/lint/docker"
 	golint "github.com/beatlabs/bake/targets/lint/golang"
 	"github.com/beatlabs/bake/targets/prometheus"
-	"github.com/beatlabs/bake/targets/swagger"
 	"github.com/beatlabs/bake/targets/test"
 	"github.com/magefile/mage/mg"
 )
@@ -20,10 +19,6 @@ func CI() error {
 		dockerlint.Lint{}.Docker,
 		prometheus.Prometheus{}.Lint,
 	)
-
-	if swagger.MainGo != "" {
-		targets = append(targets, swagger.Swagger{}.Check)
-	}
 
 	if prometheus.TestsDir != "" {
 		targets = append(targets, prometheus.Prometheus{}.Test)

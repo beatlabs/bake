@@ -1,32 +1,18 @@
 FROM golang:1.22
 ARG TARGETARCH
-RUN echo Building bake image for $TARGETARCH architecture
+RUN echo Building bake image for ${TARGETARCH} architecture
 
 RUN apt-get update && \
   apt-get install -y \
   --no-install-recommends \
-  apt-transport-https \
   unzip \
   ca-certificates \
   gnupg-agent \
-  software-properties-common \  
-  && rm -rf /var/lib/apt/lists/*
+  software-properties-common
 
-ARG NODE_VERSION=16
-ARG YARN_VERSION=1.22.17
-ARG NPM_VERSION=8.1.2
-RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
-RUN apt-get install -y --no-install-recommends nodejs=${NODE_VERSION}.*
-RUN npm install -g npm@${NPM_VERSION}
-RUN npm install -g yarn@${YARN_VERSION}
+RUN curl -fsSL https://get.docker.com | sh
 
-ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-  add-apt-repository "deb [arch=${TARGETARCH}] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
-  apt-get -y update && \
-  apt-get install -y docker-ce \
-  --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
+RUN rm -rf /var/lib/apt/lists/*
 
 # CGO is required by some modules like https://github.com/uber/h3-go
 ENV CGO_ENABLED=1
@@ -49,16 +35,8 @@ RUN case "${TARGETARCH}" in \
   esac && \
   wget -qO /usr/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH}" && chmod +x /usr/bin/hadolint
 
-# Download and install swag into bin path
-ARG SWAG_VERSION=1.8.4
-RUN case "${TARGETARCH}" in \
-  "amd64")  SWAG_ARCH=x86_64  ;; \
-  "arm64")  SWAG_ARCH=aarch64  ;; \
-  esac && \
-  wget -qc "https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin swag
-
 # Download and install helm 3 into bin path
-ARG HELM_VERSION=3.13.2
+ARG HELM_VERSION=3.15.3
 RUN case "${TARGETARCH}" in \
   "amd64")  HELM_ARCH=amd64  ;; \
   "arm64")  HELM_ARCH=arm64  ;; \
@@ -71,7 +49,7 @@ RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/ins
 
 # Download and install promtool
 # https://prometheus.io/download/
-ARG PROMTOOL_VERSION=2.48.0
+ARG PROMTOOL_VERSION=2.53.1
 RUN case "${TARGETARCH}" in \
   "amd64")  PROMTOOL_ARCH=amd64  ;; \
   "arm64")  PROMTOOL_ARCH=arm64  ;; \
