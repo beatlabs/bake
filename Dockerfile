@@ -59,14 +59,6 @@ RUN case "${TARGETARCH}" in \
   esac && \
   wget -qc "https://github.com/swaggo/swag/releases/download/v${SWAG_VERSION}/swag_${SWAG_VERSION}_Linux_${SWAG_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin swag
 
-# Download and install mark into bin path
-ARG MARK_VERSION=6.7
-RUN case "${TARGETARCH}" in \
-  "amd64")  MARK_ARCH=x86_64  ;; \
-  "arm64")  MARK_ARCH=arm64  ;; \
-  esac && \
-  wget -qc "https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_${MARK_VERSION}_Linux_${MARK_ARCH}.tar.gz" -O - | tar -xz -C /usr/bin mark
-
 # Download and install helm 3 into bin path
 ARG HELM_VERSION=3.13.2
 RUN case "${TARGETARCH}" in \
