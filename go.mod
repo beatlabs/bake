@@ -10,7 +10,7 @@ require (
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.11.0
 	github.com/stretchr/testify v1.9.0
-	go.mongodb.org/mongo-driver v1.16.1
+	go.mongodb.org/mongo-driver v1.17.0
 	golang.org/x/sync v0.8.0
 )
 
@@ -74,7 +74,7 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
-	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
+	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
 	golang.org/x/net v0.28.0 // indirect
