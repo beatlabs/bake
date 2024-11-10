@@ -24,12 +24,7 @@ jobs:
         run: ./bake.sh ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Convert coverage file to lcov
-        run: |
-          GO111MODULE=off go get -u github.com/jandelgado/gcov2lcov
-          $(go env GOPATH)/bin/gcov2lcov -infile=coverage.txt -outfile=coverage.lcov
-
+      
       - name: Codecov
         uses: codecov/codecov-action@v4
         with:
