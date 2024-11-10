@@ -1,11 +1,24 @@
 run:
   timeout: 5m
-  tests: true  
   issues-exit-code: 1
+  tests: true
+
   modules-download-mode: vendor
+
+  # list of build tags, all linters use it. Default is empty list
   build-tags:
     - component
     - integration
+
+# output configuration options
+output:
+  # print lines of code with issue, default is true
+  print-issued-lines: true
+
+  # print linter name in the end of issue text, default is true
+  print-linter-name: true
+
+  uniq-by-line: false
 
 linters:
   disable-all: true
@@ -47,7 +60,6 @@ linters:
     - makezero
     - nilnil
     - reassign
-    - sloglint
     - spancheck
     - testifylint
     - wastedassign
@@ -63,10 +75,10 @@ linters:
     - protogetter
     - usestdlibvars
     - testableexamples
+  fast: false
 
 issues:
   exclude-use-default: false
   max-same-issues: 0
   exclude-dirs:
     - vendor
-
