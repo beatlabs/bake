@@ -11,7 +11,7 @@ require (
 	github.com/ory/dockertest/v3 v3.11.0
 	github.com/stretchr/testify v1.10.0
 	go.mongodb.org/mongo-driver v1.17.1
-	golang.org/x/sync v0.9.0
+	golang.org/x/sync v0.10.0
 )
 
 require (
