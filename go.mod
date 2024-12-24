@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/IBM/sarama v1.43.3
 	github.com/cenkalti/backoff/v3 v3.2.2
-	github.com/hashicorp/consul/api v1.30.0
+	github.com/hashicorp/consul/api v1.31.0
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.11.0
 	github.com/redis/go-redis/v9 v9.7.0
