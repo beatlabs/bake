@@ -1,11 +1,12 @@
 module github.com/beatlabs/bake
 
 go 1.22
+toolchain go1.23.6
 
 require (
 	github.com/IBM/sarama v1.45.0
 	github.com/cenkalti/backoff/v3 v3.2.2
-	github.com/hashicorp/consul/api v1.31.0
+	github.com/hashicorp/consul/api v1.31.2
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.11.0
 	github.com/redis/go-redis/v9 v9.7.0
@@ -78,7 +79,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	golang.org/x/crypto v0.32.0 // indirect
-	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
+	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
