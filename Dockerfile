@@ -37,7 +37,7 @@ RUN case "${TARGETARCH}" in \
   wget -qO /usr/bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${HADOLINT_ARCH}" && chmod +x /usr/bin/hadolint
 
 # Download and install helm 3 into bin path
-ARG HELM_VERSION=3.15.3
+ARG HELM_VERSION=3.17.1
 RUN case "${TARGETARCH}" in \
   "amd64")  HELM_ARCH=amd64  ;; \
   "arm64")  HELM_ARCH=arm64  ;; \
@@ -45,7 +45,7 @@ RUN case "${TARGETARCH}" in \
   wget -qc "https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/linux-${HELM_ARCH}/helm" /usr/bin && rm -rf "/tmp/linux-${HELM_ARCH}"
 
 # Download and install golangci-lint into go bin path
-ARG GOLANGCILINT_VERSION=1.59.1
+ARG GOLANGCILINT_VERSION=1.64.7
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
 # Restore permissions as per https://hub.docker.com/_/golang
