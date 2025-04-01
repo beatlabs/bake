@@ -3,7 +3,7 @@ module github.com/beatlabs/bake
 go 1.24
 
 require (
-	github.com/IBM/sarama v1.45.0
+	github.com/IBM/sarama v1.45.1
 	github.com/cenkalti/backoff/v3 v3.2.2
 	github.com/hashicorp/consul/api v1.31.2
 	github.com/magefile/mage v1.15.0
