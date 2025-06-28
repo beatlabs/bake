@@ -8,10 +8,10 @@ require (
 	github.com/hashicorp/consul/api v1.32.1
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.12.0
-	github.com/redis/go-redis/v9 v9.9.0
+	github.com/redis/go-redis/v9 v9.11.0
 	github.com/stretchr/testify v1.10.0
-	go.mongodb.org/mongo-driver v1.17.3
-	golang.org/x/sync v0.14.0
+	go.mongodb.org/mongo-driver v1.17.4
+	golang.org/x/sync v0.15.0
 )
 
 require (
@@ -33,7 +33,7 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
-	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
+	github.com/go-viper/mapstructure/v2 v2.3.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
