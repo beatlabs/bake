@@ -2,6 +2,7 @@ package docker
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"net"
@@ -204,8 +205,11 @@ func Retry(op func() error) error {
 
 // GetFreePort tries to find a free port on the current machine.
 func GetFreePort() (string, error) {
-	/* #nosec */
-	l, err := net.Listen("tcp", ":0")
+	listernCfg := net.ListenConfig{
+		// Configure the listener as needed
+	}
+
+	l, err := listernCfg.Listen(context.Background(), "tcp", ":0") // similar to
 	if err != nil {
 		return "", fmt.Errorf("failed to obtain port: %w", err)
 	}
