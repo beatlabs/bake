@@ -103,11 +103,9 @@ github.com/golang/snappy
 # github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 ## explicit; go 1.13
 github.com/google/shlex
-# github.com/hashicorp/consul/api v1.32.1
-## explicit; go 1.23.8
+# github.com/hashicorp/consul/api v1.32.4
+## explicit; go 1.25.0
 github.com/hashicorp/consul/api
-# github.com/hashicorp/consul/sdk v0.16.2
-## explicit; go 1.22.12
 # github.com/hashicorp/errwrap v1.1.0
 ## explicit
 github.com/hashicorp/errwrap
@@ -222,9 +220,6 @@ github.com/mattn/go-isatty
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
-# github.com/mitchellh/mapstructure v1.5.0
-## explicit; go 1.14
-github.com/mitchellh/mapstructure
 # github.com/moby/docker-image-spec v1.3.1
 ## explicit; go 1.18
 github.com/moby/docker-image-spec/specs-go/v1
