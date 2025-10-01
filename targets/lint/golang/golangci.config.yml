@@ -18,9 +18,6 @@ output:
   # print linter name in the end of issue text, default is true
   print-linter-name: true
 
-issues:
-  uniq-by-line: false
-
 linters:
   disable-all: true
   enable:
@@ -79,6 +76,7 @@ linters:
   fast: false
 
 issues:
+  uniq-by-line: false
   exclude-use-default: false
   max-same-issues: 0
   exclude-dirs:
