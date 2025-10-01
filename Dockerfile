@@ -44,7 +44,7 @@ RUN case "${TARGETARCH}" in \
   wget -qc "https://get.helm.sh/helm-v${HELM_VERSION}-linux-${HELM_ARCH}.tar.gz" -O - | tar -xz -C /tmp && mv "/tmp/linux-${HELM_ARCH}/helm" /usr/bin && rm -rf "/tmp/linux-${HELM_ARCH}"
 
 # Download and install golangci-lint into go bin path
-ARG GOLANGCILINT_VERSION=1.64.7
+ARG GOLANGCILINT_VERSION=2.5.0
 RUN wget -qc https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh -O - | /bin/sh -s -- -b "$(go env GOPATH)/bin" v${GOLANGCILINT_VERSION}
 
 # Restore permissions as per https://hub.docker.com/_/golang
