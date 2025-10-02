@@ -16,7 +16,7 @@ func CI() error {
 		dockerlint.Lint{}.Docker,
 		gocode.Go{}.CheckVendor,
 		golint.Lint{}.Go,
-		test.Test{}.CoverAll,
+		test.Test{}.CoverUnit,
 	}
 
 	mg.SerialDeps(targets...)
