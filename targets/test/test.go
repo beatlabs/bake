@@ -32,10 +32,10 @@ var (
 	CoverArgs = []string{
 		"test",
 		"-mod=vendor",
-		"-p=1",
 		"-coverpkg=./...",
 		"-covermode=atomic",
 		"-coverprofile=coverage.txt",
+		"-race",
 		"-shuffle=on",
 	}
 	// Pkgs is the pkg pattern to target.
