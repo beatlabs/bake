@@ -18,19 +18,15 @@ const (
 func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	container := docker.SimpleContainerConfig{
 		Name:       componentName,
-		Repository: "bitnami/redis",
-		Tag:        "latest",
-		Env: []string{
-			"ALLOW_EMPTY_PASSWORD=yes",
-		},
+		Repository: "redis",
+		Tag:        "7-alpine",
 		ServicePorts: map[string]string{
 			ServiceName: "6379",
 		},
 		ReadyFunc: readyFunc,
 		// Disable redis protected mode, in this mode connections are only accepted from the loopback interface
-		// https://hub.docker.com/r/bitnami/redis/
 		RunOpts: &docker.RunOptions{
-			Cmd: []string{"/opt/bitnami/scripts/redis/run.sh", "--protected-mode", "no"},
+			Cmd: []string{"redis-server", "--protected-mode", "no"},
 		},
 	}
 

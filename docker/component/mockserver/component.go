@@ -2,6 +2,7 @@
 package mockserver
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -45,7 +46,7 @@ func readyFunc(session *docker.Session) error {
 		return err
 	}
 
-	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://%s/status", addr), nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodPut, fmt.Sprintf("http://%s/status", addr), nil)
 	if err != nil {
 		return fmt.Errorf("failed to create status request to mockserver: %w", err)
 	}
