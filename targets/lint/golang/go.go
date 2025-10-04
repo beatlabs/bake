@@ -32,7 +32,7 @@ func (l Lint) GoShowConfig() error {
 func (l Lint) Go() error {
 	sh.PrintStartTarget(namespace, "go")
 
-	args := "run --out-format=colored-line-number "
+	args := "run -v "
 
 	path, err := persistDefaultFile()
 	if err != nil {
