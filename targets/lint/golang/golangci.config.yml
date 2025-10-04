@@ -1,34 +1,26 @@
+## yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
+version: "2"
+
 run:
   timeout: 5m
   issues-exit-code: 1
   tests: true
-
   modules-download-mode: vendor
-
-  # list of build tags, all linters use it. Default is empty list
   build-tags:
     - component
     - integration
 
-# output configuration options
 output:
-  # print lines of code with issue, default is true
   print-issued-lines: true
-
-  # print linter name in the end of issue text, default is true
   print-linter-name: true
 
-  uniq-by-line: false
-
 linters:
-  disable-all: true
+  default: none
   enable:
-    - gofmt
-    - gosimple
+    # analyzers / style / correctness
     - unparam
     - goconst
     - prealloc
-    - stylecheck
     - unconvert
     - unused
     - staticcheck
@@ -45,13 +37,10 @@ linters:
     - predeclared
     - nestif
     - exhaustive
-    - tenv
-    - gofumpt
     - forcetypeassert
     - nilerr
     - errcheck
     - bodyclose
-    - goimports
     - durationcheck
     - errchkjson
     - sloglint
@@ -62,22 +51,28 @@ linters:
     - reassign
     - spancheck
     - testifylint
-    - wastedassign
     - rowserrcheck
     - sqlclosecheck
     - goprintffuncname
     - tagalign
     - testableexamples
-    - wastedassign
     - nonamedreturns
     - perfsprint
     - dogsled
     - protogetter
     - usestdlibvars
-    - testableexamples
-  fast: false
+  # (fast option removed in v2; default behavior is acceptable.)
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+    - gofumpt
+  settings:
+    goimports: {}
 
 issues:
+  uniq-by-line: false
   exclude-use-default: false
   max-same-issues: 0
   exclude-dirs:
