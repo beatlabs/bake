@@ -103,8 +103,8 @@ github.com/golang/snappy
 # github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 ## explicit; go 1.13
 github.com/google/shlex
-# github.com/hashicorp/consul/api v1.32.4
-## explicit; go 1.25.0
+# github.com/hashicorp/consul/api v1.33.0
+## explicit; go 1.25.3
 github.com/hashicorp/consul/api
 # github.com/hashicorp/errwrap v1.1.0
 ## explicit
@@ -240,7 +240,7 @@ github.com/opencontainers/go-digest
 ## explicit; go 1.18
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
-# github.com/opencontainers/runc v1.3.0
+# github.com/opencontainers/runc v1.3.3
 ## explicit; go 1.23.0
 github.com/opencontainers/runc/libcontainer/user
 # github.com/ory/dockertest/v3 v3.12.0
