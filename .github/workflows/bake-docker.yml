@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Get release version
         # Expect release tags to be in semver format with a 'v' prefix.
