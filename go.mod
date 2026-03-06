@@ -1,11 +1,11 @@
 module github.com/beatlabs/bake
 
-go 1.25.5
+go 1.25.7
 
 require (
 	github.com/IBM/sarama v1.47.0
 	github.com/cenkalti/backoff/v3 v3.2.2
-	github.com/hashicorp/consul/api v1.33.2
+	github.com/hashicorp/consul/api v1.33.4
 	github.com/magefile/mage v1.15.0
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/redis/go-redis/v9 v9.17.3
