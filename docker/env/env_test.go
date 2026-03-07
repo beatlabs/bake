@@ -48,7 +48,7 @@ func TestGetServiceEnvs(t *testing.T) {
 	assert.Equal(t, map[string]string{
 		"PATRON_HTTP_DEFAULT_PORT":   "65071",
 		"TEST_SERVICE":               "test_service",
-		"TEST_SERVICE_MONGO_URI":     "mongodb://root:password@localhost:64952/?connect=direct",
+		"TEST_SERVICE_MONGO_URI":     "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		"TEST_SERVICE_SQS_ENDPOINT":  "http://localhost:64950",
 		"TEST_SERVICE_SQS_QUEUE":     "the_queue",
 		"TEST_SERVICE_KAFKA_BROKERS": "localhost:64949",

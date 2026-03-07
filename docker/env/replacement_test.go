@@ -89,38 +89,38 @@ func TestReplacement_MongoUriRule(t *testing.T) {
 		},
 		"simple mongo uri": {
 			envName: "TEST_URI",
-			input:   "mongodb://root:password@000-mongo:27017",
+			input:   "mongodb://root:password@000-mongo:27017", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
-			output:  "mongodb://root:password@localhost:64952/?connect=direct",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
 		"simple mongo uri with ending /": {
 			envName: "TEST_URI",
-			input:   "mongodb://root:password@000-mongo:27017/",
+			input:   "mongodb://root:password@000-mongo:27017/", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
-			output:  "mongodb://root:password@localhost:64952/?connect=direct",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
 		"mongo uri with query params": {
 			envName: "TEST_MONGO_URI",
-			input:   "mongodb://root:password@000-mongo:27017?retryWrites=true&w=majority",
+			input:   "mongodb://root:password@000-mongo:27017?retryWrites=true&w=majority", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
-			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority", //nolint:gosec // test data
 		},
 		"mongo uri with connect param": {
 			envName: "TEST_MONGO_URI",
-			input:   "mongodb://root:password@000-mongo:27017?connect=direct",
+			input:   "mongodb://root:password@000-mongo:27017?connect=direct", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
-			output:  "mongodb://root:password@localhost:64952/?connect=direct",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
 		"mongo uri with query params with ending /": {
 			envName: "TEST_MONGO_URI",
-			input:   "mongodb://root:password@000-mongo:27017/?retryWrites=true&w=majority",
+			input:   "mongodb://root:password@000-mongo:27017/?retryWrites=true&w=majority", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
-			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority",
+			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority", //nolint:gosec // test data
 		},
 		"other url": {
 			envName: "TEST_HTTP_URL",
