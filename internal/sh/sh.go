@@ -58,7 +58,7 @@ func Run(cmd string, args ...string) error {
 }
 
 func quote(args []string) []string {
-	quoted := []string{}
+	quoted := make([]string, 0, len(args))
 	for i := range args {
 		quoted = append(quoted, fmt.Sprintf("%q", args[i]))
 	}
