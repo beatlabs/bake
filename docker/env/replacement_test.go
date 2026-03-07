@@ -87,35 +87,35 @@ func TestReplacement_MongoUriRule(t *testing.T) {
 			target:  "localhost:64952",
 			output:  "localhost:64952",
 		},
-		"simple mongo uri": {
+		"simple mongo uri": { //nolint:gosec // test data
 			envName: "TEST_URI",
 			input:   "mongodb://root:password@000-mongo:27017", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
 			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
-		"simple mongo uri with ending /": {
+		"simple mongo uri with ending /": { //nolint:gosec // test data
 			envName: "TEST_URI",
 			input:   "mongodb://root:password@000-mongo:27017/", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
 			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
-		"mongo uri with query params": {
+		"mongo uri with query params": { //nolint:gosec // test data
 			envName: "TEST_MONGO_URI",
 			input:   "mongodb://root:password@000-mongo:27017?retryWrites=true&w=majority", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
 			output:  "mongodb://root:password@localhost:64952/?connect=direct&retryWrites=true&w=majority", //nolint:gosec // test data
 		},
-		"mongo uri with connect param": {
+		"mongo uri with connect param": { //nolint:gosec // test data
 			envName: "TEST_MONGO_URI",
 			input:   "mongodb://root:password@000-mongo:27017?connect=direct", //nolint:gosec // test data
 			source:  "000-mongo:27017",
 			target:  "localhost:64952",
 			output:  "mongodb://root:password@localhost:64952/?connect=direct", //nolint:gosec // test data
 		},
-		"mongo uri with query params with ending /": {
+		"mongo uri with query params with ending /": { //nolint:gosec // test data
 			envName: "TEST_MONGO_URI",
 			input:   "mongodb://root:password@000-mongo:27017/?retryWrites=true&w=majority", //nolint:gosec // test data
 			source:  "000-mongo:27017",
