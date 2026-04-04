@@ -12,10 +12,10 @@ import (
 
 	"github.com/IBM/sarama"
 	"github.com/beatlabs/bake/docker"
+	"github.com/beatlabs/bake/docker/component/awsmock"
 	"github.com/beatlabs/bake/docker/component/consul"
 	"github.com/beatlabs/bake/docker/component/jaeger"
 	"github.com/beatlabs/bake/docker/component/kafka"
-	"github.com/beatlabs/bake/docker/component/localstack"
 	"github.com/beatlabs/bake/docker/component/mockserver"
 	"github.com/beatlabs/bake/docker/component/mongodb"
 	"github.com/beatlabs/bake/docker/component/redis"
@@ -49,7 +49,7 @@ func newSession() {
 		kafka.NewComponent(session, kafka.WithTopics("foo:1:1")),
 		consul.NewComponent(docker.WithTag("1.8.0")),
 		jaeger.NewComponent(),
-		localstack.NewComponent(localstack.WithServices("s3")),
+		awsmock.NewComponent(),
 		mockserver.NewComponent(),
 		redis.NewComponent(),
 		mongodb.NewComponent(),
