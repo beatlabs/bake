@@ -1,0 +1,31 @@
+# codecov.yml — validate: curl --data-binary @codecov.yml https://codecov.io/validate
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+        threshold: 5%
+
+ignore:
+  - "vendor/**/*"
+  - "**/testdata/**/*"
+  - "doc/**/*"
+  - "scripts/**/*"
+  - "docker/component/testservice/**/*"
+  - "docker/component/localstack/**/*"
+
+comment:
+  layout: "condensed_header, condensed_files, condensed_footer"
+  behavior: once
+  require_changes: false
+  require_head: true
