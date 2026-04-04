@@ -1,3 +1,5 @@
+// Package localstack is deprecated. Use github.com/beatlabs/bake/docker/component/awsmock instead.
+//
 // Deprecated: Use github.com/beatlabs/bake/docker/component/awsmock instead.
 package localstack
 
