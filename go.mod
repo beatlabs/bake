@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/consul/api v1.33.7
 	github.com/magefile/mage v1.17.1
 	github.com/ory/dockertest/v3 v3.12.0
-	github.com/redis/go-redis/v9 v9.18.0
+	github.com/redis/go-redis/v9 v9.19.0
 	github.com/stretchr/testify v1.11.1
 	go.mongodb.org/mongo-driver v1.17.9
 	golang.org/x/sync v0.20.0
@@ -26,7 +26,6 @@ require (
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/cli v29.2.0+incompatible // indirect
 	github.com/docker/go-connections v0.6.0 // indirect
