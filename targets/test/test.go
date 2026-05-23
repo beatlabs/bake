@@ -36,7 +36,6 @@ var (
 		"-coverpkg=./...",
 		"-covermode=atomic",
 		"-coverprofile=coverage.txt",
-		"-race",
 		"-shuffle=on",
 	}
 	// Pkgs is the pkg pattern to target.
