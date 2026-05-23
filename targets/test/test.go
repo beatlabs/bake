@@ -39,6 +39,12 @@ var (
 		"-race",
 		"-shuffle=on",
 	}
+	// CoverEnv are environment variables applied when running coverage targets.
+	// GOMEMLIMIT prevents OOM kills on memory-constrained CI runners by instructing
+	// Go's GC to reclaim memory aggressively before the OS hard limit is reached.
+	CoverEnv = map[string]string{
+		"GOMEMLIMIT": "5500MiB",
+	}
 	// Pkgs is the pkg pattern to target.
 	Pkgs = "./..."
 	// CoverExcludePatterns is a list of pkg patterns to prune from coverage.txt.
@@ -87,7 +93,7 @@ func (Test) CoverUnit() error {
 	sh.PrintStartTarget(namespace, "coverUnit")
 
 	args := append(CoverArgs, Pkgs) // nolint:gocritic
-	if err := run(args); err != nil {
+	if err := runWithEnv(CoverEnv, args); err != nil {
 		return err
 	}
 	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
@@ -99,7 +105,7 @@ func (Test) CoverAll() error {
 
 	args := CoverArgs
 	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
-	if err := run(args); err != nil {
+	if err := runWithEnv(CoverEnv, args); err != nil {
 		return err
 	}
 	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
@@ -114,6 +120,10 @@ func (Test) Cleanup() error {
 
 func run(args []string) error {
 	return sh.RunV(goCmd, args...)
+}
+
+func runWithEnv(env map[string]string, args []string) error {
+	return sh.RunWithV(env, goCmd, args...)
 }
 
 func getBuildTagFlag(buildTags []string) string {
