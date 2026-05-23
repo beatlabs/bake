@@ -28,12 +28,24 @@ var (
 		"-race",
 		"-shuffle=on",
 	}
-	// CoverArgs used in coverage targets.
+	// CoverArgs used in unit coverage targets. Uses -coverpkg=./... for
+	// cross-package coverage; safe for unit tests which have no Docker overhead.
 	CoverArgs = []string{
 		"test",
 		"-mod=vendor",
 		"-p=1",
 		"-coverpkg=./...",
+		"-covermode=atomic",
+		"-coverprofile=coverage.txt",
+		"-shuffle=on",
+	}
+	// CoverAllArgs used in full coverage targets. Omits -coverpkg=./... to
+	// avoid OOM on memory-constrained CI runners when component/integration
+	// tests also spin up Docker containers.
+	CoverAllArgs = []string{
+		"test",
+		"-mod=vendor",
+		"-p=1",
 		"-covermode=atomic",
 		"-coverprofile=coverage.txt",
 		"-shuffle=on",
@@ -96,7 +108,7 @@ func (Test) CoverUnit() error {
 func (Test) CoverAll() error {
 	sh.PrintStartTarget(namespace, "coverAll")
 
-	args := CoverArgs
+	args := CoverAllArgs
 	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
 	if err := run(args); err != nil {
 		return err
