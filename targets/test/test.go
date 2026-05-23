@@ -32,6 +32,7 @@ var (
 	CoverArgs = []string{
 		"test",
 		"-mod=vendor",
+		"-p=1",
 		"-coverpkg=./...",
 		"-covermode=atomic",
 		"-coverprofile=coverage.txt",

@@ -24,3 +24,4 @@ coverage.lcov
 
 yarn.lock
 node_modules/
+.omo/
