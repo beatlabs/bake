@@ -60,7 +60,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 			"KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE",
 			"KAFKA_HEAP_OPTS=-Xmx256m -Xms128m",
 		},
-		MemoryMB: 512,
+		MemoryMB:  512,
 		ReadyFunc: kafkaReadyFunc,
 	}
 
