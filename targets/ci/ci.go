@@ -16,11 +16,7 @@ func CI() error {
 		dockerlint.Lint{}.Docker,
 		gocode.Go{}.CheckVendor,
 		golint.Lint{}.Go,
-		// CoverUnit instead of CoverAll: component tests start Kafka, MongoDB,
-		// Redis, Consul, Jaeger and more simultaneously, exceeding the 7 GB
-		// memory limit of GitHub-hosted runners. Run CoverAll locally or on a
-		// self-hosted runner with sufficient memory.
-		test.Test{}.CoverUnit,
+		test.Test{}.CoverAll,
 	}
 
 	mg.SerialDeps(targets...)

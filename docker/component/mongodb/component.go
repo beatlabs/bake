@@ -25,13 +25,13 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 		ServicePorts: map[string]string{
 			ServiceName: "27017",
 		},
-
 		ReadyFunc: readyFunc,
 		Env:       []string{},
 		RunOpts: &docker.RunOptions{
-			Cmd:         []string{"--replSet", ReplicaSet},
+			Cmd:         []string{"--replSet", ReplicaSet, "--wiredTigerCacheSizeGB", "0.25"},
 			InitExecCmd: `mongo --eval "rs.initiate()"`,
 		},
+		MemoryMB: 384,
 	}
 
 	for _, opt := range opts {

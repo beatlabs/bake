@@ -28,6 +28,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 		RunOpts: &docker.RunOptions{
 			Cmd: []string{"redis-server", "--protected-mode", "no"},
 		},
+		MemoryMB: 64,
 	}
 
 	for _, opt := range opts {

@@ -39,6 +39,8 @@ type SimpleContainerConfig struct {
 	StaticServicePorts map[string]string
 	ReadyFunc          func(*Session) error
 	RunOpts            *RunOptions
+	// MemoryMB sets a hard memory limit on the container (in MiB, 0 = unlimited).
+	MemoryMB int64
 }
 
 // SimpleContainerOptionFunc allows for customization of SimpleContainerConfigs.
@@ -145,7 +147,13 @@ func (c *SimpleComponent) runContainer(session *Session, conf SimpleContainerCon
 	}
 
 	publishPorts, _ := strconv.ParseBool(os.Getenv("BAKE_PUBLISH_PORTS"))
-	hcOpts := func(hc *docker.HostConfig) { hc.PublishAllPorts = publishPorts }
+	memBytes := conf.MemoryMB * 1024 * 1024
+	hcOpts := func(hc *docker.HostConfig) {
+		hc.PublishAllPorts = publishPorts
+		if memBytes > 0 {
+			hc.Memory = memBytes
+		}
+	}
 	resource, err := pool.RunWithOptions(runOpts, hcOpts)
 	if err != nil {
 		return fmt.Errorf("run %s: %w", fullContainerName, err)

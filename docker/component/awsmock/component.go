@@ -26,6 +26,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 			ServiceName: "5000",
 		},
 		ReadyFunc: readyFunc,
+		MemoryMB:  256,
 	}
 
 	for _, opt := range opts {

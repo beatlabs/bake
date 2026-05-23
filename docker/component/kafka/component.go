@@ -32,10 +32,12 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 		Name:       "zookeeper",
 		Repository: "wurstmeister/zookeeper",
 		Tag:        "latest",
+		Env:        []string{"JVMFLAGS=-Xmx128m -Xms64m"},
 		ServicePorts: map[string]string{
 			ZookeeperServiceName: "2181",
 		},
 		ReadyFunc: zookeeperReadyFunc,
+		MemoryMB:  256,
 	}
 
 	port, _ := docker.GetFreePort()
@@ -56,7 +58,9 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 			"KAFKA_ADVERTISED_LISTENERS=INSIDE://:9092,OUTSIDE://localhost:" + port,
 			"KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT",
 			"KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE",
+			"KAFKA_HEAP_OPTS=-Xmx256m -Xms128m",
 		},
+		MemoryMB: 512,
 		ReadyFunc: kafkaReadyFunc,
 	}
 

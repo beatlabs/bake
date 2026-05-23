@@ -22,12 +22,14 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 		Repository: "mockserver/mockserver",
 		Tag:        "mockserver-5.12.0",
 		Env: []string{
-			"LOG_LEVEL=DEBUG",
+			"LOG_LEVEL=WARN",
+			"JAVA_OPTS=-Xmx128m -Xms64m",
 		},
 		ServicePorts: map[string]string{
 			ServiceName: "1080",
 		},
 		ReadyFunc: readyFunc,
+		MemoryMB:  256,
 	}
 
 	for _, opt := range opts {
