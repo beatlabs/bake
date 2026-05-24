@@ -69,8 +69,11 @@ func (s *Session) InDocker() bool {
 }
 
 // StartComponents starts the provided components.
+// Concurrency is capped at 3 to limit peak memory during image pulls and
+// JVM initialization on memory-constrained CI runners.
 func (s *Session) StartComponents(cs ...Component) error {
 	g := errgroup.Group{}
+	g.SetLimit(3)
 	for _, c := range cs {
 		c := c
 		g.Go(func() error {

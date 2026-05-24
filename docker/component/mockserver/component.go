@@ -23,7 +23,7 @@ func NewComponent(opts ...docker.SimpleContainerOptionFunc) *docker.SimpleCompon
 		Tag:        "mockserver-5.12.0",
 		Env: []string{
 			"LOG_LEVEL=WARN",
-			"JAVA_OPTS=-Xmx128m -Xms64m",
+			"JAVA_OPTS=-Xmx128m -Xms64m -XX:MaxMetaspaceSize=64m -XX:ReservedCodeCacheSize=32m -XX:MaxDirectMemorySize=32m",
 		},
 		ServicePorts: map[string]string{
 			ServiceName: "1080",
