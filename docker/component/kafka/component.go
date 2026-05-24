@@ -4,11 +4,12 @@
 package kafka
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/IBM/sarama"
 	"github.com/beatlabs/bake/docker"
 )
 
@@ -19,6 +20,7 @@ const (
 	// runs without ZooKeeper so this service is never registered.
 	ZookeeperServiceName = "zookeeper"
 	componentName        = "kafka"
+	adminServiceName     = "kafka-admin"
 )
 
 // topicSpec holds a parsed topic specification.
@@ -42,6 +44,9 @@ func WithTopics(topics ...string) docker.SimpleContainerOptionFunc {
 // clients (via the INSIDE listener on port 9092, addressed by container name)
 // and host clients (via the OUTSIDE listener on a random host port) can connect
 // and receive the correct advertised address in broker metadata.
+//
+// Topics requested via WithTopics are created after startup using the bundled
+// rpk CLI, so the kafka package no longer imports the sarama library.
 func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	port, _ := docker.GetFreePort()
 
@@ -55,6 +60,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 		Tag:        "latest",
 		ServicePorts: map[string]string{
 			KafkaServiceName: "9092",
+			adminServiceName: "9644",
 		},
 		StaticServicePorts: map[string]string{
 			KafkaServiceName: port,
@@ -81,33 +87,39 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 
 	// Extract topics from the env var set by WithTopics, then remove it —
 	// Redpanda does not understand KAFKA_CREATE_TOPICS; we create them via
-	// the admin API in the ready function instead.
+	// rpk inside the container after the broker is ready.
 	topics := extractTopics(&container)
 
-	cfg := sarama.NewConfig()
-	cfg.Version = sarama.V2_6_0_0
+	if len(topics) > 0 {
+		cmds := make([]string, len(topics))
+		for i, t := range topics {
+			// Use || true so that an "already exists" failure is non-fatal.
+			cmds[i] = fmt.Sprintf(
+				"rpk topic create %s --partitions %d --replicas %d --brokers localhost:9092 || true",
+				t.name, t.numPartitions, t.replicationFactor,
+			)
+		}
+		container.RunOpts.InitExecCmd = strings.Join(cmds, " && ")
+	}
 
 	container.ReadyFunc = func(s *docker.Session) error {
-		addr, err := s.AutoServiceAddress(KafkaServiceName)
+		addr, err := s.AutoServiceAddress(adminServiceName)
 		if err != nil {
 			return err
 		}
 		return docker.Retry(func() error {
-			admin, err := sarama.NewClusterAdmin([]string{addr}, cfg)
+			req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
+				"http://"+addr+"/v1/cluster/health_overview", nil)
 			if err != nil {
 				return err
 			}
-			defer func() { _ = admin.Close() }()
-
-			for _, t := range topics {
-				err := admin.CreateTopic(t.name, &sarama.TopicDetail{
-					NumPartitions:     t.numPartitions,
-					ReplicationFactor: t.replicationFactor,
-				}, false)
-				// Ignore "already exists" — idempotent startup.
-				if err != nil && !strings.Contains(err.Error(), "already exists") {
-					return fmt.Errorf("create topic %q: %w", t.name, err)
-				}
+			resp, err := http.DefaultClient.Do(req)
+			if err != nil {
+				return err
+			}
+			defer func() { _ = resp.Body.Close() }()
+			if resp.StatusCode != http.StatusOK {
+				return fmt.Errorf("admin health check returned %d", resp.StatusCode)
 			}
 			return nil
 		})

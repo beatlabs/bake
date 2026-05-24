@@ -110,7 +110,9 @@ func (Test) CoverAll() error {
 
 	args := CoverAllArgs
 	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
-	if err := run(args); err != nil {
+	// GOGC=25 forces the Go compiler to GC 4× more often, trading CPU for
+	// lower peak RSS during compilation on memory-constrained CI runners.
+	if err := sh.RunWithV(map[string]string{"GOGC": "25"}, goCmd, args...); err != nil {
 		return err
 	}
 	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
