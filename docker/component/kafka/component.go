@@ -37,8 +37,17 @@ func WithTopics(topics ...string) docker.SimpleContainerOptionFunc {
 }
 
 // NewComponent creates a Redpanda-backed Kafka component.
+//
+// Redpanda is configured with two named listeners so that both Docker-internal
+// clients (via the INSIDE listener on port 9092, addressed by container name)
+// and host clients (via the OUTSIDE listener on a random host port) can connect
+// and receive the correct advertised address in broker metadata.
 func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionFunc) *docker.SimpleComponent {
 	port, _ := docker.GetFreePort()
+
+	// insideAddr is the Docker-network address Redpanda advertises to internal
+	// clients. It matches the container name that runContainer assigns.
+	insideAddr := session.ID() + "-" + componentName + ":9092"
 
 	container := docker.SimpleContainerConfig{
 		Name:       componentName,
@@ -54,16 +63,16 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 			Cmd: []string{
 				"redpanda", "start",
 				"--smp=1",
-				"--memory=256M",
+				"--memory=512M",
 				"--reserve-memory=0M",
 				"--overprovisioned",
 				"--node-id=0",
 				"--check=false",
-				"--kafka-addr=0.0.0.0:9092",
-				fmt.Sprintf("--advertise-kafka-addr=localhost:%s", port),
+				"--kafka-addr=INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:" + port,
+				"--advertise-kafka-addr=INSIDE://" + insideAddr + ",OUTSIDE://localhost:" + port,
 			},
 		},
-		MemoryMB: 384,
+		MemoryMB: 640,
 	}
 
 	for _, opt := range opts {
@@ -71,7 +80,7 @@ func NewComponent(session *docker.Session, opts ...docker.SimpleContainerOptionF
 	}
 
 	// Extract topics from the env var set by WithTopics, then remove it —
-	// Redpanda doesn't understand KAFKA_CREATE_TOPICS; we create them via
+	// Redpanda does not understand KAFKA_CREATE_TOPICS; we create them via
 	// the admin API in the ready function instead.
 	topics := extractTopics(&container)
 
@@ -117,16 +126,16 @@ func extractTopics(c *docker.SimpleContainerConfig) []topicSpec {
 	var specs []topicSpec
 	filtered := c.Env[:0]
 	for _, e := range c.Env {
-		if strings.HasPrefix(e, "KAFKA_CREATE_TOPICS=") {
-			val := strings.TrimPrefix(e, "KAFKA_CREATE_TOPICS=")
-			for _, raw := range strings.Split(val, ",") {
-				if s, ok := parseTopicSpec(raw); ok {
-					specs = append(specs, s)
-				}
-			}
+		val, ok := strings.CutPrefix(e, "KAFKA_CREATE_TOPICS=")
+		if !ok {
+			filtered = append(filtered, e)
 			continue
 		}
-		filtered = append(filtered, e)
+		for _, raw := range strings.Split(val, ",") {
+			if s, ok := parseTopicSpec(raw); ok {
+				specs = append(specs, s)
+			}
+		}
 	}
 	c.Env = filtered
 	return specs
