@@ -9,8 +9,9 @@ import (
 	"time"
 
 	"github.com/eapache/go-resiliency/breaker"
-	"github.com/eapache/queue"
 	"github.com/rcrowley/go-metrics"
+
+	"github.com/IBM/sarama/internal/queue"
 )
 
 // ErrProducerRetryBufferOverflow is returned when the bridging retry buffer is full and OOM prevention needs to be applied.
@@ -781,12 +782,16 @@ func (p *asyncProducer) newPartitionProducer(topic string, partition int32) chan
 }
 
 func (pp *partitionProducer) backoff(retries int) {
+	pp.parent.backoff(retries)
+}
+
+func (p *asyncProducer) backoff(retries int) {
 	var backoff time.Duration
-	if pp.parent.conf.Producer.Retry.BackoffFunc != nil {
-		maxRetries := pp.parent.conf.Producer.Retry.Max
-		backoff = pp.parent.conf.Producer.Retry.BackoffFunc(retries, maxRetries)
+	if p.conf.Producer.Retry.BackoffFunc != nil {
+		maxRetries := p.conf.Producer.Retry.Max
+		backoff = p.conf.Producer.Retry.BackoffFunc(retries, maxRetries)
 	} else {
-		backoff = pp.parent.conf.Producer.Retry.Backoff
+		backoff = p.conf.Producer.Retry.Backoff
 	}
 	if backoff > 0 {
 		time.Sleep(backoff)
@@ -1030,7 +1035,7 @@ func (p *asyncProducer) newBrokerProducer(broker *Broker) *brokerProducer {
 	// This is because the AsyncProduce callback inside the bridge is invoked from the broker
 	// responseReceiver goroutine and closing the broker requires such goroutine to be finished
 	go withRecover(func() {
-		buf := queue.New()
+		var buf queue.Queue[*brokerProducerResponse]
 		for {
 			if buf.Length() == 0 {
 				res, ok := <-pending
@@ -1043,7 +1048,7 @@ func (p *asyncProducer) newBrokerProducer(broker *Broker) *brokerProducer {
 			}
 			// Send the head pending response or buffer another one
 			// so that we never block the callback
-			headRes := buf.Peek().(*brokerProducerResponse)
+			headRes := buf.Peek()
 			select {
 			case res, ok := <-pending:
 				if !ok {
@@ -1453,6 +1458,13 @@ func (p *asyncProducer) retryBatch(topic string, partition int32, pSet *partitio
 		msg.retries++
 	}
 
+	// honor Producer.Retry.Backoff between retry attempts (#2469); the
+	// non-idempotent path gets this from partitionProducer.dispatch, but
+	// retryBatch dispatches the produceSet directly to the broker
+	if len(pSet.msgs) > 0 {
+		p.backoff(pSet.msgs[0].retries)
+	}
+
 	// it's expected that a metadata refresh has been requested prior to calling retryBatch
 	leader, leaderErr := p.client.Leader(topic, partition)
 	if leaderErr != nil {
@@ -1559,7 +1571,7 @@ func (p *asyncProducer) retryHandler() {
 
 	var currentByteSize int64
 	var msg *ProducerMessage
-	buf := queue.New()
+	var buf queue.Queue[*ProducerMessage]
 
 	for {
 		if buf.Length() == 0 {
@@ -1567,8 +1579,8 @@ func (p *asyncProducer) retryHandler() {
 		} else {
 			select {
 			case msg = <-p.retries:
-			case p.input <- buf.Peek().(*ProducerMessage):
-				msgToRemove := buf.Remove().(*ProducerMessage)
+			case p.input <- buf.Peek():
+				msgToRemove := buf.Remove()
 				currentByteSize -= int64(msgToRemove.ByteSize(version))
 				continue
 			}
@@ -1585,7 +1597,7 @@ func (p *asyncProducer) retryHandler() {
 			continue
 		}
 
-		msgToHandle := buf.Peek().(*ProducerMessage)
+		msgToHandle := buf.Peek()
 		if msgToHandle.flags == 0 {
 			select {
 			case p.input <- msgToHandle:
