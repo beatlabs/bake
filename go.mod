@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/consul/api v1.33.7
 	github.com/magefile/mage v1.17.2
 	github.com/ory/dockertest/v3 v3.12.0
-	github.com/redis/go-redis/v9 v9.19.0
+	github.com/redis/go-redis/v9 v9.20.0
 	github.com/stretchr/testify v1.11.1
 	go.mongodb.org/mongo-driver v1.17.9
 	golang.org/x/sync v0.20.0
