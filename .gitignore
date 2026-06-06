@@ -24,3 +24,6 @@ coverage.lcov
 
 yarn.lock
 node_modules/
+
+.antigravitycli
+.omo
