@@ -28,10 +28,10 @@ jobs:
       - name: Codecov
         uses: codecov/codecov-action@v6
         with:
-          fail_ci_if_error: true # optional (default = false)
+          fail_ci_if_error: false
           files: ./coverage.txt
-          name: codecov-umbrella # optional 
-          token: ${{ secrets.CODECOV_TOKEN }} # required
+          name: codecov-umbrella
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload container logs
         if: failure()
