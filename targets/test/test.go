@@ -96,11 +96,18 @@ func (Test) CoverUnit() error {
 func (Test) CoverAll() error {
 	sh.PrintStartTarget(namespace, "coverAll")
 
-	args := CoverArgs
-	args = append(args, getBuildTagFlag(GoBuildTags), Pkgs)
-	if err := run(args); err != nil {
+	coveragePkgs, err := packagesExcluding("/docker/component")
+	if err != nil {
 		return err
 	}
+
+	coverageArgs := withoutArgs(CoverArgs, "-race")
+	coverageArgs = append(coverageArgs, "-p=1", getBuildTagFlag([]string{integrationTestTag}))
+	coverageArgs = append(coverageArgs, coveragePkgs...)
+	if err := runWithEnv(coverAllEnv(), coverageArgs); err != nil {
+		return err
+	}
+
 	return pruneCoverageFile(CoverExcludeFile, CoverExcludePatterns)
 }
 
@@ -113,6 +120,58 @@ func (Test) Cleanup() error {
 
 func run(args []string) error {
 	return sh.RunV(goCmd, args...)
+}
+
+func runWithEnv(env map[string]string, args []string) error {
+	return sh.RunWithV(env, goCmd, args...)
+}
+
+func coverAllEnv() map[string]string {
+	return map[string]string{
+		"GOGC":       "25",
+		"GOMEMLIMIT": "1GiB",
+	}
+}
+
+func packagesExcluding(excludePatterns ...string) ([]string, error) {
+	output, err := sh.Output(goCmd, "list", "-mod=vendor", Pkgs)
+	if err != nil {
+		return nil, err
+	}
+
+	pkgs := make([]string, 0)
+	for _, pkg := range strings.Fields(output) {
+		if isExcludedPackage(pkg, excludePatterns) {
+			continue
+		}
+		pkgs = append(pkgs, pkg)
+	}
+	return pkgs, nil
+}
+
+func isExcludedPackage(pkg string, excludePatterns []string) bool {
+	for _, pattern := range excludePatterns {
+		if strings.Contains(pkg, pattern) {
+			return true
+		}
+	}
+	return false
+}
+
+func withoutArgs(args []string, excluded ...string) []string {
+	exclusions := make(map[string]struct{}, len(excluded))
+	for _, arg := range excluded {
+		exclusions[arg] = struct{}{}
+	}
+
+	filtered := make([]string, 0, len(args))
+	for _, arg := range args {
+		if _, ok := exclusions[arg]; ok {
+			continue
+		}
+		filtered = append(filtered, arg)
+	}
+	return filtered
 }
 
 func getBuildTagFlag(buildTags []string) string {

@@ -32,3 +32,10 @@ test
 	require.NoError(t, err)
 	assert.Equal(t, exp, got)
 }
+
+func TestIsExcludedPackage(t *testing.T) {
+	patterns := []string{"/docker/component"}
+
+	assert.True(t, isExcludedPackage("github.com/beatlabs/bake/docker/component/mongodb", patterns))
+	assert.False(t, isExcludedPackage("github.com/beatlabs/bake/docker", patterns))
+}
