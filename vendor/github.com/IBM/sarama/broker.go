@@ -101,7 +101,7 @@ type AccessToken struct {
 	Extensions map[string]string
 }
 
-// AccessTokenProvider is the interface that encapsulates how implementors
+// AccessTokenProvider is the interface that encapsulates how implementers
 // can generate access tokens for Kafka broker authentication.
 type AccessTokenProvider interface {
 	// Token returns an access token. The implementation should ensure token
@@ -1012,6 +1012,45 @@ func (b *Broker) AlterUserScramCredentials(req *AlterUserScramCredentialsRequest
 // UpdateFeatures sends a request to update finalized feature versions
 func (b *Broker) UpdateFeatures(req *UpdateFeaturesRequest) (*UpdateFeaturesResponse, error) {
 	res := new(UpdateFeaturesResponse)
+
+	err := b.sendAndReceive(req, res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// DescribeProducers sends a request to list the active producer state for
+// topic partitions led by this broker
+func (b *Broker) DescribeProducers(req *DescribeProducersRequest) (*DescribeProducersResponse, error) {
+	res := new(DescribeProducersResponse)
+
+	err := b.sendAndReceive(req, res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// DescribeTransactions sends a request to retrieve the current state of
+// transactions from the transaction coordinator
+func (b *Broker) DescribeTransactions(req *DescribeTransactionsRequest) (*DescribeTransactionsResponse, error) {
+	res := new(DescribeTransactionsResponse)
+
+	err := b.sendAndReceive(req, res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// ListTransactions sends a request to list the transactions known to the
+// transaction coordinator
+func (b *Broker) ListTransactions(req *ListTransactionsRequest) (*ListTransactionsResponse, error) {
+	res := new(ListTransactionsResponse)
 
 	err := b.sendAndReceive(req, res)
 	if err != nil {
