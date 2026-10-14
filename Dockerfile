@@ -1,4 +1,4 @@
-FROM golang:1.26
+FROM golang:1.27
 ARG TARGETARCH
 RUN echo Building bake image for ${TARGETARCH} architecture
 
