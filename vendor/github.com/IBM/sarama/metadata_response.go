@@ -126,13 +126,9 @@ func (t *TopicMetadata) decode(pd packetDecoder, version int16) (err error) {
 	}
 
 	if t.Version >= 10 {
-		uuid, err := pd.getRawBytes(16)
+		t.Uuid, err = pd.getUuid()
 		if err != nil {
 			return err
-		}
-		t.Uuid = [16]byte{}
-		for i := range 16 {
-			t.Uuid[i] = uuid[i]
 		}
 	}
 
@@ -180,7 +176,7 @@ func (t *TopicMetadata) encode(pe packetEncoder, version int16) (err error) {
 	}
 
 	if t.Version >= 10 {
-		err = pe.putRawBytes(t.Uuid[:])
+		err = pe.putUuid(t.Uuid)
 		if err != nil {
 			return err
 		}
@@ -221,7 +217,7 @@ type MetadataResponse struct {
 	ControllerID int32
 	// Topics contains each topic in the response.
 	Topics                      []*TopicMetadata
-	ClusterAuthorizedOperations int32 // Only valid for Version >= 8
+	ClusterAuthorizedOperations int32 // Only valid for Version 8 to 10
 }
 
 func (r *MetadataResponse) setVersion(v int16) {
@@ -283,7 +279,7 @@ func (r *MetadataResponse) decode(pd packetDecoder, version int16) (err error) {
 		}
 	}
 
-	if r.Version >= 8 {
+	if r.Version >= 8 && r.Version <= 10 {
 		r.ClusterAuthorizedOperations, err = pd.getInt32()
 		if err != nil {
 			return err
@@ -332,7 +328,7 @@ func (r *MetadataResponse) encode(pe packetEncoder) (err error) {
 		}
 	}
 
-	if r.Version >= 8 {
+	if r.Version >= 8 && r.Version <= 10 {
 		pe.putInt32(r.ClusterAuthorizedOperations)
 	}
 
@@ -357,7 +353,7 @@ func (r *MetadataResponse) headerVersion() int16 {
 }
 
 func (r *MetadataResponse) isValidVersion() bool {
-	return r.Version >= 0 && r.Version <= 10
+	return r.Version >= 0 && r.Version <= 11
 }
 
 func (r *MetadataResponse) isFlexible() bool {
@@ -370,7 +366,7 @@ func (r *MetadataResponse) isFlexibleVersion(version int16) bool {
 
 func (r *MetadataResponse) requiredVersion() KafkaVersion {
 	switch r.Version {
-	case 10:
+	case 10, 11:
 		return V2_8_0_0
 	case 9:
 		return V2_4_0_0

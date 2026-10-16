@@ -221,6 +221,8 @@ func allocateBody(key, version int16) protocolBody {
 		return &UpdateFeaturesRequest{Version: version}
 	case apiKeyDescribeCluster:
 		return &DescribeClusterRequest{Version: version}
+	case apiKeyDescribeProducers:
+		return &DescribeProducersRequest{Version: version}
 		// 52: VoteRequest
 		// 53: BeginQuorumEpochRequest
 		// 54: EndQuorumEpochRequest
@@ -229,12 +231,13 @@ func allocateBody(key, version int16) protocolBody {
 		// 58: EnvelopeRequest
 		// 59: FetchSnapshotRequest
 		// 60: DescribeClusterRequest
-		// 61: DescribeProducersRequest
 		// 62: BrokerRegistrationRequest
 		// 63: BrokerHeartbeatRequest
 		// 64: UnregisterBrokerRequest
-		// 65: DescribeTransactionsRequest
-		// 66: ListTransactionsRequest
+	case apiKeyDescribeTransactions:
+		return &DescribeTransactionsRequest{Version: version}
+	case apiKeyListTransactions:
+		return &ListTransactionsRequest{Version: version}
 		// 67: AllocateProducerIdsRequest
 		// 68: ConsumerGroupHeartbeatRequest
 	}
@@ -336,6 +339,12 @@ func allocateResponseBody(key, version int16) protocolBody {
 		return &UpdateFeaturesResponse{Version: version}
 	case apiKeyDescribeCluster:
 		return &DescribeClusterResponse{Version: version}
+	case apiKeyDescribeProducers:
+		return &DescribeProducersResponse{Version: version}
+	case apiKeyDescribeTransactions:
+		return &DescribeTransactionsResponse{Version: version}
+	case apiKeyListTransactions:
+		return &ListTransactionsResponse{Version: version}
 	}
 	return nil
 }
